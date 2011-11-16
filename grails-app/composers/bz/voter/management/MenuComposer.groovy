@@ -27,6 +27,13 @@ class MenuComposer extends GrailsComposer {
 		
 	 }
 
+	
+	def onClick_userButton(){
+		center.getChildren().clear()
+		Executions.createComponents("user.zul",center,null)
+	}
+
+
 	 def onClick_signOutButton(){
 	 	execution.sendRedirect('/logout')
 	 }

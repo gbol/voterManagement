@@ -1,0 +1,181 @@
+package bz.voter.management
+
+import org.zkoss.zkgrails.*
+import org.zkoss.zul.*
+
+import bz.voter.management.zk.ComposerHelper
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
+
+class UserComposer extends GrailsComposer {
+
+	def addUserButton
+	def userSaveButton
+	def userCancelButton
+
+	def usernameTextbox
+	def passwordTextbox
+
+	def adminRoleCheckbox
+	def userRoleCheckbox
+	def enabledCheckbox
+
+	def userIdLabel
+
+	def usersListRows
+
+	def userFormPanel
+
+	def errorMessages
+	def messageSource
+
+	def springSecurityService
+
+
+	private static NEW_TITLE = "New User"
+	private static EDIT_TITLE = "Edit User"
+
+    def afterCompose = { window ->
+	 	if(springSecurityService.isLoggedIn()){
+			showUsersList()
+		}else{
+			execution.sendRedirect('/login')
+		}
+    }
+
+
+	def onClick_addUserButton(){
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+			showUserForm(null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
+	}
+
+
+	def onClick_userCancelButton(){
+		hideUserForm()
+	}
+
+
+	def onClick_userSaveButton(){
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+
+			def userInstance
+
+			userInstance = (userIdLabel.getValue()) ? (SecUser.get(userIdLabel.getValue())) : (new SecUser())
+
+			userInstance.username = usernameTextbox.getValue()
+			userInstance.password = passwordTextbox.getValue()
+			userInstance.enabled = enabledCheckbox.isChecked()
+			userInstance.accountExpired = false
+			userInstance.accountLocked = false
+			userInstance.passwordExpired = false
+			
+			userInstance.validate()
+			
+			if(userInstance.hasErrors()){
+				errorMessages.append{
+					for(error in userInstance.errors.allErrors){
+						log.error error
+						label(value: messageSource.getMessage(error,null),class:'errors')
+					}
+				}
+			}else{
+				userInstance.save(flush:true)
+				if(adminRoleCheckbox.isChecked()){
+					SecUserSecRole.create(userInstance,SecRole.findByAuthority('ROLE_ADMIN'),true)
+				}
+				if(userRoleCheckbox.isChecked()){
+					SecUserSecRole.create(userInstance,SecRole.findByAuthority('ROLE_USER',true))
+				}
+
+				hideUserForm()
+				showUsersList()
+				Messagebox.show('User Saved','User Message', Messagebox.OK,
+					Messagebox.INFORMATION)
+			}
+
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
+	}
+	
+
+	def showUsersList(){
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+
+		usersListRows.getChildren().clear()
+		if(!addUserButton.isVisible()){
+			addUserButton.setVisible(true)
+		}
+
+		usersListRows.append{
+			for(_user in SecUser.list([sort:'username'])){
+				def userInstance = _user
+				row{
+					label(value: _user.username)
+					label(value: _user.enabled)
+					label(value: 
+		SecUserSecRole.findAllBySecUser(_user).collect { it.secRole.authority } ) 
+					button(label: 'Edit', onClick:{
+						showUserForm(userInstance)
+					})
+				}
+			}
+		}// End of usersListRows.append
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
+	}
+
+
+	 def showUserForm(SecUser userInstance){
+	 	userIdLabel.setValue("")
+		adminRoleCheckbox.setChecked(false)
+		userRoleCheckbox.setChecked(false)
+		enabledCheckbox.setChecked(false)
+		errorMessages.getChildren().clear()
+		addUserButton.setVisible(false)
+		userFormPanel.setVisible(true)
+		usernameTextbox.setConstraint('no empty')
+		passwordTextbox.setConstraint('no empty')
+
+		if(userInstance){
+			userFormPanel.setTitle(EDIT_TITLE)
+			usernameTextbox.setValue("${userInstance.username}")
+			userIdLabel.setValue("${userInstance.id}")
+			if(userInstance.enabled){
+				enabledCheckbox.setChecked(true)
+			}
+			if(SecUserSecRole.get(userInstance.id, SecRole.findByAuthority('ROLE_ADMIN').id)){
+				adminRoleCheckbox.setChecked(true)
+			}
+			if(SecUserSecRole.get(userInstance.id, SecRole.findByAuthority('ROLE_USER').id)){
+				userRoleCheckbox.setChecked(true)
+			}
+
+		}else{
+			userFormPanel.setTitle(NEW_TITLE)
+			enabledCheckbox.setChecked(true)
+		}
+
+	 }
+
+
+	 def hideUserForm(){
+	 	errorMessages.getChildren().clear()
+		userFormPanel.setTitle('')
+		usernameTextbox.setConstraint('')
+		usernameTextbox.setValue('')
+		passwordTextbox.setConstraint('')
+		passwordTextbox.setValue('')
+		addUserButton.setVisible(true)
+		userFormPanel.setVisible(false)
+		adminRoleCheckbox.setChecked(false)
+		userRoleCheckbox.setChecked(false)
+		enabledCheckbox.setChecked(false)
+
+	 }
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <div apply="bz.voter.management.UserComposer">
+
+		<vlayout>
+			<separator spacing="1px" />
+				<vbox id="errorMessages">
+				</vbox>
+			<separator spacing="1px" />
+
+			<panel id="userFormPanel" border="normal" visible="false" width="35%" style="padding:4px;">
+				<panelchildren>
+					<grid width="100%" oddRowSclass="none">
+						<rows>
+							<row>
+								<label value="Username" />
+								<textbox id="usernameTextbox" constraint="no empty"
+									width="90%" />
+							</row>
+							<row>
+								<label value="Password" />
+								<textbox id="passwordTextbox" type="password" width="90%"/>
+							</row>
+							<row>
+								<label value="Enabled" />
+								<checkbox id="enabledCheckbox" />
+							</row>
+							<row>
+								<label value="ADMIN_ROLE" />
+								<checkbox id="adminRoleCheckbox" />
+							</row>
+							<row>
+								<label value="USER_ROLE" />
+								<checkbox id="userRoleCheckbox" />
+							</row>
+							<row>
+								<cell colspan="2" style="text-align: left;">
+									<button id="userSaveButton" label="Save" />
+									<button id="userCancelButton" label="Cancel" />
+									<label id="userIdLabel" visible="false"/>
+								</cell>
+							</row>
+						</rows>
+					</grid>
+				</panelchildren>
+			</panel>
+
+			<panel title="Users" style="padding:4px;" border="normal">
+				<panelchildren >
+					<toolbar>
+						<button id="addUserButton" label="Create User" />
+					</toolbar>
+					<grid mold="paging" pageSize="20">
+						<columns menupopup="auto" width="100%">
+							<column label="Username" align="left" sort="auto" />
+							<column label="Enabled" align="left" sort="auto" />
+							<column label="Roles" align="left" />
+							<column />
+						</columns>
+						<rows id="usersListRows">
+						</rows>
+					</grid>
+				</panelchildren>
+			</panel>
+
+		</vlayout>
+
+    </div>
+
+</zk>
