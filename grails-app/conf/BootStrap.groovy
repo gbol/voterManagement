@@ -32,7 +32,6 @@ class BootStrap {
       def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
 		def adminUser = SecUser.findByUsername('admin') ?: new SecUser(
                 username: 'admin',
-                //password: springSecurityService.encodePassword('p4ssw0rd'),
                 password: 'p4ssw0rd',
                 enabled: true).save(failOnError: true)
  

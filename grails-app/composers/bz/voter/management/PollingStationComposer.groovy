@@ -5,6 +5,8 @@ import org.zkoss.zul.*
 
 import bz.voter.management.zk.ComposerHelper
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class PollingStationComposer extends GrailsComposer {
 
 	def addPollStationButton
@@ -24,17 +26,28 @@ class PollingStationComposer extends GrailsComposer {
 	def messageSource
 
 
+	def springSecurityService
+
+
 	private static NEW_TITLE = "New Poll Station"
 	private static EDIT_TITLE = "Edit Poll Station"
 
 
     def afterCompose = { window ->
-	 	showPollStationsList()
+	 	if(springSecurityService.isLoggedIn()){
+	 		showPollStationsList()
+		}else{
+			execution.sendRedirect('/login')
+		}
     }
 
 
 	def onClick_addPollStationButton(){
-		showPollStationForm(null)
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+			showPollStationForm(null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	}
 
 
@@ -44,6 +57,9 @@ class PollingStationComposer extends GrailsComposer {
 
 
 	def onClick_pollStationSaveButton(){
+
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+
 		def pollStationInstance
 
 		pollStationInstance = (pollStationIdLabel.getValue()) ? (PollStation.get(pollStationIdLabel.getValue())) : (new PollStation())
@@ -66,6 +82,10 @@ class PollingStationComposer extends GrailsComposer {
 				Messagebox.OK, Messagebox.INFORMATION)
 			hidePollStationForm()
 			showPollStationsList()
+		}
+
+		}else{
+			ComposerHelper.permissionDeniedBox()
 		}
 	}
 

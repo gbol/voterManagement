@@ -8,6 +8,7 @@ class MenuComposer extends GrailsComposer {
 	def electionButton
 	def userButton
 	def voterButton
+	def signOutButton
 	def center
 	
     def afterCompose = { window ->
@@ -24,5 +25,9 @@ class MenuComposer extends GrailsComposer {
 	 	center.getChildren().clear()
 		Executions.createComponents("voter.zul",center,null)
 		
+	 }
+
+	 def onClick_signOutButton(){
+	 	execution.sendRedirect('/logout')
 	 }
 }
