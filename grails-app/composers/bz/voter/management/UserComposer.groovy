@@ -63,6 +63,8 @@ class UserComposer extends GrailsComposer {
 		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
 
 			def userInstance
+			def userRole = SecRole.findByAuthority('ROLE_USER')
+			def adminRole = SecRole.findByAuthority('ROLE_ADMIN')
 
 			userInstance = (userIdLabel.getValue()) ? (SecUser.get(userIdLabel.getValue())) : (new SecUser())
 
@@ -85,16 +87,25 @@ class UserComposer extends GrailsComposer {
 			}else{
 				userInstance.save(flush:true)
 				if(adminRoleCheckbox.isChecked()){
-					SecUserSecRole.create(userInstance,SecRole.findByAuthority('ROLE_ADMIN'),true)
+					SecUserSecRole.create(userInstance,adminRole,true)
+				}else{
+					if(SecUserSecRole.get(userInstance.id,adminRole.id)){
+						SecUserSecRole.remove(userInstance,adminRole,true)
+					}
 				}
+
 				if(userRoleCheckbox.isChecked()){
-					SecUserSecRole.create(userInstance,SecRole.findByAuthority('ROLE_USER',true))
+					SecUserSecRole.create(userInstance,userRole,true)
+				}else{
+					if(SecUserSecRole.get(userInstance.id,userRole.id)){
+						SecUserSecRole.remove(userInstance,userRole,true)
+					}
 				}
 
 				hideUserForm()
-				showUsersList()
 				Messagebox.show('User Saved','User Message', Messagebox.OK,
 					Messagebox.INFORMATION)
+				showUsersList()
 			}
 
 		}else{
@@ -146,6 +157,7 @@ class UserComposer extends GrailsComposer {
 			userFormPanel.setTitle(EDIT_TITLE)
 			usernameTextbox.setValue("${userInstance.username}")
 			userIdLabel.setValue("${userInstance.id}")
+			passwordTextbox.setValue(userInstance.password)
 			if(userInstance.enabled){
 				enabledCheckbox.setChecked(true)
 			}
