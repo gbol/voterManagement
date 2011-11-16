@@ -3,6 +3,11 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zul.*
 
+
+import bz.voter.management.zk.ComposerHelper
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class PledgeCrudPanelComposer extends GrailsComposer {
 
 	def addPledgeButton
@@ -24,13 +29,23 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 	private static NEW_TITLE = "Add New Pledge"
 
 
+	def springSecurityService
+
 	def afterCompose ={ window->
-		showPledgesList()
+		if(springSecurityService.isLoggedIn()){
+			showPledgesList()
+		}else{
+			execution.sendRedirect('/login')
+		}
 	}
 
 
 	def onClick_addPledgeButton(){
-		showPledgeForm(null)
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+			showPledgeForm(null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	}
 
 
@@ -40,6 +55,8 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 
 
 	def onClick_pledgeSaveButton(){
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+
 		def pledgeInstance
 
 		pledgeInstance = (pledgeIdLabel.getValue()) ? (Pledge.get(pledgeIdLabel.getValue())) : (new Pledge())
@@ -60,6 +77,10 @@ class PledgeCrudPanelComposer extends GrailsComposer {
 				Messagebox.INFORMATION)
 			hidePledgeForm()
 			showPledgesList()
+		}
+
+		}else{
+			ComposerHelper.permissionDeniedBox()
 		}
 	}
 	

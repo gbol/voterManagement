@@ -3,6 +3,10 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
 
+import bz.voter.management.zk.ComposerHelper
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class ElectionNavigationComposer extends GrailsComposer {
 
 	def electionsListButton
@@ -17,29 +21,49 @@ class ElectionNavigationComposer extends GrailsComposer {
 
 
 	 def onClick_electionsListButton(){
-	 	electionCenter.getChildren().clear()
-		Executions.createComponents("electionCrudPanel.zul", electionCenter, null)
+	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 		electionCenter.getChildren().clear()
+			Executions.createComponents("electionCrudPanel.zul", electionCenter, null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	 }
 
 	 def onClick_divisionsButton(){
-	 	electionCenter.getChildren().clear()
-		Executions.createComponents("division.zul", electionCenter, null)
+	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 		electionCenter.getChildren().clear()
+			Executions.createComponents("division.zul", electionCenter, null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	 }
 
 	 def onClick_pollStationsButton(){
-	 	electionCenter.getChildren().clear()
-		Executions.createComponents("pollingStation.zul", electionCenter, null)
+	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 		electionCenter.getChildren().clear()
+			Executions.createComponents("pollingStation.zul", electionCenter, null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	 }
 
 	 def onClick_pledgesButton(){
-	 	electionCenter.getChildren().clear()
-		Executions.createComponents("pledgeCrudPanel.zul", electionCenter, null)
+	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 		electionCenter.getChildren().clear()
+			Executions.createComponents("pledgeCrudPanel.zul", electionCenter, null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	 }
 
 
 	 def onClick_municipalitiesButton(){
-	 	electionCenter.getChildren().clear()
-		Executions.createComponents("municipalityCrudPanel.zul", electionCenter, null)
+	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 		electionCenter.getChildren().clear()
+			Executions.createComponents("municipalityCrudPanel.zul", electionCenter, null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	 }
 
 }

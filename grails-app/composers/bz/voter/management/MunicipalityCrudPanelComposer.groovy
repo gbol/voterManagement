@@ -7,6 +7,8 @@ import org.zkoss.zul.*
 
 import bz.voter.management.zk.ComposerHelper
 
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class MunicipalityCrudPanelComposer extends GrailsComposer {
 
 	def addMunicipalityButton
@@ -28,13 +30,24 @@ class MunicipalityCrudPanelComposer extends GrailsComposer {
 	private static EDIT_TITLE = "Edit Municipality"
 	private static NEW_TITLE = "New Municipality"
 
+
+	def springSecurityService
+
     def afterCompose = { window ->
-	 	showMunicipalitiesList()
+	 	if(springSecurityService.isLoggedIn()){
+	 		showMunicipalitiesList()
+		}else{
+			execution.sendRedirect('/login')
+		}
     }
 
 
 	def onClick_addMunicipalityButton(){
-		showMunicipalityForm(null)
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+			showMunicipalityForm(null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	}
 
 
@@ -44,28 +57,32 @@ class MunicipalityCrudPanelComposer extends GrailsComposer {
 
 
 	def onClick_municipalitySaveButton(){
-		def municipalityInstance
-		municipalityInstance = (municipalityIdLabel.getValue()) ? (Municipality.get(municipalityIdLabel.getValue())) : (new Municipality())
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+			def municipalityInstance
+			municipalityInstance = (municipalityIdLabel.getValue()) ? (Municipality.get(municipalityIdLabel.getValue())) : (new Municipality())
 
-		municipalityInstance.name = nameTextbox.getValue()?.trim()?.capitalize()
-		municipalityInstance.district = districtListbox.getSelectedItem()?.getValue()
+			municipalityInstance.name = nameTextbox.getValue()?.trim()?.capitalize()
+			municipalityInstance.district = districtListbox.getSelectedItem()?.getValue()
 
-		municipalityInstance.validate()
+			municipalityInstance.validate()
 
-		if(municipalityInstance.hasErrors()){
-			errorMessages.append{
-				for(error in municipalityInstance.errors.allErrors){
-					log.error error
-					label(value:messageSource.getMessage(error, null), class:'errors')
+			if(municipalityInstance.hasErrors()){
+				errorMessages.append{
+					for(error in municipalityInstance.errors.allErrors){
+						log.error error
+						label(value:messageSource.getMessage(error, null), class:'errors')
+					}
 				}
+			}else{
+				municipalityInstance.save(flush:true)
+				Messagebox.show("Municipality Saved!", 'Municipality Message!', 
+					Messagebox.OK, Messagebox.INFORMATION)
+				hideMunicipalityForm()
+				showMunicipalitiesList()
+
 			}
 		}else{
-			municipalityInstance.save(flush:true)
-			Messagebox.show("Municipality Saved!", 'Municipality Message!', 
-				Messagebox.OK, Messagebox.INFORMATION)
-			hideMunicipalityForm()
-			showMunicipalitiesList()
-
+			ComposerHelper.permissionDeniedBox()
 		}
 
 	}

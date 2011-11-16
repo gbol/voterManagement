@@ -3,6 +3,10 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zul.*
 
+import bz.voter.management.zk.ComposerHelper
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class DivisionComposer extends GrailsComposer {
 
 	def addDivisionButton
@@ -20,14 +24,26 @@ class DivisionComposer extends GrailsComposer {
 	def messageSource
 	def errorMessages
 
-    def afterCompose = { window ->
-	 	showDivisionsList()
+	def springSecurityService
 
+	private static NEW_TITLE = "NEW DIVISION"
+	private static EDIT_TITLE = "Edit Division"
+
+    def afterCompose = { window ->
+	 	if(springSecurityService.isLoggedIn()){
+	 		showDivisionsList()
+		}else{
+			execution.sendRedirect('/login')
+		}
     }
 
 
 	def onClick_addDivisionButton(){
-		showDivisionForm(null)
+		if(SpringSecrityUtils.ifAllGranted('ROLE_ADMIN')){
+			showDivisionForm(null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	}
 
 	def onClick_divisionCancelButton(){
@@ -36,6 +52,8 @@ class DivisionComposer extends GrailsComposer {
 
 
 	def onClick_divisionSaveButton(){
+		if(SpringSecurityService.ifAllGranted('ROLE_ADMIN')){
+
 		def divisionInstance
 		if(divisionIdLabel.getValue()){
 			divisionInstance = Division.get(divisionIdLabel.getValue())
@@ -60,6 +78,10 @@ class DivisionComposer extends GrailsComposer {
 			hideDivisionForm()
 			showDivisionsList()
 		}
+
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	}
 
 
@@ -71,11 +93,11 @@ class DivisionComposer extends GrailsComposer {
 		divisionNameTextbox.setConstraint('no empty')
 
 		if(divisionInstance){
-			divisionFormPanel.setTitle("Edit Division")
+			divisionFormPanel.setTitle(EDIT_TITLE)
 			divisionNameTextbox.setValue("${divisionInstance.name}")
 			divisionIdLabel.setValue("${divisionInstance.id}")
 		}else{
-			divisionFormPanel.setTitle("Add New Division")
+			divisionFormPanel.setTitle(NEW_TITLE)
 		}
 
 	 }

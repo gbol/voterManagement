@@ -3,6 +3,10 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zul.*
 
+import bz.voter.management.zk.ComposerHelper
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class ElectionCrudPanelComposer extends GrailsComposer {
 
 	def addElectionButton
@@ -24,14 +28,24 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 	def messageSource
 
 	def election
+
+	def springSecurityService
+
     def afterCompose = { window ->
-        // initialize components here
+	 	if(springSecurityService.isLoggedIn()){
 			showElectionsList()
+		}else{
+			execution.sendRedirect('/login')
+		}
     }
 
 
 	 def onClick_addElectionButton(){
-		showElectionFormGrid(null)
+	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+			showElectionFormGrid(null)
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
 	 }
 
 
@@ -42,6 +56,8 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 
 	 def onClick_saveElectionButton(){
+	 if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+
 	 	def electionInstance
 		if(electionIdLabel.getValue()){
 			electionInstance = Election.get(electionIdLabel.getValue())
@@ -65,6 +81,10 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 			Messagebox.show("Election Saved!", "Election Message", Messagebox.OK, Messagebox.INFORMATION)
 			hideElectionFormGrid()
 			showElectionsList()
+		}
+
+		}else{
+			ComposerHelper.permissionDeniedBox()
 		}
 
 	 }

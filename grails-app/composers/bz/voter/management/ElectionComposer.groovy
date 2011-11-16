@@ -3,6 +3,7 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zul.*
 
+
 class ElectionComposer extends GrailsComposer {
 	
 	def addElectionButton
@@ -25,7 +26,14 @@ class ElectionComposer extends GrailsComposer {
 
 	def election
 
+
+	def springSecurityService
+
     def afterCompose = { window ->
+
+	 	if(!springSecurityService.isLoggedIn()){
+			execution.sendRedirect('/login')
+		}
     }
 
 
