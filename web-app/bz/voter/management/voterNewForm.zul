@@ -57,6 +57,8 @@
 							<row>
 								<label value="Pledge" />
 								<listbox id="pledgeListbox" mold="select" rows="1" />
+								<label value="Affiliation" />
+								<listbox id="affiliationListbox" mold="select" rows="1" />
 							</row>
 						</rows>
 					</grid>
@@ -83,7 +85,7 @@
 					</panel>
 
 					<label value="Comments" />
-					<textbox id="commentsTextbox" rows="8" width="300px"/>
+					<textbox id="commentsTextbox" rows="8" width="90%"/>
 
 					<toolbar>
 						<button id="saveButton" label="Save" />

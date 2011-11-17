@@ -6,9 +6,9 @@ import org.zkoss.zul.*
 
 import bz.voter.management.zk.ComposerHelper
 
-import java.lang.reflect.Field
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
-import grails.plugins.springsecurity.Secured
+import java.lang.reflect.Field
 
 class VoterNewFormComposer extends GrailsComposer {
 
@@ -23,6 +23,7 @@ class VoterNewFormComposer extends GrailsComposer {
 	def districtListbox
 	def municipalityListbox
 	def pledgeListbox
+	def affiliationListbox
 
 	def firstNameTextbox
 	def middleNameTextbox
@@ -42,29 +43,34 @@ class VoterNewFormComposer extends GrailsComposer {
 	def center
 
 	def Person person
+	def Voter voter
 	def Address address
 	def municipality
 
 
 	def messageSource
 	def errorMessages
+
+	def voterService
+	def springSecurityService
 	
-	@Secured(['ROLE_ADMIN'])
-    def afterCompose = { window ->
+   def afterCompose = { window ->
+		if(springSecurityService.isLoggedIn()){
 
 		  //if(voterIdLabel.getValue()){
 		  if(Executions.getCurrent().getArg().id){
 		  		voterNewFormPanel.setTitle("Edit Voter")
 				voterIdLabel.setValue(Executions.getCurrent().getArg().id.toString())
 				//person = Person.get(voterIdLabel.getValue())
-				person = Person.get(Executions.getCurrent().getArg().id)
+				voter = Voter.get(Executions.getCurrent().getArg().id)
+				person = voter.person
 				address = person.address
 				municipality = address.municipality
 
 				firstNameTextbox.setValue(person.firstName)
 				middleNameTextbox.setValue(person.middleName)
 				lastNameTextbox.setValue(person.lastName)
-				registrationNumberTextbox.setValue("${person.registrationNumber}")
+				registrationNumberTextbox.setValue("${voter.registrationNumber}")
 				homePhoneTextbox.setValue(person.homePhone)
 				cellPhoneTextbox.setValue(person.cellPhone)
 				workPhoneTextbox.setValue(person.workPhone)
@@ -72,9 +78,10 @@ class VoterNewFormComposer extends GrailsComposer {
 				streetTextbox.setValue(person.address.street)
 				commentsTextbox.setValue(person.comments)
 				birthDateBox.setValue(person.birthDate)
-				registrationDateBox.setValue(person.registrationDate)
+				registrationDateBox.setValue(voter.registrationDate)
 
 		  }else{
+		  		voter = new Voter()
 		  		person = new Person()
 				address = new Address()
 				municipality = new Municipality()
@@ -83,11 +90,16 @@ class VoterNewFormComposer extends GrailsComposer {
 			
 
 		  		ComposerHelper.initializeListbox(sexListbox, person, 'sex')
-		  		ComposerHelper.initializeListbox(identificationTypeListbox, person, 'identificationType')
-		  		ComposerHelper.initializeListbox(pollStationListbox,person,'pollStation')
+		  		ComposerHelper.initializeListbox(identificationTypeListbox, voter, 'identificationType')
+		  		ComposerHelper.initializeListbox(pollStationListbox,voter,'pollStation')
 		  		ComposerHelper.initializeListbox(districtListbox,municipality,'district')
 		  		ComposerHelper.initializeListbox(municipalityListbox,address,'municipality')
-		  		ComposerHelper.initializeListbox(pledgeListbox,person,'pledge')
+		  		ComposerHelper.initializeListbox(pledgeListbox,voter,'pledge')
+		  		ComposerHelper.initializeListbox(affiliationListbox,voter,'affiliation')
+	 	}else{
+			execution.sendRedirect('/login')
+		}
+
 	 }
 
 
@@ -98,68 +110,58 @@ class VoterNewFormComposer extends GrailsComposer {
 
 
 	 def onClick_saveButton(){
+	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+
 	 	errorMessages.getChildren().clear()
 	 	def personInstance
 		def addressInstance
-		personInstance = (voterIdLabel.getValue()) ?  Person.get(voterIdLabel.getValue()) : (new Person())
+		def voterInstance
+
+		voterInstance = (voterIdLabel.getValue()) ?  Voter.get(voterIdLabel.getValue()) : (new Voter())
+		personInstance = (voterIdLabel.getValue()) ? voterInstance.person : (new Person())
 		addressInstance = (voterIdLabel.getValue()) ? personInstance.address : (new Address())
 
+		def params = [
+			id : voterIdLabel.getValue(),
+			firstName : firstNameTextbox.getValue()?.trim()?.capitalize(),
+			middleName : middleNameTextbox.getValue()?.trim()?.capitalize(),
+			lastName : lastNameTextbox.getValue()?.trim()?.capitalize(),
+			homePhone : homePhoneTextbox.getValue()?.trim(),
+			workPhone : workPhoneTextbox.getValue()?.trim(),
+			cellPhone : cellPhoneTextbox.getValue()?.trim(),
+			comments : commentsTextbox.getValue()?.trim(),
+			registrationNumber: registrationNumberTextbox.getValue()?.trim(),
+			birthDate : birthDateBox.getValue(),
+			registrationDate : registrationDateBox.getValue(),
+			identificationType : identificationTypeListbox.getSelectedItem()?.getValue(),
+			sex : sexListbox.getSelectedItem()?.getValue(),
+			pollStation : pollStationListbox.getSelectedItem()?.getValue(),
+			pledge : pledgeListbox.getSelectedItem()?.getValue(),
+			affiliation: affiliationListbox.getSelectedItem()?.getValue(),
+			houseNumber : houseNumberTextbox.getValue()?.trim(),
+			street : streetTextbox.getValue()?.trim(),
+			municipality: municipalityListbox.getSelectedItem()?.getValue()
 
-		Person.withTransaction{status->
+		]
 
-			addressInstance.houseNumber = houseNumberTextbox.getValue()?.trim()
-			addressInstance.street = streetTextbox.getValue()?.trim()
-			addressInstance.municipality = municipalityListbox.getSelectedItem()?.getValue()
+		voterInstance = voterService.saveVoter(params)
 
-			personInstance.firstName = firstNameTextbox.getValue()?.trim()?.capitalize()
-			personInstance.middleName = middleNameTextbox.getValue()?.trim()?.capitalize()
-			personInstance.lastName = lastNameTextbox.getValue()?.trim()?.capitalize()
-			personInstance.homePhone = homePhoneTextbox.getValue()?.trim()
-			personInstance.cellPhone = cellPhoneTextbox.getValue()?.trim()
-			personInstance.workPhone = workPhoneTextbox.getValue()?.trim()
-			personInstance.comments = commentsTextbox.getValue()?.trim()
-			personInstance.registrationNumber = registrationNumberTextbox.getValue()?.trim()
-			personInstance.birthDate = birthDateBox.getValue() 
-			personInstance.registrationDate = registrationDateBox.getValue()
-			personInstance.identificationType = identificationTypeListbox.getSelectedItem()?.getValue()
-			personInstance.sex = sexListbox.getSelectedItem()?.getValue()
-			personInstance.pollStation = pollStationListbox.getSelectedItem()?.getValue()
-			personInstance.pledge = pledgeListbox.getSelectedItem()?.getValue()
-
-		
-			addressInstance.validate()
-			if(addressInstance.hasErrors()){
-				for(error in addressInstance.errors.allErrors){
-					log.error error
-						errorMessages.append{
-							label(value: messageSource.getMessage(error,null),class:'errors')
-						}
-				}
-				status.setRollbackOnly()
-			}else{
-				addressInstance.save()
-				personInstance.address = addressInstance
-
-				personInstance.validate()
-				if(personInstance.hasErrors()){
-					for(error in personInstance.errors.allErrors){
-						log.error error
-						errorMessages.append{
-							label(value: messageSource.getMessage(error,null),class:'errors')
-						}
-					}
-					status.setRollbackOnly()
-				}else{
-					personInstance.save(flush:true)
-					Messagebox.show("Voter Saved!", "Voter Message!", Messagebox.OK,
-						Messagebox.INFORMATION)
-					closeWindow()
-				}
+		if(voterInstance.retrieveErrors()){
+			errorMessages.append{
+				label(value: voterInstance.retrieveErrors(),class:'errors')
 			}
-		
+		}else{
+			Messagebox.show("Voter Saved!", "Voter Message!", Messagebox.OK,
+				Messagebox.INFORMATION)
+			closeWindow()
+		}
+
+		}else{
+			ComposerHelper.permissionDeniedBox()
 		}
 
 	 }
+
 
 
 	 def onClose(){

@@ -39,7 +39,7 @@ class DivisionComposer extends GrailsComposer {
 
 
 	def onClick_addDivisionButton(){
-		if(SpringSecrityUtils.ifAllGranted('ROLE_ADMIN')){
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
 			showDivisionForm(null)
 		}else{
 			ComposerHelper.permissionDeniedBox()
@@ -52,7 +52,7 @@ class DivisionComposer extends GrailsComposer {
 
 
 	def onClick_divisionSaveButton(){
-		if(SpringSecurityService.ifAllGranted('ROLE_ADMIN')){
+		if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
 
 		def divisionInstance
 		if(divisionIdLabel.getValue()){

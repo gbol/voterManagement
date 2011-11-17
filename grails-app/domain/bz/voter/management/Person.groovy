@@ -8,23 +8,23 @@ class Person {
 	String middleName
 	String lastName
 	Date birthDate
-	Date registrationDate
-	String registrationNumber
 	String homePhone
 	String cellPhone
 	String workPhone
 	String comments
 	Sex sex
 	Address address
-	IdentificationType identificationType
-	PollStation pollStation
-	Pledge pledge
-
 
 	static transients = ['age','numberOfYearsRegistered']
 
     static constraints = {
-	 	registrationNumber(nullable:false, unique:true)
+	 	firstName(blank: false)
+		lastName(blank: false)
+		middleName(nullable:true)
+		homePhone(nullable:true)
+		cellPhone(nullable:true)
+		workPhone(nullable:true)
+		comments(nullable:true)
     }
 
 
@@ -32,10 +32,10 @@ class Person {
 	 	firstName = firstName?.trim()?.capitalize()
 		middleName = middleName?.trim()?.capitalize()
 		lastName = lastName?.trim()?.capitalize()
-		registrationNumber = registrationNumber?.trim()
 		homePhone = homePhone?.trim()
 		cellPhone = cellPhone?.trim()
 		workPhone = workPhone?.trim()
+		comments = comments?.trim()?.capitalize()
 	 }
 
 
@@ -55,15 +55,4 @@ class Person {
     	return age
 	 }
 
-	 def getNumberOfYearsRegistered(){
-
-	 	Calendar today = Calendar.getInstance()
-		Calendar dateOfRegistration = Calendar.getInstance()
-		dateOfRegistration.setTime(this.registrationDate)
-
-		int years = today.get(Calendar.YEAR) - dateOfRegistration(Calendar.YEAR)
-
-		return years
-
-	 }
 }

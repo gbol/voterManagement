@@ -23,17 +23,17 @@ class VoterComposer extends GrailsComposer {
 
 	 def showVoters(){
 	 	votersListRows.getChildren().clear()
-		for(voter in Person.list([sort:'firstName'])){
+		for(voter in Voter.list()){
 			def voterInstance = voter
 			votersListRows.append{
 				row{
-					label(value: voter.firstName)
-					label(value: voter.lastName)
-					label(value: voter.age)
+					label(value: voter.person.firstName)
+					label(value: voter.person.lastName)
+					label(value: voter.person.age)
 					label(value: voter.registrationNumber)
-					label(value: voter.sex)
-					label(value: voter.homePhone)
-					label(value: voter.cellPhone)
+					label(value: voter.person.sex)
+					label(value: voter.person.homePhone)
+					label(value: voter.person.cellPhone)
 					label(value: voter.pledge)
 					button(label: 'Edit', onClick:{
 						center.getChildren().clear()

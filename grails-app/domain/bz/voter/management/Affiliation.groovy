@@ -1,7 +1,6 @@
 package bz.voter.management
 
-class Pledge {
-
+class Affiliation {
 	String name
 
 	String toString(){
@@ -9,11 +8,11 @@ class Pledge {
 	}
 
     static constraints = {
-	 	name(nullable:false,unique:true,blank:false)
+	 	name(unique:true,blank:false)
     }
 
 	 def beforeValidate(){
-	 	name = name?.trim()?.capitalize()
+	 	name = name?.trim()?.toUpperCase()
 	}
 
 }

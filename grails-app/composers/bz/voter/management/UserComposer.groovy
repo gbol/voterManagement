@@ -68,8 +68,8 @@ class UserComposer extends GrailsComposer {
 
 			userInstance = (userIdLabel.getValue()) ? (SecUser.get(userIdLabel.getValue())) : (new SecUser())
 
-			userInstance.username = usernameTextbox.getValue()
-			userInstance.password = passwordTextbox.getValue()
+			userInstance.username = usernameTextbox.getValue()?.trim()
+			userInstance.password = passwordTextbox.getValue()?.trim()
 			userInstance.enabled = enabledCheckbox.isChecked()
 			userInstance.accountExpired = false
 			userInstance.accountLocked = false
