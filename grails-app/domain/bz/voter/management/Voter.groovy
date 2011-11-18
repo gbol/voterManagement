@@ -13,6 +13,7 @@ class Voter implements Serializable{
     static constraints = {
 	 	registrationNumber(blank:false)
 		affiliation(nullable: true)
+		pledge(nullable: true)
     }
 
 	 def beforeValidate(){

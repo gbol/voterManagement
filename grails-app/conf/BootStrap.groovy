@@ -28,6 +28,7 @@ class BootStrap {
 
 		new Affiliation(name:'PUP').save()
 		new Affiliation(name:'UDP').save()
+		new Affiliation(name:'Unknown').save()
 
 		new IdentificationType(name:'Passport').save()
 		new IdentificationType(name:'Social Security Card').save()
