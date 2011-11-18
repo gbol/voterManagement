@@ -9,7 +9,7 @@ class Division {
 	}
 
     static constraints = {
-	 	name(nullable:false, unique:true)
+	 	name(blank:false, unique:true)
     }
 
 	 def beforeValidate(){

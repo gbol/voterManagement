@@ -110,10 +110,16 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 					button(label: 'Edit', onClick:{
 						showElectionFormGrid(electionInstance)
 					})
-					button(label: 'Manage', onClick:{
-						center.getChildren().clear()
-						Executions.createComponents("voterElection.zul", center, 
-							[id: electionInstance.id])
+					button(label: 'Poll Station', onClick:{
+						if(SpringSecurityUtils.ifAnyGranted("ROLE_ADMIN, ROLE_POLL_STATION")){
+							center.getChildren().clear()
+							Executions.createComponents("voterElection.zul", center, 
+								[id: electionInstance.id])
+						}else{
+							ComposerHelper.permissionDeniedBox()
+						}
+					})
+					button(label: 'Office Management', onClick:{
 					})
 				}
 			}

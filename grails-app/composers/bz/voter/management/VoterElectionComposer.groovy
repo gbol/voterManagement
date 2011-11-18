@@ -2,6 +2,11 @@ package bz.voter.management
 
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
+import org.zkoss.zul.*
+
+import bz.voter.management.zk.ComposerHelper
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 class VoterElectionComposer extends GrailsComposer {
 
@@ -41,7 +46,13 @@ class VoterElectionComposer extends GrailsComposer {
 						}
 					})
 					button(label: 'Save', onClick:{
+						if(SpringSecurityUtils.ifAllGranted('ROLE_POLL_STATION')){
 							voterElectionInstance.save(flush:true)
+							Messagebox.show("Saved Successfuly!", "Voter", 
+								Messagebox.OK, Messagebox.INFORMATION)
+						}else{
+							ComposerHelper.permissionDeniedBox()
+						}
 
 					})
 					button(label: 'Details', onClick:{

@@ -2,7 +2,7 @@ package bz.voter.management
 
 import java.util.Calendar
 
-class Person {
+class Person implements Serializable{
 
 	String firstName
 	String middleName

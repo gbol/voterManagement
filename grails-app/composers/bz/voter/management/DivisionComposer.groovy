@@ -73,9 +73,9 @@ class DivisionComposer extends GrailsComposer {
 			}
 		}else{
 			divisionInstance.save(flush:true)
+			hideDivisionForm()
 			Messagebox.show("Division Saved!", "Division Message", Messagebox.OK,
 				Messagebox.INFORMATION)
-			hideDivisionForm()
 			showDivisionsList()
 		}
 

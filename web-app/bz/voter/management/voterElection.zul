@@ -11,6 +11,14 @@
 	 	style="margin:2px;font-size: 0.625em;">
 				<panel title="Voters List" style="padding:4px;" border="normal">
 					<panelchildren style="padding:5px;">
+					<toolbar>
+						<textbox id="searchTextbox" />
+						<button id="searchVoterButton" label="Search" />
+						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
+							style="cursor:help" />
+						<label value="Tips" tooltip="searchHelp" />
+
+					</toolbar>
 					<grid mold="paging" pageSize="20" >
 						<columns menupopup="auto" width="100%">
 							<column label="First Name" align="left" sort="auto" />
@@ -30,6 +38,16 @@
 					</grid>
 					</panelchildren>
 				</panel>
+
+
+				<vbox>
+					<popup id="searchHelp" width="300px">
+							To search enter First Name and Last Name separated by a comma. 
+							For example, to search for Mr. John Doe, use the 
+							following search pattern:
+								John,Doe
+					</popup>
+				</vbox>
 
     </div>
 
