@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Voter {
+class Voter implements Serializable{
 	
 	Person person
 	Date registrationDate

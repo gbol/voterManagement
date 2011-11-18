@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Address {
+class Address implements Serializable{
 
 	String houseNumber
 	String street
