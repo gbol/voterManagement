@@ -2,6 +2,7 @@ package bz.voter.management
 
 import org.zkoss.zkgrails.*
 import org.zkoss.zul.*
+import org.zkoss.zk.ui.*
 
 import bz.voter.management.zk.ComposerHelper
 
@@ -29,7 +30,10 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 	def election
 
+	def center
+
 	def springSecurityService
+	def voterElectionService
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
@@ -78,6 +82,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 			}
 		}else{
 			electionInstance.save(flush:true)
+			voterElectionService.addAllVoters(electionInstance)
 			Messagebox.show("Election Saved!", "Election Message", Messagebox.OK, Messagebox.INFORMATION)
 			hideElectionFormGrid()
 			showElectionsList()
@@ -92,7 +97,6 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 	 def showElectionsList(){
 		electionsListRows.getChildren().clear()
-		//hideElectionFormGrid()
 		if(!addElectionButton.isVisible()){
 			addElectionButton.setVisible(true)
 		}
@@ -106,7 +110,11 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 					button(label: 'Edit', onClick:{
 						showElectionFormGrid(electionInstance)
 					})
-					button(label: 'Manage')
+					button(label: 'Manage', onClick:{
+						center.getChildren().clear()
+						Executions.createComponents("voterElection.zul", center, 
+							[id: electionInstance.id])
+					})
 				}
 			}
 		}

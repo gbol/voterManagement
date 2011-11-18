@@ -7,17 +7,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-
-    <div apply="bz.voter.management.VoterComposer" 
-	 	style="margin:2px;font-size: small;">
+    <div apply="bz.voter.management.VoterElectionComposer" 
+	 	style="margin:2px;font-size: 0.625em;">
 				<panel title="Voters List" style="padding:4px;" border="normal">
 					<panelchildren style="padding:5px;">
-					<toolbar>
-						<button id="addVoterButton" label="New Voter" />
-					</toolbar>
-					<grid mold="paging" pageSize="20" style="font-size: 0.025em;">
-						<columns menupopup="auto" width="100%" 
-							style="font-size: small;">
+					<grid mold="paging" pageSize="20" >
+						<columns menupopup="auto" width="100%">
 							<column label="First Name" align="left" sort="auto" />
 							<column label="Last Name" align="left" sort="auto" />
 							<column label="Age" align="left" sort="auto" />
@@ -26,6 +21,9 @@
 							<column label="Home #" align="left" sort="auto" />
 							<column label="Cell #" align="left" sort="auto" />
 							<column label="Pledge" align="left" sort="auto" />
+							<column label="Affiliation" align="left" sort="auto" />
+							<column label="Voted" align="left" sort="auto" />
+							<column label="Pickup Time" align="left" sort="auto" />
 							<column />
 							<column />
 						</columns>

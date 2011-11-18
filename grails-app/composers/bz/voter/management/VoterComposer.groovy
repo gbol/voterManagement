@@ -10,8 +10,14 @@ class VoterComposer extends GrailsComposer {
 	
 	def votersListRows
 
+	def springSecurityService
+
     def afterCompose = { window ->
-	 	showVoters()
+	 	if(springSecurityService.isLoggedIn()){
+	 		showVoters()
+		}else{
+			execution.sendRedirect('/login')
+		}
     }
 
 
