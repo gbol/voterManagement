@@ -15,14 +15,14 @@
 						<columns menupopup="auto" width="100%">
 							<column label="First Name" align="left" sort="auto" />
 							<column label="Last Name" align="left" sort="auto" />
-							<column label="Age" align="left" sort="auto" />
+							<column label="Age" align="left" width="3%" sort="auto" />
 							<column label="Reg #" align="left" sort="auto" />
-							<column label="Sex" align="left" sort="auto" />
+							<column label="Sex" align="left" width="5%" sort="auto" />
 							<column label="Home #" align="left" sort="auto" />
 							<column label="Cell #" align="left" sort="auto" />
-							<column label="Pledge" align="left" sort="auto" />
+							<column label="Pledge" align="left" width="5%" sort="auto" />
 							<column label="Affiliation" align="left" sort="auto" />
-							<column label="Voted" align="left" sort="auto" />
+							<column label="Voted" align="left" width="5%" sort="auto" />
 							<column label="Pickup Time" align="left" sort="auto" />
 							<column />
 							<column />

@@ -20,7 +20,7 @@
 							style="font-size: small;">
 							<column label="First Name" align="left" sort="auto" />
 							<column label="Last Name" align="left" sort="auto" />
-							<column label="Age" align="left" sort="auto" />
+							<column label="Age" align="left" width="10%" sort="auto" />
 							<column label="Reg #" align="left" sort="auto" />
 							<column label="Sex" align="left" sort="auto" />
 							<column label="Home #" align="left" sort="auto" />
@@ -29,7 +29,7 @@
 							<column />
 							<column />
 						</columns>
-						<rows id="votersListRows">
+						<rows id="votersListRows" style="font-size: 0.625em;">
 						</rows>
 					</grid>
 					</panelchildren>

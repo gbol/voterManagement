@@ -35,7 +35,14 @@ class VoterElectionComposer extends GrailsComposer {
 					label(value: _voterElection.voter.person.cellPhone)
 					label(value: _voterElection.voter.pledge)
 					label(value: _voterElection.voter.affiliation)
-					checkbox(checked: voted)
+					checkbox(checked: voted, onCheck: {event->
+						if(voterElectionInstance.voted){
+							voterElectionInstance.voted = false
+						}else{
+							voterElectionInstance.voted = true
+						}
+							voterElectionInstance.save(flush:true)
+					})
 					label(value: _voterElection.pickupTime)
 					button(label: 'Activities', onClick:{
 					})
