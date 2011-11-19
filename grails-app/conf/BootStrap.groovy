@@ -30,6 +30,11 @@ class BootStrap {
 		new Affiliation(name:'UDP').save()
 		new Affiliation(name:'Unknown').save()
 
+		new Ethnicity(name:'Creole').save()
+		new Ethnicity(name:'Indian').save()
+		new Ethnicity(name:'Garifuna').save()
+		new Ethnicity(name:'Chinese').save()
+
 		new IdentificationType(name:'Passport').save()
 		new IdentificationType(name:'Social Security Card').save()
 		new IdentificationType(name:'Voter Id').save()

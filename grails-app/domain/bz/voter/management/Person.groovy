@@ -14,6 +14,7 @@ class Person implements Serializable{
 	String comments
 	Sex sex
 	Address address
+	Ethnicity ethnicity
 
 	static transients = ['age','numberOfYearsRegistered']
 
@@ -25,6 +26,7 @@ class Person implements Serializable{
 		cellPhone(nullable:true)
 		workPhone(nullable:true)
 		comments(nullable:true)
+		ethnicity(nullable:true)
     }
 
 
