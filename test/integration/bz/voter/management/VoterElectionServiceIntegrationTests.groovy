@@ -27,6 +27,14 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		  person.address = address
 		  person.save()
 
+		  def person1 = new Person()
+		  person1.firstName = 'Joseph'
+		  person1.lastName = 'User'
+		  person1.birthDate = new Date().parse('dd-MM-yyyy','15-04-1980')
+		  person1.sex = Sex.findByCode('M')
+		  person1.address = address
+		  person1.save()
+
 		  def voter = new Voter()
 		  voter.person = person
 		  voter.registrationDate = new Date()
@@ -37,7 +45,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		  voter.save()
 
 		  def voter2 = new Voter()
-		  voter2.person = person
+		  voter2.person = person1
 		  voter2.registrationDate = new Date()
 		  voter2.registrationNumber = "21"
 		  voter2.identificationType = IdentificationType.findByName('Passport')
@@ -52,7 +60,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
         super.tearDown()
     }
 
-    void testSomething() {
+    void test_Add_All_Voters_When_Election_Is_Created() {
 
 		def election = new Election()
 		election.year = 2008
@@ -63,4 +71,45 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		assertEquals 2, VoterElection.findAllByElection(election).size()
 
     }
+
+
+	 void test_Search_For_Voters_In_An_Election(){
+
+	 	def election = new Election()
+		election.year = 2008
+		election.electionType = ElectionType.findByName('General')
+		election.save()
+		voterElectionService.addAllVoters(election)
+
+		def results = voterElectionService.search('JO',election)
+
+		assertEquals 2, results.size()
+	 }
+
+
+	 void test_Search_For_Voters_In_An_Election_Using_Both_Names(){
+	 	def election = new Election()
+		election.year = 2008
+		election.electionType = ElectionType.findByName('General')
+		election.save()
+		voterElectionService.addAllVoters(election)
+
+		def results = voterElectionService.search('JO, do ',election)
+
+		assertEquals 1, results.size()
+	 }
+
+
+	 void test_Search_For_Voters_With_Empty_String_Should_Return_All_Voters(){
+	 	def election = new Election()
+		election.year = 2008
+		election.electionType = ElectionType.findByName('General')
+		election.save()
+		voterElectionService.addAllVoters(election)
+
+		def results = voterElectionService.search('  ',election)
+
+		assertEquals VoterElection.findAllByElection(election).size(), results.size()
+	 	
+	 }
 }

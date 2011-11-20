@@ -11,22 +11,47 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 class VoterElectionComposer extends GrailsComposer {
 
 	def springSecurityService
+	def voterElectionService
+
+	def electionIdLabel
+
+	def searchTextbox
 
 	def votersListRows
 
+	def election 
+
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
-			def election = Election.get(Executions.getCurrent().getArg().id)
-			showVoters(election)
+			election = Election.get(Executions.getCurrent().getArg().id)
+			def voterElectionList = VoterElection.findAllByElection(election)
+			showVoters(election,voterElectionList)
 		}else{
 			execution.sendRedirect('/login')
 		}
     }
 
 
-	 def showVoters(Election election){
+	def onChange_searchTextbox(){
+		def searchText = searchTextbox.getValue()?.trim()
+		def votersList = voterElectionService.search(searchText, election)
+		def results
+
+		if(!searchText.isAllWhitespace()){
+			results = votersList.collect{
+				it[0]
+			}
+		}else{
+			results = VoterElection.findAllByElection(election)
+		}
+		showVoters(election, results)
+	}
+
+
+	 def showVoters(Election election, def voterList){
 	 	votersListRows.getChildren().clear()
-		for(_voterElection in VoterElection.findAllByElection(election)){
+
+		for(_voterElection in voterList){
 			def voterElectionInstance = _voterElection
 			def voted = _voterElection.voted ? true : false
 			votersListRows.append{
