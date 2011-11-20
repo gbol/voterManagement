@@ -12,7 +12,7 @@ class Ethnicity {
 	 	name = name?.trim()?.capitalize()
 	 }
 
-	 def toString(){
+	 String toString(){
 	 	name
 	 }
 

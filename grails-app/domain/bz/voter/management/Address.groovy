@@ -6,6 +6,10 @@ class Address implements Serializable{
 	String street
 	Municipality municipality
 
+	String toString(){
+		"${houseNumber} ${street} , ${municipality.name}"
+	}
+
     static constraints = {
     }
 

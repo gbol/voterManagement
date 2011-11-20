@@ -9,6 +9,9 @@
 
     <div apply="bz.voter.management.VoterElectionComposer" 
 	 	style="margin:2px;font-size: 0.625em;">
+
+			<vlayout>
+
 				<panel title="Voters List" style="padding:4px;" border="normal">
 					<panelchildren style="padding:5px;">
 					<toolbar>
@@ -24,10 +27,10 @@
 							<column label="First Name" align="left" sort="auto" />
 							<column label="Last Name" align="left" sort="auto" />
 							<column label="Age" align="left" width="4%" sort="auto" />
-							<column label="Reg #" align="left" width="10%" sort="auto" />
+							<column label="Reg #" align="left" width="8%" sort="auto" />
 							<column label="Sex" align="left" width="5%" sort="auto" />
 							<column label="Pledge" align="left" width="10%" sort="auto" />
-							<column label="Affiliation" align="left" width="6%" 
+							<column label="Affiliation" align="left" width="8%" 
 								sort="auto" />
 							<column label="Voted" align="left" width="5%" sort="auto" />
 							<column width="12%"/>
@@ -48,6 +51,9 @@
 								John,Doe
 					</popup>
 				</vbox>
+
+			</vlayout>
+
 
     </div>
 

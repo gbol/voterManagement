@@ -9,6 +9,7 @@
 
     <div apply="bz.voter.management.PollingStationComposer">
 
+
 		<vlayout>
 			<separator spacing="1px" />
 				<vbox id="errorMessages">
@@ -63,6 +64,7 @@
 
 
 		</vlayout>
+
     </div>
 
 </zk>

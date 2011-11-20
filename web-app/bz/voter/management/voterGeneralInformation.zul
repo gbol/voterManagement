@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" 
+	arg0="./wndVoterInfo"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+
+    <window id="wndVoterInfo" title="Voter Information" closable="true" 
+	 	width="50%"  border="normal" action="show: slideDown; hide: slideUp"
+	 	apply="bz.voter.management.VoterGeneralInformationComposer">
+	 	
+		<grid oddRowSclass="none" width="70%">
+			<rows>
+				<row>
+					<label value="First Name" class="varLabel" width="20%"/>
+					<label value="@{wndVoterInfo$composer.voter.person.firstName}" class="varValue"/>
+				</row>
+				<row>
+					<label value="Middle Name" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.voter.person.middleName}" class="varValue" />
+				</row>
+				<row>
+					<label value="Last Name" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.voter.person.lastName}" class="varValue" />
+				</row>
+				<row>
+					<label value="Birth Date" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.birthDate}" class="varValue" />
+				</row>
+				<row>
+					<label value="Age" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.voter.person.age}" class="varValue" />
+				</row>
+				<row>
+					<label value="Sex" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.voter.person.sex.name}" class="varValue" />
+				</row>
+				<row>
+					<label value="Address" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.voter.person.address}"
+						class="varValue" />
+				</row>
+				<row>
+					<label value="Poll Station" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.voter.pollStation}" 
+							class="varValue" />
+				</row>
+				<row>
+					<label value="Affiliation" class="varLabel" width="40%" />
+					<label value="@{wndVoterInfo$composer.voter.affiliation}" 
+						class="varValue" />
+				</row>
+				<row>
+					<label value="Pledge" class="varLabel" width="40%" />
+					<label value="@{wndVoterInfo$composer.voter.pledge}" 
+						class="varValue" />
+				</row>
+				<row>
+					<label value="Registration Date" class="varLabel" width="40%" />
+					<label value="@{wndVoterInfo$composer.registrationDate}" 
+						class="varValue" />
+				</row>
+				<row>
+					<label value="Registration Number" class="varLabel" width="40%" />
+					<label value="@{wndVoterInfo$composer.voter.registrationNumber}" 
+						class="varValue" />
+				</row>
+			</rows>
+		</grid>
+
+    </window>
+
+</zk>

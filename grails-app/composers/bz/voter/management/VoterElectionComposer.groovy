@@ -30,7 +30,8 @@ class VoterElectionComposer extends GrailsComposer {
 			def voterElectionInstance = _voterElection
 			def voted = _voterElection.voted ? true : false
 			votersListRows.append{
-				row{
+				def backgroundColor = voted ? "red" : "white"
+				row(style: "background-color: ${backgroundColor}"){
 					label(value: _voterElection.voter.person.firstName)
 					label(value: _voterElection.voter.person.lastName)
 					label(value: _voterElection.voter.person.age)
@@ -45,8 +46,8 @@ class VoterElectionComposer extends GrailsComposer {
 							voterElectionInstance.voted = true
 						}
 					})
-					button(label: 'Save', onClick:{
-						if(SpringSecurityUtils.ifAllGranted('ROLE_POLL_STATION')){
+					button(label: 'Save', onClick:{evt->
+						if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_POLL_STATION')){
 							voterElectionInstance.save(flush:true)
 							Messagebox.show("Saved Successfuly!", "Voter", 
 								Messagebox.OK, Messagebox.INFORMATION)
@@ -56,7 +57,14 @@ class VoterElectionComposer extends GrailsComposer {
 
 					})
 					button(label: 'Details', onClick:{
+						final Window win = (Window) Executions.createComponents("voterGeneralInformation.zul", 
+							null, [id:voterElectionInstance.voter.id])
+						win.doModal()
+						win.setPosition("top,center")
 					})
+
+					style(content: "background-color: red;")
+					
 				}
 			}
 		}

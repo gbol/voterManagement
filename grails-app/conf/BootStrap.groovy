@@ -1,5 +1,7 @@
 import bz.voter.management.*
 
+import grails.util.Environment
+
 class BootStrap {
 
 	def springSecurityService
@@ -53,7 +55,7 @@ class BootStrap {
 
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
       def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
-      def pollStation = SecRole.findByAuthority('ROLE_POLL_STATION') ?: new SecRole(authority: 'ROLE_POLL_STATION').save(failOnError: true)
+      def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION') ?: new SecRole(authority: 'ROLE_POLL_STATION').save(failOnError: true)
 		def adminUser = SecUser.findByUsername('admin') ?: new SecUser(
                 username: 'admin',
                 password: 'p4ssw0rd',
@@ -64,6 +66,37 @@ class BootStrap {
         }
 
 
+		sessionFactory.currentSession.flush()
+
+
+		Environment.executeForCurrentEnvironment{
+			development{
+				def division = new Division(name:'Albert').save()
+				def pollStation = new PollStation(pollNumber:23, division: division).save()
+
+				def address = new Address(houseNumber: '45', street: 'Street Name', municipality: Municipality.findByName('Belmopan')).save()
+				def person = new Person()
+				person.firstName = 'John'
+				person.lastName = 'Doe'
+				person.birthDate = new Date().parse('dd/MM/yyyy','28/10/1984')
+				person.sex = Sex.findByCode('M')
+				person.ethnicity = Ethnicity.findByName('Creole')
+				person.address = address
+				person.cellPhone = '634-0921'
+				person.save()
+
+				def voter = new Voter()
+				voter.person = person
+				voter.registrationDate = new Date().parse('dd/MM/yyyy','12/11/2010')
+				voter.registrationNumber = '42323'
+				voter.pollStation = pollStation
+				voter.identificationType = IdentificationType.findByName('Passport')
+				voter.affiliation = Affiliation.findByName('UNKNOWN')
+				voter.save()
+
+
+			}
+		}
 		sessionFactory.currentSession.flush()
 
     }
