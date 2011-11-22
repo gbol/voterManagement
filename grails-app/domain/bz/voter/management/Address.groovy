@@ -11,6 +11,7 @@ class Address implements Serializable{
 	}
 
     static constraints = {
+	 	street(blank: false)
     }
 
 

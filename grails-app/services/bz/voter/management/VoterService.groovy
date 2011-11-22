@@ -6,6 +6,8 @@ class VoterService {
 
 	 def messageSource
 
+	 def personService
+
 	/*
 	Save a new instance of voters.
 	@param params : a map containing the fields for adding a new voter:
@@ -131,6 +133,9 @@ class VoterService {
 
     }
 
+
+	def save(def params){
+	}
 
 	/**
 	Searches for voters that match a certain name. 
