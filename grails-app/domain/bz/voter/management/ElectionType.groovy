@@ -10,8 +10,8 @@ class ElectionType {
 	}
 
     static constraints = {
-	 	name(nullable:false,unique:true)
-	 	code(nullable:false,unique:true)
+	 	name(blank:false,unique:true)
+	 	code(blank:false,unique:true)
     }
 
 	 def beforeValidate(){

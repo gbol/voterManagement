@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Pledge {
+class Pledge implements Serializable{
 
 	String name
 

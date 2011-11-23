@@ -121,8 +121,13 @@ class VoterNewFormComposer extends GrailsComposer {
 		personInstance = (voterIdLabel.getValue()) ? voterInstance.person : (new Person())
 		addressInstance = (voterIdLabel.getValue()) ? personInstance.address : (new Address())
 
+		def addressParams = [
+			houseNumber : houseNumberTextbox.getValue()?.trim(),
+			street : streetTextbox.getValue()?.trim(),
+			municipality: municipalityListbox.getSelectedItem()?.getValue()
+		]
+
 		def params = [
-			id : voterIdLabel.getValue(),
 			firstName : firstNameTextbox.getValue()?.trim()?.capitalize(),
 			middleName : middleNameTextbox.getValue()?.trim()?.capitalize(),
 			lastName : lastNameTextbox.getValue()?.trim()?.capitalize(),
@@ -138,13 +143,15 @@ class VoterNewFormComposer extends GrailsComposer {
 			pollStation : pollStationListbox.getSelectedItem()?.getValue(),
 			pledge : pledgeListbox.getSelectedItem()?.getValue(),
 			affiliation: affiliationListbox.getSelectedItem()?.getValue(),
-			houseNumber : houseNumberTextbox.getValue()?.trim(),
-			street : streetTextbox.getValue()?.trim(),
-			municipality: municipalityListbox.getSelectedItem()?.getValue()
-
+			address: addressParams
 		]
 
-		voterInstance = voterService.saveVoter(params)
+		if(voterInstance.id){
+			params.voter = voterInstance
+			voterInstance = voterService.save(params)
+		}else{
+			voterInstance = voterService.add(params)
+		}
 
 		if(voterInstance.retrieveErrors()){
 			errorMessages.append{
