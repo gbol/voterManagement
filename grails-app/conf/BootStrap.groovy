@@ -8,12 +8,17 @@ import bz.voter.management.importer.*
 
 import grails.util.Environment
 
+
 class BootStrap {
 
 	def springSecurityService
 	def sessionFactory
 	def grailsApplication
 	def messageSource
+	def voterService
+   //static String fileName = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/Sample.xls" PUT THE ONE FOR WINDOWS HERE AND COMMENT THE ONE UNDERNEATH THIS
+   static String fileName = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/Sample.xls"
+
 
     def init = { servletContext ->
 
@@ -57,7 +62,7 @@ class BootStrap {
 		new District(name:'Stann Creek',code:'SC').save()
 		new District(name:'Toledo',code:'TO').save(flush:true)
 
-		new Municipality(name:'Belmopan',district:District.findByCode('CY')).save()
+		new Municipality(name:'Belmopan',district:District.findByCode('CY')).save(flush:true)
 
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
       def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
@@ -72,16 +77,14 @@ class BootStrap {
             SecUserSecRole.create adminUser, adminRole
         }
 
-
-		sessionFactory.currentSession.flush()
-
+		//sessionFactory.currentSession.flush()
 
 		Environment.executeForCurrentEnvironment{
 			development{
 				def division = new Division(name:'Albert').save()
-				def pollStation = new PollStation(pollNumber:23, division: division).save()
+				def pollStation = new PollStation(pollNumber:23, division: division).save(failOnError: true)
 
-				def address = new Address(houseNumber: '45', street: 'Street Name', municipality: Municipality.findByName('Belmopan')).save()
+				def address = new Address(houseNumber: '45', street: 'Street Name', municipality: Municipality.findByName('Belmopan')).save(failOnError:true, flush:true)
 				def person = new Person()
 				person.firstName = 'John'
 				person.lastName = 'Doe'
@@ -90,7 +93,7 @@ class BootStrap {
 				person.ethnicity = Ethnicity.findByName('Creole')
 				person.address = address
 				person.cellPhone = '634-0921'
-				person.save()
+				person.save(failOnError: true)
 
 				def voter = new Voter()
 				voter.person = person
@@ -101,65 +104,41 @@ class BootStrap {
 				voter.affiliation = Affiliation.findByName('UNKNOWN')
 				voter.save()
 
-
-			}
-		}
-
-		/*
-
-   String fileName = "C:\\development\\Spring\\voterManagement\\sample.xls"
         
-        AddressExcelImporter importer = new AddressExcelImporter(fileName);
-       
-        def addressesMapList = importer.getAddresses();
-	 println addressesMapList
-       
-        
-        addressesMapList.each { Map addressParams ->
-            def newAddress = new Address(addressParams)
-            //println newBook
-            if (!newAddress.save()) {
-            println "Address not saved, errors = ${newAddress.errors}"
-           } 
-    }
-        
-        
-        
-        String fileName2 = "C:\\development\\Spring\\voterManagement\\sample.xls"
-        
-        PersonExcelImporter importer2 = new PersonExcelImporter(fileName2);
-       
-        def personsMapList = importer2.getPersons();
-	 println personsMapList
-       
-        
-        personsMapList.each { Map personParams ->
-            def newPerson = new Person(personParams)
-            //println newBook
-            if (!newPerson.save()) {
-            println "Person not saved, errors = ${newPerson.errors}"
-           } 
-    }
-    /////////////////////////////////////////////////////////////////////////////
-        
-       String fileName3 = "C:\\development\\Spring\\voterManagement\\Sample.xls"
-                
-        VoterExcelImporter importer3 = new VoterExcelImporter(fileName3);
+        VoterExcelImporter importer3 = new VoterExcelImporter(fileName);
        
         def votersMapList = importer3.getVoters();
-	 println votersMapList
+	 	  println votersMapList
        
         
         votersMapList.each { Map voterParams ->
-            def newVoter = new Voter(voterParams)
-            if (!newVoter.save()) {
-            println "Voter not saved, errors = ${newVoter.errors}"
-       } 
-   } 
-	*/
-		sessionFactory.currentSession.flush()
+		  		def municipality = Municipality.findByName(voterParams.municipality) ?: new Municipality(name:'Unknown', district: District.findByCode('BZ')).save()
+		  		def addressParams = [
+					houseNumber: voterParams.houseNumber,
+					street: voterParams.street,
+					municipality:  municipality
+				]
 
-    }
+				voterParams.sex = Sex.findByCode(voterParams.sex)
+				voterParams.identificationType = IdentificationType.findByName(voterParams.identificationType)
+				voterParams.affiliation = Affiliation.findByName(voterParams.affiliation) ?: Affiliation.findByName('Unknown')
+				voterParams.pollStation = PollStation.findByPollNumber(voterParams.pollStation) ?: new PollStation(pollNumber: voterParams.pollStation, division: division).save()
+
+				voterParams.address = addressParams
+				def newVoter = voterService.add(voterParams)
+				if(newVoter.hasErrors()){
+					println "\nVoter not saved: ${newVoter.errors}"
+				}else{
+					println "\nVoter Saved: ${newVoter.id}\n"
+				}
+       } 
+
+
+			}//End of development
+		}
+
+		sessionFactory.currentSession.flush()
+   } 
 
     def destroy = {
 

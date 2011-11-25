@@ -21,15 +21,15 @@ class AddressExcelImporter extends AbstractExcelImporter {
               columnMap: [
                 'G':'houseNumber',
                 'H':'street',
-                'Y':'Municipality.id'
+                'Y':'municipality'
               ]
                         
     ]
     
     static Map propertyConfigurationMap = [
-       houseNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null] ),
+        houseNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null] ),
         street: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
-        municipality: ([expectedType: ExpectedPropertyType.IntType, defaultValue:null])
+        municipality: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown'])
     ]
     
     //List bookParamsList = ExcelImportUtils.columns(workbook, CONFIG_BOOK_COLUMN_MAP)

@@ -25,7 +25,7 @@ class PersonExcelImporter extends AbstractExcelImporter {
                 'K':'birthDate',
                 'R':'homePhone',
                 'S':'comments',
-                'F':'Sex.id',
+                'F':'Sex',
                 'Z':'Address.id'
               ]
                         

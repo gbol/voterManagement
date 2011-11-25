@@ -19,21 +19,38 @@ class VoterExcelImporter extends AbstractExcelImporter {
         sheet: 'Sheet1',
                         startRow: 1,
               columnMap: [
-                'X':'Person.id',
-                'B':'registrationDate',
                 'A':'registrationNumber',
-                'T':'Affiliation.id',
-                'Q':'IdentificationType.id'
+                'B':'registrationDate',
+                'D':'lastName',
+                'E':'firstName',
+                'K':'birthDate',
+                'R':'homePhone',
+                'S':'comments',
+                'F':'sex',
+					 'I': 'pollStation',
+                'T':'affiliation',
+                'Q':'identificationType',
+                'G':'houseNumber',
+                'H':'street',
+                'Y':'municipality'
                  ]
                         
     ]
     
     static Map propertyConfigurationMap = [
-         registrationDate: ([expectedType: ExpectedPropertyType.DateJavaType, defaultValue:null]),
-         registrationNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
-         person: ([expectedType: ExpectedPropertyType.IntType, defaultValue:null]),
-        identificationType: ([expectedType: ExpectedPropertyType.IntType, defaultValue:null]),
-         affiliation: ([expectedType: ExpectedPropertyType.IntType, defaultValue:null])
+         registrationDate: ([expectedType: ExpectedPropertyType.DateJavaType, defaultValue:'']),
+         registrationNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
+         identificationType: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
+         affiliation: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
+			firstName: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
+			lastName: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
+         homePhone: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
+         comments: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
+         sex: ([expectedType: ExpectedPropertyType.StringType, defaultValue: '']),
+         birthDate: ([expectedType: ExpectedPropertyType.DateJavaType, defaultValue:null]),
+         houseNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null] ),
+         street: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
+         municipality: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown'])
     ]
     
 
