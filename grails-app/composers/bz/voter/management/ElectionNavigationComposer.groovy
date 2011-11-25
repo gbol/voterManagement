@@ -19,7 +19,6 @@ class ElectionNavigationComposer extends GrailsComposer {
     def afterCompose = { window ->
     }
 
-
 	 def onClick_electionsListButton(){
 	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
 	 		electionCenter.getChildren().clear()

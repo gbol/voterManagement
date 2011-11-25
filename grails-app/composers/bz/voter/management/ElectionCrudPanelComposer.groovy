@@ -20,10 +20,11 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 	def yearTextbox
 
+	def electionDatebox
+
 	def electionTypeListbox
 
 	def electionsListRows
-
 
 	def errorMessages
 	def messageSource
@@ -70,6 +71,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 		}
 
 		electionInstance.year = yearTextbox.getValue()?.trim()?.toInteger()
+		electionInstance.electionDate = electionDatebox.getValue()
 		electionInstance.electionType = ElectionType.get(electionTypeListbox.getSelectedItem()?.getLastChild()?.getLabel()) ?: null
 		electionInstance.validate()
 
@@ -107,6 +109,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 				row{
 					label(value: _election.year)
 					label(value: _election.electionType)
+					label(value: _election.electionDate?.format('dd-MMM-yyyy'))
 					button(label: 'Edit', onClick:{
 						showElectionFormGrid(electionInstance)
 					})
@@ -120,6 +123,15 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 						}
 					})
 					button(label: 'Office Management', onClick:{
+						if(SpringSecurityUtils.ifAnyGranted("ROLE_ADMIN, ROLE_OFFICE_STATION")){
+
+							center.getChildren().clear()
+							Executions.createComponents("electionOfficeMain.zul",center,
+								[id: electionInstance.id])
+						}else{
+							ComposerHelper.permissionDeniedBox()
+						}
+
 					})
 				}
 			}
@@ -152,6 +164,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 		if(electionInstance){
 			electionFormPanel.setTitle("Edit Election")
+			electionDatebox.setValue(electionInstance?.electionDate)
 			yearTextbox.setValue("${electionInstance?.year}")
 			electionIdLabel.setValue("${electionInstance.id}")
 			for(item in electionTypeListbox.getItems()){

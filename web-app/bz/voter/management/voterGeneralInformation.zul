@@ -70,6 +70,11 @@
 					<label value="@{wndVoterInfo$composer.voter.registrationNumber}" 
 						class="varValue" />
 				</row>
+				<row>
+					<label value="Time Voted" class="varLabel"  width="40%" />
+					<label value="@{wndVoterInfo$composer.voteTime}"
+						class="varValue" />
+				</row>
 			</rows>
 		</grid>
 

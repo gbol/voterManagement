@@ -1,5 +1,7 @@
 package bz.voter.management
 
+import java.util.Calendar
+
 class VoterElectionService {
 
 	def sessionFactory
@@ -17,9 +19,11 @@ class VoterElectionService {
 					flush = true
 					cnt =  0
 				}
-				VoterElection.create(voter,election,flush)	
-				flush = false
-				cnt++
+				if(voter.registrationDate.toCalendar().get(Calendar.YEAR) <= election.year){
+					VoterElection.create(voter,election,flush)	
+					flush = false
+					cnt++
+				}
 			}
 		}
 
@@ -27,6 +31,12 @@ class VoterElectionService {
 
     }
 
+
+
+	List<VoterElection> findAllByElection(Election election){
+		println "\nSearching for voters in election: ${election?.year} | ${election?.electionType?.name}\n\n"
+		(List<VoterElection>) VoterElection.findAllByElection(election)
+	}
 
 	 /**
 	 Search for voters in an election by first name and/or last name.

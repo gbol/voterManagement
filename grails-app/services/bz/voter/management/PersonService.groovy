@@ -60,7 +60,7 @@ class PersonService {
 
 			personInstance.firstName = params.firstName ?: personInstance.firstName
 			personInstance.lastName = params.lastName ?: personInstance.lastName
-			personInstance.middleName = params.lastName ?: personInstance.middleName
+			personInstance.middleName = params.middleName ?: personInstance.middleName
 			personInstance.birthDate = params.birthDate ?: personInstance.birthDate
 			personInstance.sex = params.sex ?: personInstance.sex
 			personInstance.address = addressInstance?.errors ? addressInstance : personInstance.address

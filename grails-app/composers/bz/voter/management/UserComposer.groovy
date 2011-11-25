@@ -19,6 +19,8 @@ class UserComposer extends GrailsComposer {
 
 	def adminRoleCheckbox
 	def userRoleCheckbox
+	def officeStationRoleCheckbox
+	def pollStationRoleCheckbox
 	def enabledCheckbox
 
 	def userIdLabel
@@ -65,6 +67,8 @@ class UserComposer extends GrailsComposer {
 			def userInstance
 			def userRole = SecRole.findByAuthority('ROLE_USER')
 			def adminRole = SecRole.findByAuthority('ROLE_ADMIN')
+			def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION')
+			def officeStationRole = SecRole.findByAuthority('ROLE_OFFICE_STATION')
 
 			userInstance = (userIdLabel.getValue()) ? (SecUser.get(userIdLabel.getValue())) : (new SecUser())
 
@@ -99,6 +103,22 @@ class UserComposer extends GrailsComposer {
 				}else{
 					if(SecUserSecRole.get(userInstance.id,userRole.id)){
 						SecUserSecRole.remove(userInstance,userRole,true)
+					}
+				}
+
+				if(pollStationRoleCheckbox.isChecked()){
+					SecUserSecRole.create(userInstance,pollStationRole,true)
+				}else{
+					if(SecUserSecRole.get(userInstance.id,pollStationRole.id)){
+						SecUserSecRole.remove(userInstance,pollStationRole,true)
+					}
+				}
+
+				if(officeStationRoleCheckbox.isChecked()){
+					SecUserSecRole.create(userInstance,officeStationRole,true)
+				}else{
+					if(SecUserSecRole.get(userInstance.id,officeStationRole.id)){
+						SecUserSecRole.remove(userInstance,officeStationRole,true)
 					}
 				}
 
@@ -166,6 +186,12 @@ class UserComposer extends GrailsComposer {
 			}
 			if(SecUserSecRole.get(userInstance.id, SecRole.findByAuthority('ROLE_USER').id)){
 				userRoleCheckbox.setChecked(true)
+			}
+			if(SecUserSecRole.get(userInstance.id, SecRole.findByAuthority('ROLE_POLL_STATION').id)){
+				pollStationRoleCheckbox.setChecked(true)
+			}
+			if(SecUserSecRole.get(userInstance.id, SecRole.findByAuthority('ROLE_OFFICE_STATION').id)){
+				officeStationRoleCheckbox.setChecked(true)
 			}
 
 		}else{

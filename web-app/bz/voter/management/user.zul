@@ -41,6 +41,14 @@
 								<checkbox id="userRoleCheckbox" />
 							</row>
 							<row>
+								<label value="POLL_STATION_ROLE" />
+								<checkbox id="pollStationRoleCheckbox" />
+							</row>
+							<row>
+								<label value="OFFICE_STATION_ROLE" />
+								<checkbox id="officeStationRoleCheckbox" />
+							</row>
+							<row>
 								<cell colspan="2" style="text-align: left;">
 									<button id="userSaveButton" label="Save" />
 									<button id="userCancelButton" label="Cancel" />

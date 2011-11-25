@@ -67,8 +67,10 @@ class VoterElectionComposer extends GrailsComposer {
 					checkbox(checked: voted, onCheck: {event->
 						if(voterElectionInstance.voted){
 							voterElectionInstance.voted = false
+							voterElectionInstance.voteTime = new Date()
 						}else{
 							voterElectionInstance.voted = true
+							voterElectionInstance.voteTime = null
 						}
 					})
 					button(label: 'Save', onClick:{evt->
@@ -83,7 +85,7 @@ class VoterElectionComposer extends GrailsComposer {
 					})
 					button(label: 'Details', onClick:{
 						final Window win = (Window) Executions.createComponents("voterGeneralInformation.zul", 
-							null, [id:voterElectionInstance.voter.id])
+							null, [id: voterElectionInstance.voter.id, electionId: voterElectionInstance.election.id])
 						win.doModal()
 						win.setPosition("top,center")
 					})

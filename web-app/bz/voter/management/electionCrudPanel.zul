@@ -25,6 +25,10 @@
 								<textbox id="yearTextbox" constraint="no empty" width="90%"/>
 							</row>
 							<row>
+								<label value="Election Date" />
+								<datebox id="electionDatebox" format="dd-MM-yyyy"/>
+							</row>
+							<row>
 								<label value="Election Type" />
 								<listbox id="electionTypeListbox" mold="select" rows="1"/>
 							</row>
@@ -52,7 +56,9 @@
 					<grid mold="paging" pageSize="20" >
 						<columns menupopup="auto" width="100%">
 							<column label="Year" align="left" sort="auto" />
+							<column label="Date" align="left" sort="auto" />
 							<column label="Type" align="left" sort="auto" />
+							<column />
 							<column />
 							<column />
 						</columns>

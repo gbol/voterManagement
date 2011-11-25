@@ -20,7 +20,7 @@ class VoterNewFormComposer extends GrailsComposer {
 	def sexListbox
 	def pollStationListbox
 	def identificationTypeListbox
-	def districtListbox
+	def districtListboxhttp://java.dzone.com/
 	def municipalityListbox
 	def pledgeListbox
 	def affiliationListbox

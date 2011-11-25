@@ -8,10 +8,12 @@ class VoterElection implements Serializable{
 	Election election
 	boolean voted
 	Date pickupTime
+	Date voteTime
 
 
     static constraints = {
 	 	pickupTime(nullable:true)
+		voteTime(nullable: true)
     }
 
 
@@ -28,7 +30,9 @@ class VoterElection implements Serializable{
 	 int hashCode(){
 	 	def builder = new HashCodeBuilder()
 		if (voter) builder.append(voter.id)
-		if(election) election.append(election.id)
+		if(election) builder.append(election.id)
+		if(pickupTime) builder.append(pickupTime)
+		if(voteTime) builder.append(voteTime)
 		builder.toHashCode()
 	 }
 
@@ -44,11 +48,13 @@ class VoterElection implements Serializable{
 	 }
 
 
-	 static VoterElection update(Voter voter, Election election, boolean voted, Date pickupTime, flush=false){
+	 static VoterElection update(Voter voter, Election election, boolean voted, 
+	 	Date pickupTime,Date voteTime, flush=false){
 	 	def instance = VoterElection.get(voter.id,election.id)
 		if(instance){
 			instance.voted = voted
 			instance.pickupTime = pickupTime
+			instance.pickupTime = voteTime
 			instance.save(flush:flush)
 		}
 

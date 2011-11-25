@@ -1,4 +1,10 @@
+import org.grails.plugins.excelimport.*
+import grails.util.Environment
+
+import java.util.*
+
 import bz.voter.management.*
+import bz.voter.management.importer.*
 
 import grails.util.Environment
 
@@ -56,6 +62,7 @@ class BootStrap {
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
       def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
       def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION') ?: new SecRole(authority: 'ROLE_POLL_STATION').save(failOnError: true)
+      def officeStationRole = SecRole.findByAuthority('ROLE_OFFICE_STATION') ?: new SecRole(authority: 'ROLE_OFFICE_STATION').save(failOnError: true)
 		def adminUser = SecUser.findByUsername('admin') ?: new SecUser(
                 username: 'admin',
                 password: 'p4ssw0rd',
@@ -97,6 +104,59 @@ class BootStrap {
 
 			}
 		}
+
+		/*
+
+   String fileName = "C:\\development\\Spring\\voterManagement\\sample.xls"
+        
+        AddressExcelImporter importer = new AddressExcelImporter(fileName);
+       
+        def addressesMapList = importer.getAddresses();
+	 println addressesMapList
+       
+        
+        addressesMapList.each { Map addressParams ->
+            def newAddress = new Address(addressParams)
+            //println newBook
+            if (!newAddress.save()) {
+            println "Address not saved, errors = ${newAddress.errors}"
+           } 
+    }
+        
+        
+        
+        String fileName2 = "C:\\development\\Spring\\voterManagement\\sample.xls"
+        
+        PersonExcelImporter importer2 = new PersonExcelImporter(fileName2);
+       
+        def personsMapList = importer2.getPersons();
+	 println personsMapList
+       
+        
+        personsMapList.each { Map personParams ->
+            def newPerson = new Person(personParams)
+            //println newBook
+            if (!newPerson.save()) {
+            println "Person not saved, errors = ${newPerson.errors}"
+           } 
+    }
+    /////////////////////////////////////////////////////////////////////////////
+        
+       String fileName3 = "C:\\development\\Spring\\voterManagement\\Sample.xls"
+                
+        VoterExcelImporter importer3 = new VoterExcelImporter(fileName3);
+       
+        def votersMapList = importer3.getVoters();
+	 println votersMapList
+       
+        
+        votersMapList.each { Map voterParams ->
+            def newVoter = new Voter(voterParams)
+            if (!newVoter.save()) {
+            println "Voter not saved, errors = ${newVoter.errors}"
+       } 
+   } 
+	*/
 		sessionFactory.currentSession.flush()
 
     }

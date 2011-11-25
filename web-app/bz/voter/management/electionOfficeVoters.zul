@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <div apply="bz.voter.management.ElectionOfficeVotersComposer">
+
+	 	<vlayout>
+
+			<panel title="Voters List" style="padding: 4px" border="normal">
+				<panelchildren style="padding:5px">
+					<toolbar>
+						<textbox id="searchTextbox" />
+						<button id="searchVoterButton" label="Search" />
+						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
+							style="cursor:help" />
+						<label value="Tips" tooltip="searchHelp" />
+
+					</toolbar>
+
+					<grid mold="paging" pageSize="20" >
+						<columns menupopup="auto" width="100%">
+							<column label="First Name" align="left" sort="auto" />
+							<column label="Last Name" align="left" sort="auto" />
+							<column label="Age" align="left" width="4%" sort="auto" />
+							<column label="Reg #" align="left" width="8%" sort="auto" />
+							<column label="Sex" align="left" width="5%" sort="auto" />
+							<column label="Pledge" align="left" width="10%" sort="auto" />
+							<column label="Affiliation" align="left" width="8%" 
+								sort="auto" />
+							<column width="12%"/>
+						</columns>
+						<rows id="votersListRows">
+						</rows>
+					</grid>
+
+				</panelchildren>
+			</panel>
+
+			<popup id="searchHelp" width="300px">
+				To search enter First Name and Last Name separated by a comma. 
+				For example, to search for Mr. John Doe, use the 
+				following search pattern:
+					John,Doe
+			</popup>
+
+		 </vlayout>
+
+	 </div>
+
+</zk>
