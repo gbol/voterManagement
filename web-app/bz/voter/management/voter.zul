@@ -15,7 +15,7 @@
 					<toolbar>
 						<button id="addVoterButton" label="New Voter" />
 					</toolbar>
-					<grid mold="paging" pageSize="20" style="font-size: 0.025em;">
+					<grid mold="paging" pageSize="10" style="font-size: 0.025em;">
 						<columns menupopup="auto" width="100%" 
 							style="font-size: small;">
 							<column label="First Name" align="left" sort="auto" />

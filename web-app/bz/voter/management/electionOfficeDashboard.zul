@@ -8,25 +8,8 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 	 <div apply="bz.voter.management.electionOfficeDashboardComposer">
-	 	<borderlayout>
-			<north size="50%">
-				<borderlayout>
-					<west size="33%">
-						<include src="pollStationVotesCount.zul"/>
-					</west>
-					<center >
-						<label value="Center" />
-					</center>
-					<east width="33%">
-						<label value="East" />
-					</east>
-				</borderlayout>
-			</north>
-			<center>
-				<label value="Main Center" />
-			</center>
-		</borderlayout>
-
+	 	<vlayout id="votesCountBox" style="padding: 4px" >
+		</vlayout>
 	 </div>
 
 </zk>

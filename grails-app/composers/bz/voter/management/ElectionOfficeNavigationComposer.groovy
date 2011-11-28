@@ -15,7 +15,12 @@ class ElectionOfficeNavigationComposer extends GrailsComposer {
 
 	def electionOfficeCenter
 
+	def election
+
+
     def afterCompose = { window ->
+		def electionId = Executions.getCurrent().getArg().id
+		election = Election.get(electionId)
     }
 
 
@@ -23,7 +28,17 @@ class ElectionOfficeNavigationComposer extends GrailsComposer {
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
 			electionOfficeCenter.getChildren().clear()
 			Executions.createComponents("electionOfficeDashboard.zul",electionOfficeCenter,
-			null)
+			[electionId: election.id])
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
+	 }
+
+	 def onClick_votersButton(){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+			electionOfficeCenter.getChildren().clear()
+			Executions.createComponents("electionOfficeVoters.zul",electionOfficeCenter,
+				[id: election.id])
 		}else{
 			ComposerHelper.permissionDeniedBox()
 		}

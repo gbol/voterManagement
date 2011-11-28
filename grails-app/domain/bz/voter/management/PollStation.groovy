@@ -5,7 +5,7 @@ class PollStation {
 	Integer pollNumber
 	Division division
 
-	static transients = ['name']
+	static transients = ['name' ]
 
 	String toString(){
 		"${division.name} : ${pollNumber}"
@@ -18,5 +18,9 @@ class PollStation {
 
 	 def getName(){
 	 	pollNumber.toString()
+	 }
+
+	 static totalVoters(PollStation pollStation){
+	 	Voter.countByPollStation(pollStation)
 	 }
 }

@@ -16,6 +16,7 @@ class BootStrap {
 	def grailsApplication
 	def messageSource
 	def voterService
+	def unknownMunicipality
    //static String fileName = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/Sample.xls" PUT THE ONE FOR WINDOWS HERE AND COMMENT THE ONE UNDERNEATH THIS
    static String fileName = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/Sample.xls"
 
@@ -62,7 +63,8 @@ class BootStrap {
 		new District(name:'Stann Creek',code:'SC').save()
 		new District(name:'Toledo',code:'TO').save(flush:true)
 
-		new Municipality(name:'Belmopan',district:District.findByCode('CY')).save(flush:true)
+		new Municipality(name:'Belmopan',district:District.findByCode('CY')).save()
+		unknownMunicipality = new Municipality(name:'Unknown', district: District.findByCode('BZ')).save(flush:true)
 
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
       def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
@@ -127,7 +129,8 @@ class BootStrap {
       def votersMapList = importer3.getVoters();
         
       votersMapList.each { Map voterParams ->
-		  		def municipality = Municipality.findByName(voterParams.municipality) ?: new Municipality(name:'Unknown', district: District.findByCode('BZ')).save()
+		  		def municipality = Municipality.findByName(voterParams.municipality) ?:  unknownMunicipality
+
 		  		def addressParams = [
 					houseNumber: voterParams.houseNumber,
 					street: voterParams.street,

@@ -14,10 +14,8 @@
 			<center id="electionOfficeCenter">
 			</center>
 
-			<east title="Elections Office" collapsible="true" flex="true">
-				<vlayout style="padding: 4px">
-					<include src="electionOfficeNavigation.zul" />
-				</vlayout>
+			<east title="Elections Office" collapsible="true" 
+				flex="true" id="navigationBox">
 			</east>
 
 		</borderlayout>

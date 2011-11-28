@@ -8,9 +8,15 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 	 <div apply="bz.voter.management.PollStationVotesCountComposer">
-	 	<panel title="Poll Stations Count" border="normal" closable="true">
+	 	<panel title="Display Votes By Divisions" border="normal" 
+			style="padding: 8px" >
 			<panelchildren>
-				<label value="Poll Stations Count" />
+					<toolbar>
+						<listbox id="divisionListBox" mold="select" rows="1"/>
+						<button label="Display Votes" id="votesBtn" />
+					</toolbar>
+				<vbox id="countGrids" style="padding: 10px">
+				</vbox>
 			</panelchildren>
 		</panel>
 

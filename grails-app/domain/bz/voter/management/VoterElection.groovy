@@ -67,54 +67,28 @@ class VoterElection implements Serializable{
 		version false
 	 }
 
-	 static namedQueries={
-	 	findVotesSummaryByPollStationsAndElection{election->
-			createAlias("voter", "voter")
-			createAlias 'election', 'e'
-			//createAlias 'v.pollStation', 'p'
-			//createAlias 'v.affiliation', 'party'
-
-			projections{
-				//property 'p.pollNumber', 'pollStation'
-				//property 'party.name', 'affiliation'
-				//property("voter.registrationNumber")
-				count 'voter' , 'votes'
-				//groupProperty('voter.affiliation.name')
-				//groupProperty('voter')
-				groupProperty('voted')
-				groupProperty('voter')
-				//groupProperty('v.registrationNumber')
-
-			}
-
-			and{
-				eq 'election', election
-				eq 'voted', true
-			}
-
-			/*order 'pollStation'
-			order 'votes'
-			order 'affiliation'
-			*/
-			//order 'voter'
-		}
-	 }
-
-
-	 static countVotesByPollStationAndAffiliation(Election election){
+	/**
+	Counts the votes casted at a Division, grouped by poll station, 
+	affiliation and division.
+	@param election is the election for which we want count votes.
+	@param division is the division for which we want to count votes
+	@return list of results: [voteCounts, poll_station, affiliation ]
+	**/
+	 static countVotesByPollStationAndAffiliation(Election election,Division division){
 	 	if(election instanceof Election){
 	 		def query = "select count(v.id) as voteCounts, " +
 				"p.pollNumber as poll_station, " +
-				"aff.name as party, div.name as divisions "+
+				"aff.name as party "+
 				"from VoterElection ve"+
 				" inner join ve.voter as v" +
 				" inner join v.affiliation as aff" +
 				" inner join v.pollStation as p" +
-				" inner join p.division as div" +
 				" where ve.election = :election and ve.voted = true " +
-				" group by p.pollNumber, aff.name, div.name "
+				" and p.division = :division " +
+				" group by p.pollNumber, aff.name"
 
-			def results = VoterElection.executeQuery(query,[election: election])
+			def results = VoterElection.executeQuery(query,
+				[election: election, division: division])
 		}
 	 }
 }

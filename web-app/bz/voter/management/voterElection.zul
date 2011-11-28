@@ -22,7 +22,7 @@
 						<label value="Tips" tooltip="searchHelp" />
 
 					</toolbar>
-					<grid mold="paging" pageSize="20" >
+					<grid mold="paging" pageSize="10" >
 						<columns menupopup="auto" width="100%">
 							<column label="First Name" align="left" sort="auto" />
 							<column label="Last Name" align="left" sort="auto" />

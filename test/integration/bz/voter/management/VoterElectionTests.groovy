@@ -83,12 +83,11 @@ class VoterElectionTests extends GroovyTestCase {
 		voterElection7.voteTime = new Date()
 		voterElection7.save()
 
-		def results = VoterElection.countVotesByPollStationAndAffiliation(election)
+		def results = VoterElection.countVotesByPollStationAndAffiliation(election, Division.findByName('Albert'))
 
-		assert [1,23,'UNKNOWN','Albert'] ==  results[0]
-		assert [3,10,'PUP','Albert'] ==  results[1]
-		assert [2,10,'UDP','Albert'] ==  results[2]
-		assert [1,2011,'PUP','Belmopan'] ==  results[3]
+		assert [1,23,'UNKNOWN'] ==  results[0]
+		assert [3,10,'PUP'] ==  results[1]
+		assert [2,10,'UDP'] ==  results[2]
 
     }
 }
