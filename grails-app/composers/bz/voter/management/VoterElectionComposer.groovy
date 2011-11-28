@@ -62,15 +62,15 @@ class VoterElectionComposer extends GrailsComposer {
 					label(value: _voterElection.voter.person.age)
 					label(value: _voterElection.voter.registrationNumber)
 					label(value: _voterElection.voter.person.sex)
-					label(value: _voterElection.voter.pledge)
+					label(value: _voterElection.voter.pollStation)
 					label(value: _voterElection.voter.affiliation)
 					checkbox(checked: voted, onCheck: {event->
 						if(voterElectionInstance.voted){
 							voterElectionInstance.voted = false
-							voterElectionInstance.voteTime = new Date()
+							voterElectionInstance.voteTime = null
 						}else{
 							voterElectionInstance.voted = true
-							voterElectionInstance.voteTime = null
+							voterElectionInstance.voteTime = new Date()
 						}
 					})
 					button(label: 'Save', onClick:{evt->
@@ -78,9 +78,16 @@ class VoterElectionComposer extends GrailsComposer {
 							voterElectionInstance.save(flush:true)
 							Messagebox.show("Saved Successfuly!", "Voter", 
 								Messagebox.OK, Messagebox.INFORMATION)
+							if(voterElectionInstance.voted){
+								//evt.getTarget().getParent().invalidate()
+								evt.getTarget().getParent().setStyle("background-color:red")
+							}else{
+								evt.getTarget().getParent().setStyle("background-color: white")
+							}
 						}else{
 							ComposerHelper.permissionDeniedBox()
 						}
+
 
 					})
 					button(label: 'Details', onClick:{

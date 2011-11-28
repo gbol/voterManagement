@@ -29,7 +29,7 @@
 							<column label="Age" align="left" width="4%" sort="auto" />
 							<column label="Reg #" align="left" width="8%" sort="auto" />
 							<column label="Sex" align="left" width="5%" sort="auto" />
-							<column label="Pledge" align="left" width="10%" sort="auto" />
+							<column label="Poll Station" align="left" width="10%" sort="auto" />
 							<column label="Affiliation" align="left" width="8%" 
 								sort="auto" />
 							<column label="Voted" align="left" width="5%" sort="auto" />

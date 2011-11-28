@@ -81,37 +81,52 @@ class BootStrap {
 
 		Environment.executeForCurrentEnvironment{
 			development{
-				def division = new Division(name:'Albert').save()
-				def pollStation = new PollStation(pollNumber:23, division: division).save(failOnError: true)
+				populateTestData()
 
-				def address = new Address(houseNumber: '45', street: 'Street Name', municipality: Municipality.findByName('Belmopan')).save(failOnError:true, flush:true)
-				def person = new Person()
-				person.firstName = 'John'
-				person.lastName = 'Doe'
-				person.birthDate = new Date().parse('dd/MM/yyyy','28/10/1984')
-				person.sex = Sex.findByCode('M')
-				person.ethnicity = Ethnicity.findByName('Creole')
-				person.address = address
-				person.cellPhone = '634-0921'
-				person.save(failOnError: true)
+			}//End of development
+			
+			test{
+				populateTestData()
+			}
+		}
 
-				def voter = new Voter()
-				voter.person = person
-				voter.registrationDate = new Date().parse('dd/MM/yyyy','12/11/2010')
-				voter.registrationNumber = '42323'
-				voter.pollStation = pollStation
-				voter.identificationType = IdentificationType.findByName('Passport')
-				voter.affiliation = Affiliation.findByName('UNKNOWN')
-				voter.save()
+		sessionFactory.currentSession.flush()
+   } 
 
-        
-        VoterExcelImporter importer3 = new VoterExcelImporter(fileName);
+    def destroy = {
+
+    }
+
+	 def populateTestData(){
+
+		def division = new Division(name:'Albert').save()
+		def pollStation = new PollStation(pollNumber:23, division: division).save(failOnError: true)
+
+		def address = new Address(houseNumber: '45', street: 'Street Name', municipality: Municipality.findByName('Belmopan')).save(failOnError:true, flush:true)
+		def person = new Person()
+		person.firstName = 'John'
+		person.lastName = 'Doe'
+		person.birthDate = new Date().parse('dd/MM/yyyy','28/10/1984')
+		person.sex = Sex.findByCode('M')
+		person.ethnicity = Ethnicity.findByName('Creole')
+		person.address = address
+		person.cellPhone = '634-0921'
+		person.save(failOnError: true)
+
+		def voter = new Voter()
+		voter.person = person
+		voter.registrationDate = new Date().parse('dd/MM/yyyy','12/11/2010')
+		voter.registrationNumber = '42323'
+		voter.pollStation = pollStation
+		voter.identificationType = IdentificationType.findByName('Passport')
+		voter.affiliation = Affiliation.findByName('UNKNOWN')
+		voter.save()
        
-        def votersMapList = importer3.getVoters();
-	 	  println votersMapList
+      VoterExcelImporter importer3 = new VoterExcelImporter(fileName);
        
+      def votersMapList = importer3.getVoters();
         
-        votersMapList.each { Map voterParams ->
+      votersMapList.each { Map voterParams ->
 		  		def municipality = Municipality.findByName(voterParams.municipality) ?: new Municipality(name:'Unknown', district: District.findByCode('BZ')).save()
 		  		def addressParams = [
 					houseNumber: voterParams.houseNumber,
@@ -121,27 +136,19 @@ class BootStrap {
 
 				voterParams.sex = Sex.findByCode(voterParams.sex)
 				voterParams.identificationType = IdentificationType.findByName(voterParams.identificationType)
-				voterParams.affiliation = Affiliation.findByName(voterParams.affiliation) ?: Affiliation.findByName('Unknown')
+				voterParams.affiliation = Affiliation.findByName(voterParams.affiliation) ?: Affiliation.findByName('UNKNOWN')
 				voterParams.pollStation = PollStation.findByPollNumber(voterParams.pollStation) ?: new PollStation(pollNumber: voterParams.pollStation, division: division).save()
 
 				voterParams.address = addressParams
-				def newVoter = voterService.add(voterParams)
-				if(newVoter.hasErrors()){
+				voterService.add(voterParams)
+				//def newVoter = voterService.add(voterParams)
+				/*if(newVoter.hasErrors()){
 					println "\nVoter not saved: ${newVoter.errors}"
 				}else{
 					println "\nVoter Saved: ${newVoter.id}\n"
-				}
+				}*/
        } 
 
-
-			}//End of development
-		}
-
-		sessionFactory.currentSession.flush()
-   } 
-
-    def destroy = {
-
-    }
+	 }
 
 }

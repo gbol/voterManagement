@@ -40,7 +40,7 @@ class VoterComposer extends GrailsComposer {
 					label(value: voter.person.sex)
 					label(value: voter.person.homePhone)
 					label(value: voter.person.cellPhone)
-					label(value: voter.pledge)
+					label(value: voter.affiliation)
 					button(label: 'Edit', onClick:{
 						center.getChildren().clear()
 						Executions.createComponents("voterNewForm.zul", center,

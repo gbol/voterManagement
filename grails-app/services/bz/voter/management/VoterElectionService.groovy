@@ -34,7 +34,7 @@ class VoterElectionService {
 
 
 	List<VoterElection> findAllByElection(Election election){
-		println "\nSearching for voters in election: ${election?.year} | ${election?.electionType?.name}\n\n"
+		//println "\nSearching for voters in election: ${election?.year} | ${election?.electionType?.name}\n\n"
 		(List<VoterElection>) VoterElection.findAllByElection(election)
 	}
 

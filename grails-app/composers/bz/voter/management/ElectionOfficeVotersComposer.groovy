@@ -13,10 +13,14 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 	def springSecurityService
 	def voterElectionService
+	def searchTextbox
+
+	def votersListRows
+	def election
 
     def afterCompose = { window ->
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
-			Election election = Election.get(Executions.getCurrent().getArg().id)
+			election = Election.get(Executions.getCurrent().getArg().id)
 			def votersElection = VoterElection.findAllByElection(election)
 			showVoters(votersElection)
 		}else{
@@ -25,10 +29,71 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     }
 
 
-	 def showVoters(def votersElection){
-	 	println "\n\n Voters in this elecion:\n\n"
-		votersElection.each{voterElection->
-			println voterElection.voter.person.firstName
+
+	def onChange_searchTextbox(){
+		def searchText = searchTextbox.getValue()?.trim()
+		def votersList = voterElectionService.search(searchText, election)
+		def results
+
+		if(!searchText.isAllWhitespace()){
+			results = votersList.collect{
+				it[0]
+			}
+		}else{
+			results = VoterElection.findAllByElection(election)
 		}
+		//showVoters(election, results)
+		showVoters(results)
+	}
+
+
+	 def showVoters(def votersElection){
+		votersListRows.getChildren().clear()
+		for(_voterElection in votersElection){
+			def voterElectionInstance = _voterElection
+			def pickupTimeButtonLabel = voterElectionInstance.pickupTime ? 'Edit' : 'Add'
+			votersListRows.append{
+				row(style: "font-size: 0.5em; margin:0",height: "32px"){
+					label(value: voterElectionInstance.voter.person.firstName)
+					label(value: voterElectionInstance.voter.person.lastName)
+					label(value: voterElectionInstance.voter.person.age)
+					label(value: voterElectionInstance.voter.registrationNumber)
+					label(value: voterElectionInstance.voter.person.sex.code)
+					label(value: voterElectionInstance.voter.pollStation)
+					label(value: voterElectionInstance.voter.affiliation)
+					label(value: voterElectionInstance.voted)
+					textbox(value: voterElectionInstance.pickupTime, onChange:{e->
+						voterElectionInstance.pickupTime = e.getTarget().getValue()
+					})
+					button(label: pickupTimeButtonLabel, onClick:{evt->
+						if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+						def HOUR = /10|11|12|[0-9]/
+						def MINUTE = /[0-5][0-9]/
+						def TIME = /($HOUR):($MINUTE)/
+						def valid = (voterElectionInstance.pickupTime =~ TIME).matches()
+						if(valid){
+							voterElectionInstance.save(flush:true)
+							evt.getTarget().setLabel("Edit")
+							Messagebox.show("Saved Pickup Time Successfully!", "Pickup Time Message",
+								Messagebox.OK, Messagebox.INFORMATION)
+						}else{
+							Messagebox.show("Wrong Time Format", "Time Format Message", Messagebox.OK,
+								Messagebox.ERROR)
+						}
+						}else{
+							ComposerHelper.permissionDeniedBox()
+						}
+						
+					})
+					button(label: 'Details', onClick:{
+						final Window win = (Window) Executions.createComponents("voterGeneralInformation.zul", 
+							null, [id: voterElectionInstance.voter.id, electionId: voterElectionInstance.election.id])
+						win.doModal()
+						win.setPosition("top,center")
+					})
+				}
+			}//End of votersListRows.append
+		}
+
 	 }
 }

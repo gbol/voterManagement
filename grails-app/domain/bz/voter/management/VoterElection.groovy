@@ -7,7 +7,7 @@ class VoterElection implements Serializable{
 	Voter voter
 	Election election
 	boolean voted
-	Date pickupTime
+	String pickupTime
 	Date voteTime
 
 
@@ -65,5 +65,56 @@ class VoterElection implements Serializable{
 	 static mapping = {
 	 	id composite: ['voter','election']
 		version false
+	 }
+
+	 static namedQueries={
+	 	findVotesSummaryByPollStationsAndElection{election->
+			createAlias("voter", "voter")
+			createAlias 'election', 'e'
+			//createAlias 'v.pollStation', 'p'
+			//createAlias 'v.affiliation', 'party'
+
+			projections{
+				//property 'p.pollNumber', 'pollStation'
+				//property 'party.name', 'affiliation'
+				//property("voter.registrationNumber")
+				count 'voter' , 'votes'
+				//groupProperty('voter.affiliation.name')
+				//groupProperty('voter')
+				groupProperty('voted')
+				groupProperty('voter')
+				//groupProperty('v.registrationNumber')
+
+			}
+
+			and{
+				eq 'election', election
+				eq 'voted', true
+			}
+
+			/*order 'pollStation'
+			order 'votes'
+			order 'affiliation'
+			*/
+			//order 'voter'
+		}
+	 }
+
+
+	 static countVotesByPollStationAndAffiliation(Election election){
+	 	if(election instanceof Election){
+	 		def query = "select count(v.id) as voteCounts, " +
+				"p.pollNumber as poll_station, " +
+				"aff.name as party, div.name as divisions "+
+				"from VoterElection ve"+
+				" inner join ve.voter as v" +
+				" inner join v.affiliation as aff" +
+				" inner join v.pollStation as p" +
+				" inner join p.division as div" +
+				" where ve.election = :election and ve.voted = true " +
+				" group by p.pollNumber, aff.name, div.name "
+
+			def results = VoterElection.executeQuery(query,[election: election])
+		}
 	 }
 }
