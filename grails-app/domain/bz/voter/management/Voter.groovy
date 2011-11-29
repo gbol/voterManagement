@@ -32,4 +32,9 @@ class Voter implements Serializable{
 		return years
 
 	 }
+
+	 static totalVotersByPollStation(PollStation pollStation){
+	 	Voter.countByPollStation(pollStation)
+	 }
+
 }

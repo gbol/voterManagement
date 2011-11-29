@@ -20,7 +20,4 @@ class PollStation {
 	 	pollNumber.toString()
 	 }
 
-	 static totalVoters(PollStation pollStation){
-	 	Voter.countByPollStation(pollStation)
-	 }
 }
