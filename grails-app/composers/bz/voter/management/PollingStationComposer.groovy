@@ -64,7 +64,7 @@ class PollingStationComposer extends GrailsComposer {
 
 		pollStationInstance = (pollStationIdLabel.getValue()) ? (PollStation.get(pollStationIdLabel.getValue())) : (new PollStation())
 
-		pollStationInstance.pollNumber = pollNumberTextbox.getValue()?.trim()?.toInteger()
+		pollStationInstance.pollNumber = pollNumberTextbox.getValue()?.trim()
 		pollStationInstance.division = divisionListbox.getSelectedItem()?.getValue()
 
 		pollStationInstance.validate()
@@ -116,7 +116,7 @@ class PollingStationComposer extends GrailsComposer {
 		errorMessages.getChildren().clear()
 		addPollStationButton.setVisible(false)
 		pollStationFormPanel.setVisible(true)
-		pollNumberTextbox.setConstraint('no empty, /[0-9]*/:Only Numeric Values Allowed!')
+		pollNumberTextbox.setConstraint('no empty')
 
 		if(pollStationInstance){
 			pollStationFormPanel.setTitle(EDIT_TITLE)

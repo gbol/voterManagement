@@ -91,4 +91,29 @@ class VoterElection implements Serializable{
 				[election: election, division: division])
 		}
 	 }
+
+
+	/**
+	Gets all voters in a specific division for an election.
+	@param electionInstance is the election that we want to query.
+	@param divisionInstance is the division we want the voters from.
+	@return A list of voters.
+	**/
+	 static getAllVotersByElectionAndDivision(Election electionInstance, Division divisionInstance){
+
+	 	if((electionInstance instanceof Election) && (divisionInstance instanceof Division)){
+
+			def query = "select ve " +
+			"from VoterElection as ve "+
+			"inner join ve.voter as v " +
+			"inner join v.pollStation as p " +
+			"where ve.election = :election " +
+			"and p.division = :division "
+
+			return VoterElection.executeQuery(query ,
+				[election: electionInstance, 
+				division: divisionInstance])
+		}
+
+	 }
 }

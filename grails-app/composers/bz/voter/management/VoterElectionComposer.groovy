@@ -17,34 +17,48 @@ class VoterElectionComposer extends GrailsComposer {
 
 	def searchTextbox
 
+	def filterBtn
+
+	def divisionListbox
+
+	def divisionInstance
+
 	def votersListRows
 
 	def election 
 
+	ListModelList divisionModel
+
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
 			election = Election.get(Executions.getCurrent().getArg().id)
-			def voterElectionList = VoterElection.findAllByElection(election)
-			showVoters(election,voterElectionList)
+			divisionModel = new ListModelList(Division.list([sort:'name']))
+			divisionListbox.setModel(divisionModel)
+			//def voterElectionList = VoterElection.findAllByElection(election)
+			//showVoters(election,voterElectionList)
 		}else{
 			execution.sendRedirect('/login')
 		}
     }
 
 
+	 def onClick_filterBtn(){
+	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
+		println "Division ${divisionInstance?.name} was selected\n"
+		if(divisionInstance){
+			def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
+			showVoters(election,votersList)
+		}
+	 }
+
+
 	def onChange_searchTextbox(){
+		println "\nSearching for voters in ${divisionInstance.name}\n"
 		def searchText = searchTextbox.getValue()?.trim()
-		def votersList = voterElectionService.search(searchText, election)
+		def votersList = voterElectionService.search(searchText, election,divisionInstance)
 		def results
 
-		if(!searchText.isAllWhitespace()){
-			results = votersList.collect{
-				it[0]
-			}
-		}else{
-			results = VoterElection.findAllByElection(election)
-		}
-		showVoters(election, results)
+		showVoters(election, votersList)
 	}
 
 

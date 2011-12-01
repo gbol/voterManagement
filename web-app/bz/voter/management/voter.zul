@@ -15,6 +15,10 @@
 					<toolbar>
 						<button id="addVoterButton" label="New Voter" />
 					</toolbar>
+					<toolbar>
+						<listbox id="voterDivisionListbox" rows="1" mold="select" />
+						<button label="Filter By Division" id="filterBtn" />
+					</toolbar>
 					<grid mold="paging" pageSize="10" style="font-size: 0.025em;">
 						<columns menupopup="auto" width="100%" 
 							style="font-size: small;">

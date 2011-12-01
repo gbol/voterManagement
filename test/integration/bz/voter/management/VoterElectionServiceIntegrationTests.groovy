@@ -6,9 +6,13 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 
 
 	 def voterElectionService
+	 def albertDivision
 
     protected void setUp() {
         super.setUp()
+
+		  albertDivision = Division.findByName('Albert')
+		  println "Albert division: ${albertDivision}"
 
 		  def address = new Address(houseNumber:'2',street:'n/a',
 		  		municipality: Municipality.findByName('Belmopan')).save()
@@ -42,7 +46,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		  voter.identificationType = IdentificationType.findByName('Passport')
 		  voter.pollStation = pollStation
 		  voter.pledge = Pledge.findByName("Undecided")
-		  voter.save()
+		  voter.save(flush:true)
 
 		  def voter2 = new Voter()
 		  voter2.person = person1
@@ -51,7 +55,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		  voter2.identificationType = IdentificationType.findByName('Passport')
 		  voter2.pollStation = pollStation
 		  voter2.pledge = Pledge.findByName("Undecided")
-		  voter2.save()
+		  voter2.save(flush:true)
 
 
     }
@@ -68,7 +72,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		assertEquals 2, VoterElection.findAllByElection(election).size()
+		assertEquals 13, VoterElection.findAllByElection(election).size()
 
     }
 
@@ -81,9 +85,9 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		def results = voterElectionService.search('JO',election)
+		def results = voterElectionService.search('f',election,albertDivision)
 
-		assertEquals 2, results.size()
+		assertEquals 6, results.size()
 	 }
 
 
@@ -94,7 +98,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		def results = voterElectionService.search('JO, do ',election)
+		def results = voterElectionService.search('Fe, re ',election,albertDivision)
 
 		assertEquals 1, results.size()
 	 }
@@ -107,7 +111,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		def results = voterElectionService.search('  ',election)
+		def results = voterElectionService.search('  ',election,albertDivision)
 
 		assertEquals VoterElection.findAllByElection(election).size(), results.size()
 	 	

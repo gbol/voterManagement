@@ -3,22 +3,62 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
 
+import org.zkoss.zul.*
+
+import bz.voter.management.zk.ComposerHelper
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class VoterComposer extends GrailsComposer {
 
 	def addVoterButton
+	def filterBtn
+
 	def center
 	
 	def votersListRows
 
+	def voterDivisionListbox
+
+	def division
+
+	ListModelList divisionModel
+
 	def springSecurityService
+	def voterService
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
-	 		showVoters()
+			divisionModel = new ListModelList(Division.list([sort:'name']))
+			voterDivisionListbox.setModel(divisionModel)
+	 		//showVoters()
 		}else{
 			execution.sendRedirect('/login')
 		}
     }
+
+
+	 def onClick_filterBtn(){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+	 		def divisionInstance = voterDivisionListbox.getSelectedItem().getValue()
+			if(divisionInstance){
+				def divisionVoters = voterService.listByDivision(divisionInstance)
+				if(divisionVoters.size()>0){
+					showVoters(divisionVoters)
+				}else{
+					votersListRows.getChildren().clear()
+					Messagebox.show("No voters exist in ${divisionInstance.name}!",
+						"Division Message", Messagebox.OK,
+						Messagebox.INFORMATION)
+				}
+			}else{
+				Messagebox.show("Error: division does not exist!", "Error",
+					Messagebox.OK, Messagebox.ERROR)
+			}
+		}else{
+			ComposerHelper.permissionDeniedBox()
+		}
+	 }
 
 
 	 def onClick_addVoterButton(){
@@ -27,9 +67,10 @@ class VoterComposer extends GrailsComposer {
 	 }
 
 
-	 def showVoters(){
+	 def showVoters(divisionVoters){
 	 	votersListRows.getChildren().clear()
-		for(voter in Voter.list()){
+		//for(voter in Voter.list()){
+		for(voter in divisionVoters){
 			def voterInstance = voter
 			votersListRows.append{
 				row{

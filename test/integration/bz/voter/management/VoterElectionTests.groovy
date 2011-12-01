@@ -85,9 +85,21 @@ class VoterElectionTests extends GroovyTestCase {
 
 		def results = VoterElection.countVotesByPollStationAndAffiliation(election, Division.findByName('Albert'))
 
-		assert [1,23,'UNKNOWN'] ==  results[0]
-		assert [3,10,'PUP'] ==  results[1]
-		assert [2,10,'UDP'] ==  results[2]
+		println "results: ${results} \n"
+		assert [1,'23','UNKNOWN'] ==  results[0]
+		assert [3,'10.0','PUP'] ==  results[1]
+		assert [2,'10.0','UDP'] ==  results[2]
 
     }
+
+
+	 void testGetAllVotersByElectionAndDivision(){
+	 	def divisionInstance = Division.findByName('Albert')
+
+		def votersList = VoterElection.getAllVotersByElectionAndDivision(election, divisionInstance)
+
+		println "votersList: ${votersList}\n"
+
+		assertEquals 14, votersList.size()
+	 }
 }

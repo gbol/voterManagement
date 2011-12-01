@@ -18,7 +18,7 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 		  pollStation.division = division
 		  pollStation.save()
 		  
-		  def person = new Person()
+		  /*def person = new Person()
 		  person.firstName = 'John'
 		  person.lastName = 'Doe'
 		  person.birthDate = new Date().parse('dd-MM-yyyy','15-04-1980')
@@ -85,6 +85,7 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 		  voter4.pollStation = pollStation
 		  voter4.pledge = Pledge.findByName("Undecided")
 		  voter4.save()
+		  */
 
     }
 
@@ -115,4 +116,19 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 	 	def searchResults = voterService.search("")
 		assertEquals Voter.count(), searchResults.size()
 	 }
+
+
+	 def test_List_By_Division(){
+	 	def division = Division.findByName('Albert')
+	 	def listResults = voterService.listByDivision(division)
+
+		def totalVoters = 0
+
+		PollStation.findAllByDivision(division).each{poll->
+			totalVoters += Voter.countByPollStation(poll)
+		}
+
+		assertEquals listResults.size(), totalVoters
+	 }
+
 }

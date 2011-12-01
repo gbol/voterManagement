@@ -45,44 +45,86 @@ class VoterElectionService {
 	 @return a List of VoterElection
 	 **/
 
-	 def search(String searchString, Election election){
+	 def search(String searchString, Election election, Division division){
 	 	def searchParams
 		def results
-		def query = "from VoterElection as ve " +
+		def query = "select ve from VoterElection as ve " +
 						"inner join ve.voter as v " +
-						"inner join v.person as p " +
-						"where " 
+						"inner join v.person as p " 
 
 	 	if(!searchString.isAllWhitespace()){
 	 		searchParams = searchString.split(',').collect{it}
 
 			if(searchParams.size() == 1){
+				if(division){
+					println "\n Searching for voters with name ${searchString} in ${division}\n"
 
-				query = query + "(lower(p.firstName) like lower(:firstName) " +
+					query = query + " inner join v.pollStation as poll " +
+						"where ((lower(p.firstName) like lower(:firstName)) " +
+						"or (lower(p.lastName) like lower(:lastName))) " +
+						"and ve.election =:election and poll.division =:division"
+
+					results = VoterElection.executeQuery("${query}", [
+							firstName: '%' + searchParams[0].trim() + '%', 
+							lastName: '%' + searchParams[0].trim() + '%', 
+							division: division,
+							election: election])
+					println "results: ${results}\n"
+
+				}else{
+
+					query = query + " where (lower(p.firstName) like lower(:firstName) " +
 						"or lower(p.lastName) like lower(:lastName)) " +
-						"and ve.election = :election"
+						"and ve.election =:election"
 
-				results = VoterElection.findAll("${query}", [
+					results = VoterElection.executeQuery("${query}", [
 							firstName: '%' + searchParams[0].trim() + '%', 
 							lastName: '%' + searchParams[0].trim() + '%', 
 							election: election])
+				}
+
 			}else{
 
-				query = query + "(lower(p.firstName) like lower(:firstName) "+
+				if(division){
+					query = query + " inner join v.pollStation as poll " +
+						"where (lower(p.firstName) like lower(:firstName) "+
 						"and lower(p.lastName) like lower(:lastName)) " +
-						"and ve.election = :election"
+						"and ve.election =:election and poll.division =:division"
 
-				results = VoterElection.findAll("${query}", [
+					results = VoterElection.executeQuery("${query}", [
+							firstName: '%' + searchParams[0].trim() + '%', 
+							lastName: '%' + searchParams[1].trim() + '%', 
+							division: division,
+							election: election])
+				}else{
+					query = query + " where (lower(p.firstName) like lower(:firstName) "+
+						"and lower(p.lastName) like lower(:lastName)) " +
+						"and ve.election =:election"
+
+					results = VoterElection.executeQuery("${query}", [
 							firstName: '%' + searchParams[0].trim() + '%', 
 							lastName: '%' + searchParams[1].trim() + '%', 
 							election: election])
+				}
+
 			}
 
 		}else{
-			results = VoterElection.findAllByElection(election)
+			if(division){
+				query = query + " inner join v.pollStation as poll " +
+				"where ve.election =:election and poll.division =:division"
+				results = VoterElection.executeQuery("${query}", [
+					election: election,
+					division: division])
+
+			}else{
+				results = VoterElection.findAllByElection(election)
+			}
 		}
 
 		return results
 
 	 }
+
+
 }

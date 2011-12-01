@@ -55,6 +55,7 @@ class BootStrap {
 
 		new ElectionType(name:'General',code:'GN').save()
 		new ElectionType(name:'Municipal',code:'MN').save()
+		new ElectionType(name:'Convention',code:'CN').save()
 
 		new District(name:'Corozal',code: 'CZ').save()
 		new District(name:'Orange Walk', code:'OW').save()
@@ -102,7 +103,7 @@ class BootStrap {
 	 def populateTestData(){
 
 		def division = new Division(name:'Albert').save()
-		def pollStation = new PollStation(pollNumber:23, division: division).save(failOnError: true)
+		def pollStation = new PollStation(pollNumber:'23', division: division).save(failOnError: true)
 
 		def address = new Address(houseNumber: '45', street: 'Street Name', municipality: Municipality.findByName('Belmopan')).save(failOnError:true, flush:true)
 		def person = new Person()
@@ -140,7 +141,8 @@ class BootStrap {
 				voterParams.sex = Sex.findByCode(voterParams.sex)
 				voterParams.identificationType = IdentificationType.findByName(voterParams.identificationType)
 				voterParams.affiliation = Affiliation.findByName(voterParams.affiliation) ?: Affiliation.findByName('UNKNOWN')
-				voterParams.pollStation = PollStation.findByPollNumber(voterParams.pollStation) ?: new PollStation(pollNumber: voterParams.pollStation, division: division).save()
+				voterParams.pollStation = PollStation.findByPollNumber(voterParams.pollStation) ?: new PollStation(pollNumber: "${voterParams.pollStation}", division: division).save()
+				voterParams.pledge = Pledge.findByName(voterParams.pledge) ?: Pledge.findByName('Undecided')
 
 				voterParams.address = addressParams
 				voterService.add(voterParams)

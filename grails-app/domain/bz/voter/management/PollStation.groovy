@@ -2,7 +2,7 @@ package bz.voter.management
 
 class PollStation {
 
-	Integer pollNumber
+	String pollNumber
 	Division division
 
 	static transients = ['name' ]
@@ -12,12 +12,13 @@ class PollStation {
 	}
 
     static constraints = {
+	 	pollNumber(blank: false)
 
     }
 
 
 	 def getName(){
-	 	pollNumber.toString()
+	 	pollNumber
 	 }
 
 }

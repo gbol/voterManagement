@@ -143,4 +143,15 @@ class VoterService {
 
 	 }
 
+
+	 def listByDivision(Division division){
+	 	def query = "select v " +
+			"from Voter as v " +
+			"inner join v.pollStation as poll " +
+			"where  poll.division =:division"
+
+		return Voter.executeQuery(query, [division: division])
+	 	
+	 }
+
 }

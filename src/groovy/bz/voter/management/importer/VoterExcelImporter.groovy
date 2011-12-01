@@ -29,6 +29,7 @@ class VoterExcelImporter extends AbstractExcelImporter {
                 'F':'sex',
 					 'I': 'pollStation',
                 'T':'affiliation',
+					 'U':'pledge',
                 'Q':'identificationType',
                 'G':'houseNumber',
                 'H':'street',
@@ -50,7 +51,8 @@ class VoterExcelImporter extends AbstractExcelImporter {
          birthDate: ([expectedType: ExpectedPropertyType.DateJavaType, defaultValue:null]),
          houseNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null] ),
          street: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
-         municipality: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown'])
+         municipality: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown']),
+			pledge: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown'])
     ]
     
 

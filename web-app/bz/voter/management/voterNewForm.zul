@@ -30,7 +30,7 @@
 							</row>
 							<row>
 								<label value="Birth Date" style="text-align:right;" />
-								<datebox id="birthDateBox" format="MM-dd-yyyy" height="16px"
+								<datebox id="birthDateBox" format="dd-MM-yyyy" height="16px"
 									constraint="no empty" />
 								<label value="Sex" />
 								<listbox id="sexListbox" mold="select" rows="1" />

@@ -15,12 +15,15 @@
 				<panel title="Voters List" style="padding:4px;" border="normal">
 					<panelchildren style="padding:5px;">
 					<toolbar>
+						<listbox id="divisionListbox" rows="1" mold="select" />
+						<button label="Filter By Division" id="filterBtn" />
+					</toolbar>
+					<toolbar>
 						<textbox id="searchTextbox" />
 						<button id="searchVoterButton" label="Search" />
 						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
 							style="cursor:help" />
 						<label value="Tips" tooltip="searchHelp" />
-
 					</toolbar>
 					<grid mold="paging" pageSize="10" >
 						<columns menupopup="auto" width="100%">
