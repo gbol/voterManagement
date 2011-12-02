@@ -83,16 +83,19 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 		votersListRows.getChildren().clear()
 		for(_voterElection in votersElection){
 			def voterElectionInstance = _voterElection
+			def _voter = _voterElection.voter
+			def _election = _voterElection.election
 			def pickupTimeButtonLabel = voterElectionInstance.pickupTime ? 'Edit' : 'Add'
 			votersListRows.append{
 				row(style: "font-size: 0.5em; margin:0",height: "32px"){
-					label(value: voterElectionInstance.voter.person.firstName)
-					label(value: voterElectionInstance.voter.person.lastName)
-					label(value: voterElectionInstance.voter.person.age)
 					label(value: voterElectionInstance.voter.registrationNumber)
+					label(value: voterElectionInstance.voter.person.lastName)
+					label(value: voterElectionInstance.voter.person.firstName)
+					label(value: voterElectionInstance.voter.person.age)
 					label(value: voterElectionInstance.voter.person.sex.code)
-					label(value: voterElectionInstance.voter.pollStation)
+					label(value: voterElectionInstance.voter.pollStation.pollNumber)
 					label(value: voterElectionInstance.voter.affiliation)
+					label(value: voterElectionInstance.voter.pledge)
 					label(value: voterElectionInstance.voted)
 					textbox(value: voterElectionInstance.pickupTime, onChange:{e->
 						voterElectionInstance.pickupTime = e.getTarget().getValue()
@@ -119,7 +122,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 					})
 					button(label: 'Details', onClick:{
 						final Window win = (Window) Executions.createComponents("voterGeneralInformation.zul", 
-							null, [id: voterElectionInstance.voter.id, electionId: voterElectionInstance.election.id])
+							null, [id: _voter.id, electionId: _election.id])
 						win.doModal()
 						win.setPosition("top,center")
 					})

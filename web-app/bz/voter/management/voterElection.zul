@@ -27,17 +27,19 @@
 					</toolbar>
 					<grid mold="paging" pageSize="10" >
 						<columns menupopup="auto" width="100%">
-							<column label="First Name" align="left" sort="auto" />
-							<column label="Last Name" align="left" sort="auto" />
-							<column label="Age" align="left" width="4%" sort="auto" />
 							<column label="Reg #" align="left" width="8%" sort="auto" />
+							<column label="Reg Date" align="left" width="12%" sort="auto" />
+							<column label="Last Name" align="left" sort="auto" />
+							<column label="First Name" align="left" sort="auto" />
+							<column label="House #" align="left" width="5%" sort="auto" />
+							<column label="Street" align="left" width="8%" sort="auto" />
 							<column label="Sex" align="left" width="5%" sort="auto" />
+							<column label="Age" align="left" width="4%" sort="auto" />
+							<column label="Date of Birth" align="left" width="12%" sort="auto" />
 							<column label="Poll Station" align="left" width="10%" sort="auto" />
-							<column label="Affiliation" align="left" width="8%" 
-								sort="auto" />
 							<column label="Voted" align="left" width="5%" sort="auto" />
-							<column width="12%"/>
-							<column width="12%"/>
+							<column width="8%"/>
+							<column width="8%"/>
 						</columns>
 						<rows id="votersListRows">
 						</rows>

@@ -96,14 +96,15 @@ class VoterComposer extends GrailsComposer {
 			def voterInstance = voter
 			votersListRows.append{
 				row{
-					label(value: voter.person.firstName)
-					label(value: voter.person.lastName)
-					label(value: voter.person.age)
 					label(value: voter.registrationNumber)
+					label(value: voter.person.lastName)
+					label(value: voter.person.firstName)
+					label(value: voter.person.age)
 					label(value: voter.person.sex)
 					label(value: voter.person.homePhone)
 					label(value: voter.person.cellPhone)
 					label(value: voter.affiliation)
+					label(value: voter.pledge)
 					button(label: 'Edit', onClick:{
 						//center.getChildren().clear()
 						final Window win = Executions.createComponents("voterNewForm.zul", null,

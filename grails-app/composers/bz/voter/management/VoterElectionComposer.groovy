@@ -69,13 +69,16 @@ class VoterElectionComposer extends GrailsComposer {
 			votersListRows.append{
 				def backgroundColor = voted ? "red" : "white"
 				row(style: "background-color: ${backgroundColor}"){
-					label(value: _voterElection.voter.person.firstName)
-					label(value: _voterElection.voter.person.lastName)
-					label(value: _voterElection.voter.person.age)
 					label(value: _voterElection.voter.registrationNumber)
-					label(value: _voterElection.voter.person.sex)
-					label(value: _voterElection.voter.pollStation)
-					label(value: _voterElection.voter.affiliation)
+					label(value: _voterElection.voter.registrationDate.format("dd-MMM-yyyy"))
+					label(value: _voterElection.voter.person.lastName)
+					label(value: _voterElection.voter.person.firstName)
+					label(value: _voterElection.voter.person.address.houseNumber)
+					label(value: _voterElection.voter.person.address.street)
+					label(value: _voterElection.voter.person.sex.code)
+					label(value: _voterElection.voter.person.age)
+					label(value: _voterElection.voter.person.birthDate.format("dd-MMM-yyyy"))
+					label(value: _voterElection.voter.pollStation.pollNumber)
 					checkbox(checked: voted, onCheck: {event->
 						if(voterElectionInstance.voted){
 							voterElectionInstance.voted = false

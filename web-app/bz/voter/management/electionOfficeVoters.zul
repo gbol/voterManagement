@@ -28,15 +28,17 @@
 
 					<grid mold="paging" pageSize="10" >
 						<columns menupopup="auto" width="100%">
-							<column label="First Name" align="left" sort="auto" />
-							<column label="Last Name" align="left" sort="auto" />
-							<column label="Age" align="left" width="4%" sort="auto" />
 							<column label="Reg #" align="left" width="8%" sort="auto" />
-							<column label="Sex" align="left" width="5%" sort="auto" />
-							<column label="Poll Station" align="left" width="15%" sort="auto" />
+							<column label="Last Name" align="left" sort="auto" />
+							<column label="First Name" align="left" sort="auto" />
+							<column label="Age" align="left" width="4%" sort="auto" />
+							<column label="Sex" align="left" width="4%" sort="auto" />
+							<column label="Poll Station" align="left" width="8%" sort="auto" />
 							<column label="Affiliation" align="left" width="8%" 
 								sort="auto" />
-							<column label="Voted" align="left" width="8%" />
+							<column label="Pledge" align="left" width="8%" 
+								sort="auto" />
+							<column label="Voted" align="left" width="6%" />
 							<column label="Pickup Time" sort="auto" />
 							<column  width="12%"/>
 							<column width="12%"/>

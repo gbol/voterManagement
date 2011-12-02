@@ -29,14 +29,15 @@
 					<grid mold="paging" pageSize="10" style="font-size: 0.025em;">
 						<columns menupopup="auto" width="100%" 
 							style="font-size: small;">
-							<column label="First Name" align="left" sort="auto" />
-							<column label="Last Name" align="left" sort="auto" />
-							<column label="Age" align="left" width="10%" sort="auto" />
 							<column label="Reg #" align="left" sort="auto" />
+							<column label="Last Name" align="left" sort="auto" />
+							<column label="First Name" align="left" sort="auto" />
+							<column label="Age" align="left" width="10%" sort="auto" />
 							<column label="Sex" align="left" sort="auto" />
 							<column label="Home #" align="left" sort="auto" />
 							<column label="Cell #" align="left" sort="auto" />
 							<column label="Affiliation" align="left" sort="auto" />
+							<column label="Pledge" align="left" sort="auto" />
 							<column />
 							<column />
 						</columns>
