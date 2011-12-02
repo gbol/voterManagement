@@ -144,6 +144,49 @@ class VoterService {
 	 }
 
 
+	 def searchByDivision(String searchString, Division division){
+	 	def searchParams
+		def results
+
+
+		def query = "select v " +
+			"from Voter as v " +
+			"inner join v.person as p "+
+			"inner join v.pollStation as poll " +
+			"where poll.division =:division " +
+		   "and ((lower(p.firstName) like lower(:firstName)) " +
+			" or (lower(p.lastName) like lower(:lastName)))"
+
+	 	if(!searchString.isAllWhitespace()){
+	 		searchParams = searchString.split(',').collect{it}
+
+			if(searchParams.size() == 1){
+				results = Voter.executeQuery(query, [
+					firstName: '%' + searchParams[0].trim() + '%',
+					lastName: '%' + searchParams[0].trim() + '%',
+					division: division])
+			}else{
+				results = Voter.executeQuery(query, [
+					firstName: '%' + searchParams[0].trim() + '%',
+					lastName: '%' + searchParams[1].trim() + '%',
+					division: division])
+			}
+
+		}else{
+			query = "select v " +
+				"from Voter as v " +
+				"inner join v.pollStation as p " +
+				"where p.division =:division"
+			results = Voter.executeQuery(query, [
+				division: division
+			])
+		}
+
+		return results
+
+	 }
+
+
 	 def listByDivision(Division division){
 	 	def query = "select v " +
 			"from Voter as v " +

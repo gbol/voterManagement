@@ -13,6 +13,7 @@ class VoterElectionComposer extends GrailsComposer {
 	def springSecurityService
 	def voterElectionService
 
+
 	def electionIdLabel
 
 	def searchTextbox
@@ -34,8 +35,6 @@ class VoterElectionComposer extends GrailsComposer {
 			election = Election.get(Executions.getCurrent().getArg().id)
 			divisionModel = new ListModelList(Division.list([sort:'name']))
 			divisionListbox.setModel(divisionModel)
-			//def voterElectionList = VoterElection.findAllByElection(election)
-			//showVoters(election,voterElectionList)
 		}else{
 			execution.sendRedirect('/login')
 		}
@@ -44,7 +43,6 @@ class VoterElectionComposer extends GrailsComposer {
 
 	 def onClick_filterBtn(){
 	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
-		println "Division ${divisionInstance?.name} was selected\n"
 		if(divisionInstance){
 			def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
 			showVoters(election,votersList)
@@ -53,10 +51,8 @@ class VoterElectionComposer extends GrailsComposer {
 
 
 	def onChange_searchTextbox(){
-		println "\nSearching for voters in ${divisionInstance.name}\n"
 		def searchText = searchTextbox.getValue()?.trim()
 		def votersList = voterElectionService.search(searchText, election,divisionInstance)
-		def results
 
 		showVoters(election, votersList)
 	}
@@ -67,6 +63,8 @@ class VoterElectionComposer extends GrailsComposer {
 
 		for(_voterElection in voterList){
 			def voterElectionInstance = _voterElection
+			def _voter = Voter.load(_voterElection.voter.id)
+			def _election = Election.load(_voterElection.election.id)
 			def voted = _voterElection.voted ? true : false
 			votersListRows.append{
 				def backgroundColor = voted ? "red" : "white"
@@ -93,7 +91,6 @@ class VoterElectionComposer extends GrailsComposer {
 							Messagebox.show("Saved Successfuly!", "Voter", 
 								Messagebox.OK, Messagebox.INFORMATION)
 							if(voterElectionInstance.voted){
-								//evt.getTarget().getParent().invalidate()
 								evt.getTarget().getParent().setStyle("background-color:red")
 							}else{
 								evt.getTarget().getParent().setStyle("background-color: white")

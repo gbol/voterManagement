@@ -12,7 +12,7 @@ import java.lang.reflect.Field
 
 class VoterNewFormComposer extends GrailsComposer {
 
-	def cancelButton
+	//def cancelButton
 	def saveButton
 	def voterIdLabel
 	def voterNewFormPanel
@@ -103,10 +103,10 @@ class VoterNewFormComposer extends GrailsComposer {
 	 }
 
 
-	 def onClick_cancelButton(){
-	 	center.getChildren().clear()
+	 /*def onClick_cancelButton(){
+	 	/*center.getChildren().clear()
 		Executions.createComponents("voter.zul", center,null)
-	 }
+	 }*/
 
 
 	 def onClick_saveButton(){
@@ -160,7 +160,7 @@ class VoterNewFormComposer extends GrailsComposer {
 		}else{
 			Messagebox.show("Voter Saved!", "Voter Message!", Messagebox.OK,
 				Messagebox.INFORMATION)
-			closeWindow()
+			//closeWindow()
 		}
 
 		}else{
@@ -171,7 +171,7 @@ class VoterNewFormComposer extends GrailsComposer {
 
 
 
-	 def onClose(){
+	 /*def onClose(){
 	 	closeWindow()
 	 }
 
@@ -179,6 +179,6 @@ class VoterNewFormComposer extends GrailsComposer {
 	 def closeWindow(){
 	 	center.getChildren().clear()
 		Executions.createComponents("voter.zul",center,null)
-	 }
+	 }*/
 
 }

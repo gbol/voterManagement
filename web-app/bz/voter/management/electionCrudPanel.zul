@@ -15,7 +15,7 @@
 						</vbox>
 					<separator spacing='2px' />
 
-					<panel id="electionFormPanel" border="normal" visible="false" width="25%">
+					<panel id="electionFormPanel" border="normal" visible="false" width="45%">
 					<panelchildren>
 
 					<grid  width="100%" oddRowSclass="none">

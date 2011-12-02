@@ -14,6 +14,8 @@ class VoterComposer extends GrailsComposer {
 	def addVoterButton
 	def filterBtn
 
+	def voterSearchTextbox
+
 	def center
 	
 	def votersListRows
@@ -36,6 +38,26 @@ class VoterComposer extends GrailsComposer {
 			execution.sendRedirect('/login')
 		}
     }
+
+
+	 def onChange_voterSearchTextbox(){
+
+	 	if(division){
+	 		def searchText = voterSearchTextbox.getValue()?.trim()
+			def votersList = voterService.searchByDivision(searchText,division)
+			showVoters(votersList)
+		}else{
+			Messagebox.show("You must select a division!",
+				"Message", Messagebox.OK, Messagebox.EXCLAMATION)
+		}
+
+	 }
+
+
+	 def onSelect_voterDivisionListbox(){
+		division = voterDivisionListbox.getSelectedItem()?.getValue()
+
+	 }
 
 
 	 def onClick_filterBtn(){
@@ -62,8 +84,8 @@ class VoterComposer extends GrailsComposer {
 
 
 	 def onClick_addVoterButton(){
-	 	center.getChildren().clear()
-		Executions.createComponents("voterNewForm.zul", center,null) //.doModal()
+		final Window win = (Window)Executions.createComponents("voterNewForm.zul",null ,null) //.doModal()
+		win.doModal()
 	 }
 
 
@@ -83,9 +105,10 @@ class VoterComposer extends GrailsComposer {
 					label(value: voter.person.cellPhone)
 					label(value: voter.affiliation)
 					button(label: 'Edit', onClick:{
-						center.getChildren().clear()
-						Executions.createComponents("voterNewForm.zul", center,
+						//center.getChildren().clear()
+						final Window win = Executions.createComponents("voterNewForm.zul", null,
 							[id:voterInstance.id]) 
+						win.doModal()
 					})
 					button(label: 'Manage', onClick:{
 					})

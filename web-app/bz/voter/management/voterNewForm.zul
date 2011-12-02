@@ -6,9 +6,9 @@
     xmlns:h="http://www.w3.org/1999/xhtml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <div apply="bz.voter.management.VoterNewFormComposer" >
-	 	
 
+    <window title="Voter Form" apply="bz.voter.management.VoterNewFormComposer" closable="true">
+	 	
 
 		<panel id="voterNewFormPanel" style="padding:4px;" border="normal">
 			<panelchildren>
@@ -89,7 +89,6 @@
 
 					<toolbar>
 						<button id="saveButton" label="Save" />
-						<button id="cancelButton" label="Cancel" />
 						<label id="voterIdLabel" visible="false" />
 					</toolbar>
 
@@ -97,6 +96,6 @@
 			</panelchildren>
 		</panel>
 
-    </div>
+    </window>
 
 </zk>

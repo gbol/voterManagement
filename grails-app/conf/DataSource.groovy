@@ -28,11 +28,12 @@ environments {
     }
     production {
         dataSource {
-    			driverClassName = "org.hsqldb.jdbcDriver"
-    			username = "sa"
-    			password = ""
+    			driverClassName = "org.postgresql.Driver"
+    			username = "voter_management"
+    			password = ".,password.\$"
             dbCreate = "update"
-            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+				dialect = 'org.hibernate.dialect.PostgreSQLDialect'
+            url = "jdbc:postgresql://127.0.0.1:5432/voter-management"
         }
     }
 }

@@ -19,6 +19,13 @@
 						<listbox id="voterDivisionListbox" rows="1" mold="select" />
 						<button label="Filter By Division" id="filterBtn" />
 					</toolbar>
+					<toolbar>
+						<textbox id="voterSearchTextbox" />
+						<button id="searchVoterButton" label="Search" />
+						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
+							style="cursor:help" />
+						<label value="Tips" tooltip="searchHelp" />
+					</toolbar>
 					<grid mold="paging" pageSize="10" style="font-size: 0.025em;">
 						<columns menupopup="auto" width="100%" 
 							style="font-size: small;">
@@ -38,6 +45,15 @@
 					</grid>
 					</panelchildren>
 				</panel>
+
+				<vbox>
+					<popup id="searchHelp" width="300px">
+							To search enter First Name and Last Name separated by a comma. 
+							For example, to search for Mr. John Doe, use the 
+							following search pattern:
+								John,Doe
+					</popup>
+				</vbox>
 
     </div>
 

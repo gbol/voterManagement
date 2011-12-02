@@ -34,6 +34,7 @@ class PersonService {
 	 def save(def params) {
 	 	def personInstance 
 		def addressInstance
+		def errorMessages
 
 		if(params.person?.id){
 			personInstance = params.person
@@ -50,7 +51,7 @@ class PersonService {
 		}
 
 		if(addressInstance?.hasErrors()){
-			for(error in addressInstance.errors.allErrors()){
+			for(error in addressInstance.errors.allErrors){
 				log.error error
 				errorMessages = errorMessages + "\n" + (messageSource.getMessage(error,null))
 			}

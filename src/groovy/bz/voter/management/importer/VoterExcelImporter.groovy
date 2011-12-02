@@ -52,7 +52,8 @@ class VoterExcelImporter extends AbstractExcelImporter {
          houseNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null] ),
          street: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
          municipality: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown']),
-			pledge: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown'])
+			pledge: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown']),
+			pollStation: ([expectedType: ExpectedPropertyType.StringType, defaultValue: 'N/A'])
     ]
     
 

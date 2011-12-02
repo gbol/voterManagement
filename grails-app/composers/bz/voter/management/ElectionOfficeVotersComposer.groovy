@@ -18,11 +18,21 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	def votersListRows
 	def election
 
+	def filterBtn
+
+	def divisionInstance
+
+	def divisionListbox
+
+	ListModelList divisionModel
+
     def afterCompose = { window ->
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
 			election = Election.get(Executions.getCurrent().getArg().id)
-			def votersElection = VoterElection.findAllByElection(election)
-			showVoters(votersElection)
+			divisionModel = new ListModelList(Division.list([sort:'name']))
+			divisionListbox.setModel(divisionModel)
+			//def votersElection = VoterElection.findAllByElection(election)
+			//showVoters(votersElection)
 		}else{
 			ComposerHelper.permissionDeniedBox()
 		}
@@ -30,8 +40,29 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 
 
+	def onSelect_divisionListbox(){
+	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
+	}
+
+	 def onClick_filterBtn(){
+	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
+		if(divisionInstance){
+			def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
+			showVoters(votersList)
+		}
+	 }
+
+
 	def onChange_searchTextbox(){
-		def searchText = searchTextbox.getValue()?.trim()
+		if(divisionInstance){
+			def searchText = searchTextbox.getValue()?.trim()
+			def votersList = voterElectionService.search(searchText, election,divisionInstance)
+			showVoters(votersList)
+		}else{
+			Messagebox.show("You must select a division!",
+				"Message", Messagebox.OK, Messagebox.EXCLAMATION)
+		}
+		/*def searchText = searchTextbox.getValue()?.trim()
 		def votersList = voterElectionService.search(searchText, election)
 		def results
 
@@ -44,6 +75,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 		}
 		//showVoters(election, results)
 		showVoters(results)
+		*/
 	}
 
 

@@ -14,17 +14,11 @@ class VoterGeneralInformationComposer extends GrailsComposer {
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
-			voter = Voter.get(Executions.getCurrent().getArg().id)
-			println "\n\nVoter: ${voter.person.firstName}"
+			voter = Voter.load(Executions.getCurrent().getArg().id)
 			def voterElection = VoterElection.get(voter.id, Executions.getCurrent().getArg().electionId)
 			birthDate = voter.person.birthDate.format('dd-MMM-yyyy')
 			registrationDate = voter.registrationDate.format('dd-MMM-yyyy')
 			voteTime = voterElection.voteTime
-			println """
-				VoterElection: \n 
-				voted: ${voterElection.voted} 
-				\n voteTime: ${voteTime}
-				"""
 		}else{
 			execution.sendRedirect('/login')
 		}
