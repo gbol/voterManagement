@@ -154,18 +154,23 @@ class VoterService {
 			"inner join v.person as p "+
 			"inner join v.pollStation as poll " +
 			"where poll.division =:division " +
-		   "and ((lower(p.firstName) like lower(:firstName)) " +
-			" or (lower(p.lastName) like lower(:lastName)))"
+		   "and ((lower(p.firstName) like lower(:firstName)) " 
 
 	 	if(!searchString.isAllWhitespace()){
 	 		searchParams = searchString.split(',').collect{it}
 
 			if(searchParams.size() == 1){
+				query = query + 
+					" or (lower(p.lastName) like lower(:lastName)))"
+
 				results = Voter.executeQuery(query, [
 					firstName: '%' + searchParams[0].trim() + '%',
 					lastName: '%' + searchParams[0].trim() + '%',
 					division: division])
 			}else{
+				query = query + 
+					" and (lower(p.lastName) like lower(:lastName)))"
+
 				results = Voter.executeQuery(query, [
 					firstName: '%' + searchParams[0].trim() + '%',
 					lastName: '%' + searchParams[1].trim() + '%',

@@ -110,7 +110,7 @@ class VoterNewFormComposer extends GrailsComposer {
 
 
 	 def onClick_saveButton(){
-	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
 
 	 	errorMessages.getChildren().clear()
 	 	def personInstance
