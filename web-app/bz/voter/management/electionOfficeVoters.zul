@@ -7,12 +7,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div apply="bz.voter.management.ElectionOfficeVotersComposer">
+    <div vflex='1' apply="bz.voter.management.ElectionOfficeVotersComposer">
 
-	 	<vlayout>
+	 	<vlayout vflex='1'>
 
-			<panel title="Voters List" style="padding: 4px" border="normal">
-				<panelchildren style="padding:5px">
+			<panel title="Voters List" style="padding: 4px " 
+				border="normal" vflex='1'>
+				<panelchildren style="padding:5px" vflex='1'>
 					<toolbar>
 						<listbox id="divisionListbox" rows="1" mold="select" />
 						<button label="Filter By Division" id="filterBtn" />
@@ -26,7 +27,7 @@
 
 					</toolbar>
 
-					<grid mold="paging" pageSize="10" >
+					<grid mold="paging" pageSize="10"  vflex='1'>
 						<columns menupopup="auto" width="100%">
 							<column label="Reg #" align="left" width="8%" sort="auto" />
 							<column label="Last Name" align="left" sort="auto" />
@@ -43,7 +44,7 @@
 							<column  width="12%"/>
 							<column width="12%"/>
 						</columns>
-						<rows id="votersListRows">
+						<rows id="votersListRows" vflex='1'>
 						</rows>
 					</grid>
 

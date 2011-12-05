@@ -9,8 +9,8 @@
 
 
     <div apply="bz.voter.management.VoterComposer" 
-	 	style="margin:2px;font-size: small;">
-				<panel title="Voters List" style="padding:4px;" border="normal">
+	 	style="margin:2px;font-size: small" vflex='1'>
+				<panel title="Voters List" style="padding:4px;" border="normal" vflex='1'>
 					<panelchildren style="padding:5px;">
 					<toolbar>
 						<button id="addVoterButton" label="New Voter" />
@@ -26,7 +26,7 @@
 							style="cursor:help" />
 						<label value="Tips" tooltip="searchHelp" />
 					</toolbar>
-					<grid mold="paging" pageSize="10" style="font-size: 0.025em;">
+					<grid mold="paging" pageSize="10" style="font-size: 0.025em;" vflex='1'>
 						<columns menupopup="auto" width="100%" 
 							style="font-size: small;">
 							<column label="Reg #" align="left" sort="auto" />

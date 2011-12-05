@@ -19,6 +19,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	def election
 
 	def filterBtn
+	def searchVoterButton
 
 	def divisionInstance
 
@@ -31,8 +32,6 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 			election = Election.get(Executions.getCurrent().getArg().id)
 			divisionModel = new ListModelList(Division.list([sort:'name']))
 			divisionListbox.setModel(divisionModel)
-			//def votersElection = VoterElection.findAllByElection(election)
-			//showVoters(votersElection)
 		}else{
 			ComposerHelper.permissionDeniedBox()
 		}
@@ -53,7 +52,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	 }
 
 
-	def onChange_searchTextbox(){
+	def onClick_searchVoterButton(){
 		if(divisionInstance){
 			def searchText = searchTextbox.getValue()?.trim()
 			def votersList = voterElectionService.search(searchText, election,divisionInstance)
@@ -62,20 +61,6 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 			Messagebox.show("You must select a division!",
 				"Message", Messagebox.OK, Messagebox.EXCLAMATION)
 		}
-		/*def searchText = searchTextbox.getValue()?.trim()
-		def votersList = voterElectionService.search(searchText, election)
-		def results
-
-		if(!searchText.isAllWhitespace()){
-			results = votersList.collect{
-				it[0]
-			}
-		}else{
-			results = VoterElection.findAllByElection(election)
-		}
-		//showVoters(election, results)
-		showVoters(results)
-		*/
 	}
 
 

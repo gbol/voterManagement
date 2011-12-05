@@ -13,6 +13,7 @@ class VoterComposer extends GrailsComposer {
 
 	def addVoterButton
 	def filterBtn
+	def searchVoterButton
 
 	def voterSearchTextbox
 
@@ -33,14 +34,13 @@ class VoterComposer extends GrailsComposer {
 	 	if(springSecurityService.isLoggedIn()){
 			divisionModel = new ListModelList(Division.list([sort:'name']))
 			voterDivisionListbox.setModel(divisionModel)
-	 		//showVoters()
 		}else{
 			execution.sendRedirect('/login')
 		}
     }
 
 
-	 def onChange_voterSearchTextbox(){
+	 def onClick_searchVoterButton(){
 
 	 	if(division){
 	 		def searchText = voterSearchTextbox.getValue()?.trim()

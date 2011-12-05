@@ -19,6 +19,7 @@ class VoterElectionComposer extends GrailsComposer {
 	def searchTextbox
 
 	def filterBtn
+	def searchVoterButton
 
 	def divisionListbox
 
@@ -50,11 +51,16 @@ class VoterElectionComposer extends GrailsComposer {
 	 }
 
 
-	def onChange_searchTextbox(){
-		def searchText = searchTextbox.getValue()?.trim()
-		def votersList = voterElectionService.search(searchText, election,divisionInstance)
-
-		showVoters(election, votersList)
+	def onClick_searchVoterButton(){
+	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
+		if(divisionInstance){
+			def searchText = searchTextbox.getValue()?.trim()
+			def votersList = voterElectionService.search(searchText, election,divisionInstance)
+			showVoters(election, votersList)
+		}else{
+			Messagebox.show('You must to select a division!', 'Message', 
+				Messagebox.OK, Messagebox.EXCLAMATION)
+		}
 	}
 
 
