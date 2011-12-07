@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class ElectionType {
+class ElectionType implements Serializable{
 	
 	String name
 	String code

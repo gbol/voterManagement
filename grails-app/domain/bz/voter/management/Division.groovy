@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Division {
+class Division implements Serializable{
 
 	String name
 

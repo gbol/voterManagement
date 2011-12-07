@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Municipality {
+class Municipality implements Serializable{
 
 	String name
 	District district

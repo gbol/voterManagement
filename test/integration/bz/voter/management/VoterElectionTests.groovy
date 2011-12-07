@@ -38,7 +38,7 @@ class VoterElectionTests extends GroovyTestCase {
 		  voter1.affiliation = Affiliation.findByName('PUP')
 		  voter1.pollStation = pollStation
 		  voter1.validate()
-		  voter1.save()
+		  voter1.save(flush:true)
 
 		  voterElectionService.addAllVoters(election)
     }
@@ -48,10 +48,6 @@ class VoterElectionTests extends GroovyTestCase {
     }
 
     void test_findVotesSummaryByPollStationsAndElection_should_return_list_of_vote_count_by_poll_station() {
-		def voterElection = VoterElection.get(Voter.findByPerson(Person.findByFirstName('John')).id, election.id)
-		voterElection.voted = true
-		voterElection.voteTime = new Date()
-		voterElection.save()
 
 		def voterElection2 = VoterElection.get(Voter.findByPerson(Person.findByLastName('Faber')).id, election.id)
 		voterElection2.voted = true
@@ -78,17 +74,17 @@ class VoterElectionTests extends GroovyTestCase {
 		voterElection6.voteTime = new Date()
 		voterElection6.save()
 
-		def voterElection7 = VoterElection.get(Voter.findByPerson(Person.findByLastName('Jordi')).id,election.id)
+		def voterElection7 = VoterElection.get(Voter.findByPerson(Person.findByLastName('Bhojwani')).id,election.id)
 		voterElection7.voted = true
 		voterElection7.voteTime = new Date()
 		voterElection7.save()
 
 		def results = VoterElection.countVotesByPollStationAndAffiliation(election, Division.findByName('Albert'))
 
-		println "results: ${results} \n"
-		assert [1,'23','UNKNOWN'] ==  results[0]
-		assert [3,'10.0','PUP'] ==  results[1]
-		assert [2,'10.0','UDP'] ==  results[2]
+		//println "results: ${results} \n"
+		assert [3,'10','PUP'] ==  results[0]
+		assert [3,'10','UDP'] ==  results[1]
+		//assert [2,'10.0','UDP'] ==  results[2]
 
     }
 
@@ -100,6 +96,6 @@ class VoterElectionTests extends GroovyTestCase {
 
 		println "votersList: ${votersList}\n"
 
-		assertEquals 14, votersList.size()
+		assertEquals 13, votersList.size()
 	 }
 }

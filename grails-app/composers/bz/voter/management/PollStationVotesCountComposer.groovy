@@ -58,7 +58,7 @@ class PollStationVotesCountComposer extends GrailsComposer {
 	 		def pollStationTotalVotes = 0
 			def allVoters = Voter.totalVotersByPollStation(PollStation.findByPollNumber(pollNumber))
 	 		countGrids.append{
-				grid(width: "90%"){
+				grid(width: "90%", style:"padding: 10px") {
 					auxhead{
 						auxheader(label: "Poll Station: ${pollNumber}")
 					}

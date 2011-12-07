@@ -7,9 +7,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-	 <div apply="bz.voter.management.electionOfficeDashboardComposer">
-	 	<vlayout id="votesCountBox" style="padding: 4px" >
-		</vlayout>
+	 <div apply="bz.voter.management.electionOfficeDashboardComposer" 
+	 	vflex="1" style="padding: 4px" id="votesCountBox">
+
 	 </div>
 
 </zk>

@@ -95,20 +95,20 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 
 
     void test_Search_Only_One_Name() {
-	 	def searchResults = voterService.search('John')
+	 	def searchResults = voterService.search('Jules')
 		assertEquals 1, searchResults.size()
 
     }
 
 	 def test_Search_First_And_Last_Names(){
-	 	def searchResults = voterService.search('John, Doe')
+	 	def searchResults = voterService.search('Cesar, Ross')
 		assertEquals 1, searchResults.size()
 	 }
 
 
 	 def test_Search_Partial_Names(){
-		def searchResults = voterService.search('J , Do ')
-		assertEquals 2, searchResults.size()
+		def searchResults = voterService.search('C , ro ')
+		assertEquals 1, searchResults.size()
 	 }
 
 

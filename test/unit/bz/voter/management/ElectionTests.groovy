@@ -9,8 +9,8 @@ class ElectionTests extends GrailsUnitTestCase {
     protected void setUp() {
         super.setUp()
 			
-	 		electionType = new ElectionType(name: 'General')
 	 		mockDomain(ElectionType, [electionType])
+	 		electionType = new ElectionType(name: 'General').save()
 	 		mockDomain(Election)
     }
 
@@ -29,7 +29,7 @@ class ElectionTests extends GrailsUnitTestCase {
 
 
 	 void test_Can_Not_Save_Election_Twice(){
-	 	def electionInstance = new Election(year: 2008,electionType: electionType)
+	 	def electionInstance = new Election(year: 2008,electionType: electionType).save()
 		mockDomain(Election, [electionInstance])
 		def electionInstance2 = new Election(year: 2008,electionType: electionType)
 		mockForConstraintsTests(Election, [electionInstance2])

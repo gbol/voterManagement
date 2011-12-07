@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Sex {
+class Sex implements Serializable{
 
 	String name
 	String code

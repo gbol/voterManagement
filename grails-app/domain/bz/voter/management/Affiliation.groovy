@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Affiliation {
+class Affiliation implements Serializable{
 	String name
 
 	String toString(){

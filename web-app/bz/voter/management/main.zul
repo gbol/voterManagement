@@ -53,7 +53,7 @@
 					<include src="menu.zul"/>
 				</vlayout>
 			</west>
-			<center id="center">
+			<center id="center" vflex="1">
 				Center
 			</center>
 		</borderlayout>

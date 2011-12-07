@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Ethnicity {
+class Ethnicity implements Serializable{
 
 	String name
 

@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class Election {
+class Election implements Serializable{
 	
 	Integer year
 	Date electionDate

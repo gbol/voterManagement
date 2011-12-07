@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class District {
+class District implements Serializable{
 	
 	String name
 	String code

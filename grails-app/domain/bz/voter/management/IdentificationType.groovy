@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class IdentificationType {
+class IdentificationType implements Serializable{
 
 	String name
 

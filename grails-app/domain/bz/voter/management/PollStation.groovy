@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class PollStation {
+class PollStation implements Serializable{
 
 	String pollNumber
 	Division division

@@ -16,6 +16,7 @@ class Person implements Serializable{
 	Address address
 	Ethnicity ethnicity
 
+
 	static transients = ['age','numberOfYearsRegistered']
 
     static constraints = {
@@ -57,5 +58,8 @@ class Person implements Serializable{
     	return age
 	 }
 
+	String toString(){
+		"${lastName} , ${firstName}"
+	}
 
 }

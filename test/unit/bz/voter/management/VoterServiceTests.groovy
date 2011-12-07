@@ -5,16 +5,17 @@ import grails.test.*
 import java.util.Calendar
 
 class VoterServiceTests extends GrailsUnitTestCase {
+  def pledge
+  def affiliation
+  def district
+  def municipality
+  def division
+  def pollStation
+  def sex
+  def identificationType
+
     protected void setUp() {
         super.setUp()
-		  def pledge = new Pledge(name:'Yes')
-		  def affiliation = new Affiliation(name:'PUP')
-		  def district = new District(name:'Cayo', code:'CY')
-		  def municipality = new Municipality(name:'Belmopan', district:district)
-		  def division = new Division(name: 'Belmopan')
-		  def pollStation = new PollStation(pollNumber:1,division:division)
-		  def sex = new Sex(name:'Male', code:'M')
-		  def identificationType = new IdentificationType(name:'Passport')
 		  mockDomain(Pledge, [pledge])
 		  mockDomain(Affiliation, [affiliation])
 		  mockDomain(District, [district])
@@ -32,6 +33,14 @@ class VoterServiceTests extends GrailsUnitTestCase {
 		  mockDomain(Election)
 		  mockDomain(ElectionType)
 		  mockLogging(VoterService.class,true)
+		  pledge = new Pledge(name:'Yes').save()
+		  affiliation = new Affiliation(name:'PUP').save()
+		  district = new District(name:'Cayo', code:'CY').save()
+		  municipality = new Municipality(name:'Belmopan', district:district).save()
+		  division = new Division(name: 'Belmopan').save()
+		  pollStation = new PollStation(pollNumber:'1',division:division).save()
+		  sex = new Sex(name:'Male', code:'M').save()
+		  identificationType = new IdentificationType(name:'Passport').save()
 
 		  new ElectionType(name: 'General',code:'G').save()
     }
@@ -62,8 +71,8 @@ class VoterServiceTests extends GrailsUnitTestCase {
 			registrationDate: new Date().parse('yyyy-dd-mm','2010-01-01'),
 			registrationNumber: 1,
 			sex: Sex.findByCode('M'),
-			identificationType: IdentificationType.findByName('Passport'),
-			pollStation: PollStation.findByPollNumber(1),
+			identificationType: identificationType,
+			pollStation: pollStation,
 			pledge: Pledge.findByName('Yes'),
 			affiliation: Affiliation.findByName('PUP'),
 			address: addressParams
@@ -84,17 +93,16 @@ class VoterServiceTests extends GrailsUnitTestCase {
 				lastName: params.lastName,
 				birthDate: params.birthDate,
 				sex: params.sex
-			)
+			).save()
 
 			return person
 		}]
 
-		/*voterService.Election = [findAll: {
-			Election.findAllByYearGreaterThanEquals(2011)	
-		}
-		]*/
 
 		def voter = voterService.add(params)
+
+		println "voter: ${voter.person}"
+		println "errors: ${voter.errors}"
 
 		assertNotNull voter.id
 		assertEquals 'John', voter.person.firstName
@@ -158,49 +166,61 @@ class VoterServiceTests extends GrailsUnitTestCase {
 	 def test_Update_Existing_Voter(){
 
 	 	def voterService = new VoterService()
-	 	
+
 		def addressInstance = new Address(
 			houseNumber: '1',
 			street: 'N/A',
-			municipality: Municipality.findByName('Belmopan') ).save()
-	
-		def person = new Person(
+			municipality: Municipality.findByName('Belmopan') 
+		).save()
+
+		def personInstance = new Person(
 			firstName: 'John',
 			lastName: 'Doe',
 			birthDate: new Date(77,04,15),
 			sex: Sex.findByCode('M'),
 			address: addressInstance
-		).save()
-
-		def voter = new Voter(
-			person: person,
-			registrationDate: new Date().parse('dd/MM/yyyy','01/11/2011'),
-			registrationNumber: '123',
-			identificationType: IdentificationType.findByName('Passport'),
-			pledge: Pledge.findByName('Yes'),
-			affiliation: Affiliation.findByName('PUP'),
-			pollStation: PollStation.findByPollNumber(1)).save()
+			
+		).save(flush:true)
+	 	
+		def addressParams = [ 
+			houseNumber: '1',
+			street: 'N/A',
+			municipality: Municipality.findByName('Belmopan') 
+		]
+	
 
 		def params = [
 			registrationNumber: '456',
+			registrationDate: new Date().parse('dd/MM/yyyy','01/11/2011'),
 			firstName: 'John',
-			voter: voter
+			lastName: 'Doe',
+			birthDate: new Date(77,04,15),
+			sex: Sex.findByCode('M'),
+			identificationType: IdentificationType.findByName('Passport'),
+			pledge: Pledge.findByName('Yes'),
+			affiliation: Affiliation.findByName('PUP'),
+			pollStation: PollStation.findByPollNumber(1),
+			address: addressParams
 		]
 
 
+		println "\nPersons: ${Person.list()}"
+
 		voterService.messageSource = [getMessage:{errors, locale-> return "error message"}]
 		voterService.personService = [save : {
-			def personInstance = Person.findByFirstName('John')
+			/*def personInstance = Person.findByFirstNameIlike('John')
 			personInstance.firstName = 'John'
 
 			personInstance.validate()
 
-			personInstance.save()
+			personInstance.save()*/
 
 			return personInstance
 		}]
 
 		def voterInstance = voterService.save(params)
+		println "person: ${voterInstance.person}"
+		println "registrationDate: ${voterInstance.registrationDate}\n"
 
 		assertEquals 'John',voterInstance.person.firstName
 		assertEquals '456', voterInstance.registrationNumber

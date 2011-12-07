@@ -7,19 +7,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-	 <div apply="bz.voter.management.PollStationVotesCountComposer">
-	 	<panel title="Display Votes By Divisions" border="normal" 
-			style="padding: 8px" >
-			<panelchildren>
+	 	<panel title="Display Votes By Divisions" border="normal" style="overflow:auto" 
+			 apply="bz.voter.management.PollStationVotesCountComposer" vflex="1">
+			<panelchildren >
 					<toolbar>
 						<listbox id="divisionListBox" mold="select" rows="1"/>
 						<button label="Display Votes" id="votesBtn" />
 					</toolbar>
-				<vbox id="countGrids" style="padding: 10px">
-				</vbox>
+				<vlayout id="countGrids" style="padding:10px">
+				</vlayout>
 			</panelchildren>
 		</panel>
-
-	 </div>
 
 </zk>

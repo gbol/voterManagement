@@ -1,6 +1,6 @@
 package bz.voter.management
 
-class SecUser {
+class SecUser implements Serializable{
 
 	transient springSecurityService
 
