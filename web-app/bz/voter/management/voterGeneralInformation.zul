@@ -57,7 +57,7 @@
 				</row>
 				<row>
 					<label value="Pledge" class="varLabel" width="40%" />
-					<label value="@{wndVoterInfo$composer.voter.pledge}" 
+					<label value="@{wndVoterInfo$composer.pledge}" 
 						class="varValue" />
 				</row>
 				<row>

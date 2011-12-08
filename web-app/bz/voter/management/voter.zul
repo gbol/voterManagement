@@ -37,7 +37,6 @@
 							<column label="Home #" align="left" sort="auto" />
 							<column label="Cell #" align="left" sort="auto" />
 							<column label="Affiliation" align="left" sort="auto" />
-							<column label="Pledge" align="left" sort="auto" />
 							<column />
 							<column />
 						</columns>

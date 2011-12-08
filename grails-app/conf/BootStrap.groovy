@@ -18,15 +18,10 @@ class BootStrap {
 	def grailsApplication
 	def messageSource
 	def unknownMunicipality
-   //static String fileName = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/Sample.xls" PUT THE ONE FOR WINDOWS HERE AND COMMENT THE ONE UNDERNEATH THIS
-   /*static String fileName = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/Sample.xls"
-   static String albertFile = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/albert.xlsx"
-   static String caribbeanShoresFile = "/home/rguerra/Documents/Dev/voterManagement/web-app/files/caribbean_shores.xlsx"
-	*/
+
    static String fileName = "/usr/local/files/Sample.xls"
    static String albertFile = "/usr/local/files/albert.xlsx"
    static String caribbeanShoresFile = "/usr/local/files/caribbean_shores.xlsx"
-
 
     def init = { servletContext ->
 
@@ -46,9 +41,9 @@ class BootStrap {
 		}
 
 		if(Pledge.count() == 0){
-			new Pledge(name:'Yes').save()
-			new Pledge(name:'No').save()
-			new Pledge(name:'Undecided').save()
+			new Pledge(name:'Yes',code:'Y').save()
+			new Pledge(name:'No',code:'N').save()
+			new Pledge(name:'Undecided',code:'U').save()
 		}
 
 

@@ -3,17 +3,20 @@ package bz.voter.management
 class Pledge implements Serializable{
 
 	String name
+	String code
 
 	String toString(){
-		name
+		code
 	}
 
     static constraints = {
-	 	name(nullable:false,unique:true,blank:false)
+	 	name(unique:true,blank:false)
+		code(unique:true, blank:false,maxSize:1)
     }
 
 	 def beforeValidate(){
 	 	name = name?.trim()?.capitalize()
+		code = code?.trim()?.capitalize()
 	}
 
 }

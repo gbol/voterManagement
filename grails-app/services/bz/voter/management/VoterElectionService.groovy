@@ -11,6 +11,7 @@ class VoterElectionService {
     def addAllVoters(Election election) {
 	 	if(VoterElection.findAllByElection(election).size() < 1){
 			//Add all voters to election
+			def pledge = Pledge.findByCode('U')
 			int cnt = 0
 			def flush = false
 			def sizeOfList = Voter.count()
@@ -20,7 +21,7 @@ class VoterElectionService {
 					cnt =  0
 				}
 				if(voter.registrationDate.toCalendar().get(Calendar.YEAR) <= election.year){
-					VoterElection.create(voter,election,flush)	
+					VoterElection.create(voter,election,null,flush)	
 					flush = false
 					cnt++
 				}

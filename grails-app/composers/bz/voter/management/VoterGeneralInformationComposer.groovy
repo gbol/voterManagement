@@ -9,6 +9,7 @@ class VoterGeneralInformationComposer extends GrailsComposer {
 	def birthDate
 	def registrationDate
 	def voteTime
+	def pledge
 
 	def springSecurityService
 
@@ -19,6 +20,7 @@ class VoterGeneralInformationComposer extends GrailsComposer {
 			birthDate = voter.person.birthDate.format('dd-MMM-yyyy')
 			registrationDate = voter.registrationDate.format('dd-MMM-yyyy')
 			voteTime = voterElection.voteTime
+			pledge = voterElection.pledge
 		}else{
 			execution.sendRedirect('/login')
 		}

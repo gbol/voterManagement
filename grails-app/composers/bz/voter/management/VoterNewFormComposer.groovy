@@ -22,7 +22,7 @@ class VoterNewFormComposer extends GrailsComposer {
 	def identificationTypeListbox
 	def districtListbox
 	def municipalityListbox
-	def pledgeListbox
+	//def pledgeListbox
 	def affiliationListbox
 
 	def firstNameTextbox
@@ -94,7 +94,7 @@ class VoterNewFormComposer extends GrailsComposer {
 		  		ComposerHelper.initializeListbox(pollStationListbox,voter,'pollStation')
 		  		ComposerHelper.initializeListbox(districtListbox,municipality,'district')
 		  		ComposerHelper.initializeListbox(municipalityListbox,address,'municipality')
-		  		ComposerHelper.initializeListbox(pledgeListbox,voter,'pledge')
+		  		//ComposerHelper.initializeListbox(pledgeListbox,voter,'pledge')
 		  		ComposerHelper.initializeListbox(affiliationListbox,voter,'affiliation')
 	 	}else{
 			execution.sendRedirect('/login')
@@ -141,7 +141,7 @@ class VoterNewFormComposer extends GrailsComposer {
 			identificationType : identificationTypeListbox.getSelectedItem()?.getValue(),
 			sex : sexListbox.getSelectedItem()?.getValue(),
 			pollStation : pollStationListbox.getSelectedItem()?.getValue(),
-			pledge : pledgeListbox.getSelectedItem()?.getValue(),
+			//pledge : pledgeListbox.getSelectedItem()?.getValue(),
 			affiliation: affiliationListbox.getSelectedItem()?.getValue(),
 			address: addressParams
 		]

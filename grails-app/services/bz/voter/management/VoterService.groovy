@@ -30,7 +30,6 @@ class VoterService {
 	comments
 	identificationType
 	pollStation
-	pledge
 	affiliation
 
 	If id does not exist, then an insert is done, otherwise the existing instance is updated.
@@ -68,7 +67,6 @@ class VoterService {
 			voterInstance.registrationNumber = params.registrationNumber ?: voterInstance.registrationNumber
 			voterInstance.identificationType = params.identificationType ?: voterInstance.identificationType
 			voterInstance.pollStation = params.pollStation ?: voterInstance.pollStation
-			voterInstance.pledge = params.pledge ?: voterInstance.pledge
 			voterInstance.affiliation = params.affiliation ?: voterInstance.affiliation
 
 			voterInstance.validate()

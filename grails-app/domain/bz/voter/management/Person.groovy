@@ -15,6 +15,7 @@ class Person implements Serializable{
 	Sex sex
 	Address address
 	Ethnicity ethnicity
+	boolean alive
 
 
 	static transients = ['age','numberOfYearsRegistered']
@@ -39,6 +40,7 @@ class Person implements Serializable{
 		cellPhone = cellPhone?.trim()
 		workPhone = workPhone?.trim()
 		comments = comments?.trim()?.capitalize()
+		alive = alive ?: true
 	 }
 
 

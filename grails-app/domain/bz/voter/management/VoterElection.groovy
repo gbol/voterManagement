@@ -9,7 +9,7 @@ class VoterElection implements Serializable{
 	boolean voted
 	String pickupTime
 	Date voteTime
-
+	Pledge pledge
 
     static constraints = {
 	 	pickupTime(nullable:true)
@@ -43,18 +43,22 @@ class VoterElection implements Serializable{
 	 }
 
 
-	 static VoterElection create(Voter voter, Election election, boolean flush=false){
-	 	new VoterElection(voter: voter, election: election, voted: false).save(flush:flush,insert:true)
+	 static VoterElection create(Voter voter, Election election,Pledge pledge, boolean flush=false){
+	 	new VoterElection(voter: voter, 
+			election: election, 
+			pledge: pledge ?: Pledge.findByCode('U'),
+			voted: false).save(flush:flush,insert:true)
 	 }
 
 
 	 static VoterElection update(Voter voter, Election election, boolean voted, 
-	 	Date pickupTime,Date voteTime, flush=false){
+	 	Date pickupTime,Date voteTime,Pledge pledge, flush=false){
 	 	def instance = VoterElection.get(voter.id,election.id)
 		if(instance){
 			instance.voted = voted
 			instance.pickupTime = pickupTime
 			instance.pickupTime = voteTime
+			instance.pledge = pledge
 			instance.save(flush:flush)
 		}
 

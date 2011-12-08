@@ -55,8 +55,6 @@
 								<textbox id="workPhoneTextbox" />
 							</row>
 							<row>
-								<label value="Pledge" />
-								<listbox id="pledgeListbox" mold="select" rows="1" />
 								<label value="Affiliation" />
 								<listbox id="affiliationListbox" mold="select" rows="1" />
 							</row>

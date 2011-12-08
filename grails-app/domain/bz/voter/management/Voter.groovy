@@ -20,7 +20,6 @@ class Voter implements Serializable{
 	 	registrationNumber = registrationNumber?.trim()
 	 }
 
-
 	 def getNumberOfYearsRegistered(){
 
 	 	Calendar today = Calendar.getInstance()
