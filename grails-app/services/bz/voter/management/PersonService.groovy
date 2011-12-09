@@ -36,6 +36,10 @@ class PersonService {
 		def addressInstance
 		def errorMessages
 
+		if(!addressService){
+			addressService = new AddressService()
+		}
+
 		if(params.person?.id){
 			personInstance = params.person
 		}else{

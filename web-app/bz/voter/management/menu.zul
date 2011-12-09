@@ -14,7 +14,7 @@
 					<toolbarbutton id="electionButton" label="Election"/>
 					<toolbarbutton id="voterButton" label="Voters"/>
 					<toolbarbutton id="userButton" label="Users"/>
-					<toolbarbutton label="System"/>
+					<toolbarbutton id="systemButton" label="System"/>
 					<toolbarbutton id="signOutButton" label="Sign Out"/>
 				</vbox>
 			</panelchildren>

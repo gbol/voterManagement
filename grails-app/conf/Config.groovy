@@ -51,6 +51,8 @@ grails.spring.bean.packages = []
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
 
+files.dir='/usr/local/files/'
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
@@ -98,3 +100,7 @@ log4j = {
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'bz.voter.management.SecUser'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'bz.voter.management.SecUserSecRole'
 grails.plugins.springsecurity.authority.className = 'bz.voter.management.SecRole'
+grails.plugins.springsecurity.filterChain.chainMap = [
+	'/zkau/upload': 'anonymousAuthenticationFilter',
+	'/**': 'JOINED_FILTERS',
+]

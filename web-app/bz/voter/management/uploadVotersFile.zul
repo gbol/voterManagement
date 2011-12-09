@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <div apply="bz.voter.management.UploadVotersFileComposer" vflex="1" 
+	 	style="margin: 2px; font-size: 0.65em">
+
+			<panel title="Import Voters" border="normal" vflex="1"
+				style="padding:4px">
+
+				<panelchildren style="padding:4px">
+					<vlayout>
+						<hbox>
+							<label value="Select Division" />
+							<listbox id="divisionListbox" rows="1" mold="select" />
+							<button id="fileUpload" vflex="min" label="Upload File" upload="true"/>
+						</hbox>
+					</vlayout>
+				</panelchildren>
+
+			</panel>
+
+    </div>
+
+</zk>

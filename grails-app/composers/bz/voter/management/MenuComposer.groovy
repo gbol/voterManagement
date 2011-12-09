@@ -9,6 +9,8 @@ class MenuComposer extends GrailsComposer {
 	def userButton
 	def voterButton
 	def signOutButton
+	def systemButton
+
 	def center
 	
     def afterCompose = { window ->
@@ -36,5 +38,10 @@ class MenuComposer extends GrailsComposer {
 
 	 def onClick_signOutButton(){
 	 	execution.sendRedirect('/logout')
+	 }
+
+	 def onClick_systemButton(){
+	 	center.getChildren().clear()
+		Executions.createComponents("uploadVotersFile.zul",center,null)
 	 }
 }

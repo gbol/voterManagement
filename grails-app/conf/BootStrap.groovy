@@ -1,5 +1,8 @@
-import org.grails.plugins.excelimport.*
 import grails.util.Environment
+
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+
+import org.grails.plugins.excelimport.*
 
 import java.util.*
 
@@ -13,13 +16,14 @@ class BootStrap {
 
 	def springSecurityService
 	def voterService
+	def importFileService
 
 	def sessionFactory
 	def grailsApplication
 	def messageSource
 	def unknownMunicipality
 
-   static String fileName = "/usr/local/files/Sample.xls"
+   static String fileName = ConfigurationHolder.config.files.dir + "Sample.xls"
    static String albertFile = "/usr/local/files/albert.xlsx"
    static String caribbeanShoresFile = "/usr/local/files/caribbean_shores.xlsx"
 
@@ -149,64 +153,16 @@ class BootStrap {
 		sessionFactory.currentSession.flush()
    } 
 
+
     def destroy = {
 
     }
 
+
 	 def populateTestData(){
 
 		def division = new Division(name:'Albert').save()
-		def pollStation = new PollStation(pollNumber:'23', division: division).save(failOnError: true)
-
-		def address = new Address(houseNumber: '45', street: 'Street Name', municipality: Municipality.findByName('Belmopan')).save(failOnError:true, flush:true)
-		def person = new Person()
-		person.firstName = 'John'
-		person.lastName = 'Doe'
-		person.birthDate = new Date().parse('dd/MM/yyyy','28/10/1984')
-		person.sex = Sex.findByCode('M')
-		person.ethnicity = Ethnicity.findByName('Creole')
-		person.address = address
-		person.cellPhone = '634-0921'
-		person.save(failOnError: true)
-
-		def voter = new Voter()
-		voter.person = person
-		voter.registrationDate = new Date().parse('dd/MM/yyyy','12/11/2010')
-		voter.registrationNumber = '42323'
-		voter.pollStation = pollStation
-		voter.identificationType = IdentificationType.findByName('Passport')
-		voter.affiliation = Affiliation.findByName('UNKNOWN')
-		voter.save()
-       
-      //VoterExcelImporter importer3 = new VoterExcelImporter(fileName);
-      VoterExcelImporter importer3 = populateDataFromXLSForDev()
-       
-      def votersMapList = importer3.getVoters()
-        
-      votersMapList.each { Map voterParams ->
-		  		def municipality = Municipality.findByName(voterParams.municipality) ?:  unknownMunicipality
-
-		  		def addressParams = [
-					houseNumber: voterParams.houseNumber,
-					street: voterParams.street,
-					municipality:  municipality
-				]
-
-				voterParams.sex = Sex.findByCode(voterParams.sex)
-				voterParams.identificationType = IdentificationType.findByName(voterParams.identificationType)
-				voterParams.affiliation = Affiliation.findByName(voterParams.affiliation) ?: Affiliation.findByName('UNKNOWN')
-				voterParams.pollStation = PollStation.findByPollNumber(voterParams.pollStation) ?: new PollStation(pollNumber: "${voterParams.pollStation}", division: division).save()
-				voterParams.pledge = Pledge.findByName(voterParams.pledge) ?: Pledge.findByName('Undecided')
-
-				voterParams.address = addressParams
-				voterService.add(voterParams)
-				//def newVoter = voterService.add(voterParams)
-				/*if(newVoter.hasErrors()){
-					println "\nVoter not saved: ${newVoter.errors}"
-				}else{
-					println "\nVoter Saved: ${newVoter.id}\n"
-				}*/
-       } 
+		importFileService.importVoters(division,'Sample.xls')
 
 	 }
 

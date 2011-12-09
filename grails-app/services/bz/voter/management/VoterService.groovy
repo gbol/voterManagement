@@ -51,6 +51,9 @@ class VoterService {
 			voterInstance = new Voter()
 		}
 
+		if(!personService){
+			personService = new PersonService()
+		}
 		personInstance = personService.save(params)
 
 		if(personInstance.hasErrors()){
