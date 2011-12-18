@@ -85,7 +85,7 @@ class VoterService {
 	}
 
 
-	def add(params){
+	def add(HashMap params,Election election){
 		def voterInstance = save(params)
 
 		if(!voterInstance.hasErrors()){
@@ -93,8 +93,12 @@ class VoterService {
 
 			def elections = Election.findAllByYearGreaterThanEquals(year)
 
-			for(election in elections){
-				VoterElection.create(voterInstance,election,true)
+			for(e in elections){
+				if(e == election){
+					VoterElection.create(voterInstance,election,params.pledge,true)
+				}else{
+					VoterElection.create(voterInstance,e,null,true)
+				}
 			}
 			
 		}

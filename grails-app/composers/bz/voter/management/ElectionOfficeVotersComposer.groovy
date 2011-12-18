@@ -81,7 +81,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 					label(value: voterElectionInstance.voter.pollStation.pollNumber)
 					label(value: voterElectionInstance.voter.affiliation)
 					label(value: voterElectionInstance.pledge)
-					label(value: voterElectionInstance.voted)
+					label(value: voterElectionInstance.voted ? 'Yes' : 'No')
 					textbox(value: voterElectionInstance.pickupTime, onChange:{e->
 						voterElectionInstance.pickupTime = e.getTarget().getValue()
 					})

@@ -43,10 +43,10 @@ class VoterElection implements Serializable{
 	 }
 
 
-	 static VoterElection create(Voter voter, Election election,Pledge pledge, boolean flush=false){
+	 static VoterElection create(Voter voter, Election election,Pledge voterPledge, boolean flush=false){
 	 	new VoterElection(voter: voter, 
 			election: election, 
-			pledge: pledge ?: Pledge.findByCode('U'),
+			pledge: voterPledge ?: Pledge.findByCode('U'),
 			voted: false).save(flush:flush,insert:true)
 	 }
 

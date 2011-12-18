@@ -28,4 +28,7 @@
         <name>org.zkoss.zk.ui.metainfo.page.Loader.class</name>
         <value>org.zkoss.web.util.resource.CustomContentLoader</value>
     </library-property>
+	 <system-config>
+	 	<max-upload-size>-1</max-upload-size>
+	 </system-config>
 </zk>

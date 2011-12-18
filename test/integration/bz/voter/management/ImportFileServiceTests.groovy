@@ -14,14 +14,17 @@ class ImportFileServiceTests extends GroovyTestCase {
     }
 
 
-    void testSomething() {
+    void testImportExcelFileWithVotersList() {
 	 	def division = new Division(name:'Albert').save()
+		def election = new Election(year:2008, electionType: ElectionType.findByCode('GN')).save()
 
 		def initialNumberOfVoters = Voter.count()
 		def importFileService = new ImportFileService()
-		importFileService.importVoters(division,'Sample.xls')
+		importFileService.importVoters(division,election,'Sample.xls')
+
 
 		assertEquals((Voter.count() - initialNumberOfVoters), 13)
+		assertEquals((Voter.count() - initialNumberOfVoters), VoterElection.count())
     }
 
 }

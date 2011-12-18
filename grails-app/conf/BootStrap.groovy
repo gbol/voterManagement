@@ -162,7 +162,7 @@ class BootStrap {
 	 def populateTestData(){
 
 		def division = new Division(name:'Albert').save()
-		importFileService.importVoters(division,'Sample.xls')
+		importFileService.importVoters(division,null,'Sample.xls')
 
 	 }
 

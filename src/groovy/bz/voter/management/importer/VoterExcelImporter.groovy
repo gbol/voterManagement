@@ -59,6 +59,7 @@ class VoterExcelImporter extends AbstractExcelImporter {
 
     public VoterExcelImporter(fileName3) {
         super(fileName3)
+	 	  println "Importing file ${fileName3}"
     }
     
     List<Map> getVoters() {

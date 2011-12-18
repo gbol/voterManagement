@@ -1,9 +1,7 @@
 package bz.voter.management
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-
-import bz.voter.management.importer.*
-
+import bz.voter.management.importer.* 
 
 /**
 Service that has utilities to import files with voters into the database.
@@ -23,8 +21,11 @@ class ImportFileService {
 	ConfigurationHolder.config.files.dir
 	@return void
 	**/
-    def importVoters(Division division, String fileName) {
-      VoterExcelImporter excelImporter = new VoterExcelImporter(ConfigurationHolder.config.files.dir + fileName);
+    def importVoters(Division division,Election election, String fileName) {
+	 	
+		fileName = ConfigurationHolder.config.files.dir + fileName
+		println "Sending to VoterExcelImporter: " +  fileName
+      VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
       def votersMapList = excelImporter.getVoters()
         
       votersMapList.each { Map voterParams ->
@@ -42,11 +43,11 @@ class ImportFileService {
 				voterParams.affiliation = Affiliation.findByName(voterParams.affiliation) ?: Affiliation.findByName('UNKNOWN')
 				voterParams.pollStation = PollStation.findByPollNumber(voterParams.pollStation) ?: 
 														new PollStation(pollNumber: "${voterParams.pollStation}", division: division).save()
-				voterParams.pledge = Pledge.findByName(voterParams.pledge) ?: Pledge.findByName('Undecided')
+				voterParams.pledge = Pledge.findByName(voterParams.pledge) ?: Pledge.findByCode('U')
 
 				voterParams.address = addressParams
 				if(!voterService) voterService = new VoterService()
-				voterService.add(voterParams)
+				def voter = voterService.add(voterParams,election)
        } 
 
     }

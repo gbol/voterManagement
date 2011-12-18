@@ -11,16 +11,37 @@
 	 	style="margin: 2px; font-size: 0.65em">
 
 			<panel title="Import Voters" border="normal" vflex="1"
-				style="padding:4px">
+				style="padding:4px" width="50%">
 
 				<panelchildren style="padding:4px">
-					<vlayout>
-						<hbox>
-							<label value="Select Division" />
-							<listbox id="divisionListbox" rows="1" mold="select" />
-							<button id="fileUpload" vflex="min" label="Upload File" upload="true"/>
-						</hbox>
-					</vlayout>
+
+					<grid oddRowSclass="none">
+						<columns>
+							<column width="20%">
+							</column>
+						</columns>
+						<rows>
+							<row>
+								<label value="Select Division" />
+								<listbox id="divisionListbox" rows="1" mold="select" />
+							</row>
+							<row>
+								<label id="electionListLabel" value="Select Election" />
+								<listbox id="electionListbox" mold="default" rows="5" width="94%">
+									<listhead>
+										<listheader label="Year" width="20%"/>
+										<listheader label="Election Type" width="40%"/>
+										<listheader label="Date" width="40%"/>
+									</listhead>
+								</listbox>
+							</row>
+							<row>
+								<label id="uploadLabel" value="Select File" />
+								<button id="fileUpload" vflex="min" label="Upload File" upload="true" />
+							</row>
+						</rows>
+					</grid>
+
 				</panelchildren>
 
 			</panel>
