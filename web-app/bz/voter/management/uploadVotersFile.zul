@@ -8,14 +8,14 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
     <div apply="bz.voter.management.UploadVotersFileComposer" vflex="1" 
-	 	style="margin: 2px; font-size: 0.65em">
+	 	style="margin: 2px; font-size: 0.65em" id="uploadDiv">
 
 			<panel title="Import Voters" border="normal" vflex="1"
 				style="padding:4px" width="50%">
 
-				<panelchildren style="padding:4px">
+				<panelchildren id="panelChildren" style="padding:4px">
 
-					<grid oddRowSclass="none">
+					<grid id="importFormGrid" oddRowSclass="none">
 						<columns>
 							<column width="20%">
 							</column>
@@ -41,6 +41,8 @@
 							</row>
 						</rows>
 					</grid>
+
+					<textbox id="textbox" rows="8" visible="false"/>
 
 				</panelchildren>
 

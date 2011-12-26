@@ -118,7 +118,7 @@ class BootStrap {
 
 		Environment.executeForCurrentEnvironment{
 			development{
-				populateTestData()
+				//populateTestData()
 
 			}//End of development
 			
@@ -127,7 +127,7 @@ class BootStrap {
 			}
 
 			production{
-				if(Voter.count() == 0 ){
+				/*if(Voter.count() == 0 ){
 					def albertDiv = Division.findByName('Albert')
 					def caribbeanShoresDiv = Division.findByName('Caribbean Shores')
 					if(albertDiv){
@@ -146,7 +146,7 @@ class BootStrap {
 						caribbeanShoresDiv = new Division(name:'Caribbean Shores').save(flush:true)
 						populateDataFromXLSForProduction('Caribbean Shores',caribbeanShoresFile)
 					}
-				}
+				}*/
 			}
 		}
 

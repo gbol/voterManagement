@@ -25,8 +25,16 @@ class UploadVotersFileComposer extends GrailsComposer {
 
 	def fileUpload
 
+	def importFormGrid
+
+	def textbox
+
+	def panelChildren
+
 	def division
 	def election
+
+	def uploadDiv
 
 	ListModelList divisionModel
 
@@ -84,7 +92,6 @@ class UploadVotersFileComposer extends GrailsComposer {
 					Messagebox.ERROR)
 			}else{
 				if(spreadSheetContentType.contains(media.getContentType())){
-					//println "\nStream Data: ${media.getStreamData()}\n"
 					InputStream srcFileInputStream =  media.getStreamData()
 					file = new FileOutputStream(new File(ConfigurationHolder.config.files.dir + media.getName()))
 					
@@ -103,12 +110,20 @@ class UploadVotersFileComposer extends GrailsComposer {
 						srcFileInputStream.close()
 						file.flush()
 						file.close()
-						if((new File(ConfigurationHolder.config.files.dir + media.getName()))?.exists()){
-							println "\nImported File ${media.getName()}"
-							println "Importing data\n"
-							importFileService.importVoters(division,election,media.getName())
-						}
 
+					}
+					if((new File(ConfigurationHolder.config.files.dir + media.getName()))?.exists()){
+						println "\nImported File ${media.getName()}"
+						println "Importing data\n"
+						importFormGrid.setVisible(false)
+						importFormGrid.getChildren().clear()
+						textbox.setVisible(true)
+						//textbox.setValue("Importing voters...")
+						if(textbox.isVisible() && !importFormGrid.isVisible())
+						{
+							def totalVotersImported = importFileService.importVoters(division,election,media.getName())
+							textbox.setValue(textbox.getValue() + "\nImported ${totalVotersImported} voters!")
+						}
 					}
 				}else{
 					Messagebox.show("Import file must be an excel document", "Wrong File Format", Messagebox.OK,

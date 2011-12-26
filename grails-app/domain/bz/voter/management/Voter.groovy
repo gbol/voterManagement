@@ -1,7 +1,14 @@
 package bz.voter.management
 
+import java.util.Locale
+import java.text.DateFormat
+
 class Voter implements Serializable{
 	
+
+	static transients = ["firstName", "lastName", "birthDate",
+		"age", "sex"]
+
 	Person person
 	Date registrationDate
 	String registrationNumber
@@ -30,6 +37,27 @@ class Voter implements Serializable{
 
 		return years
 
+	 }
+
+
+	 String getFirstName(){
+	 	person.firstName
+	 }
+
+	 String getLastName(){
+	 	person.lastName
+	 }
+
+	 def getBirthDate(){
+	 	DateFormat.getDateInstance(DateFormat.MEDIUM,Locale.UK).format(person.birthDate)
+	 }
+
+	 int getAge(){
+	 	person.age
+	 }
+
+	 Sex getSex(){
+	 	person.sex
 	 }
 
 	 static totalVotersByPollStation(PollStation pollStation){

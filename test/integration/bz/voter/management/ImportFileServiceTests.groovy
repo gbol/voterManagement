@@ -20,11 +20,12 @@ class ImportFileServiceTests extends GroovyTestCase {
 
 		def initialNumberOfVoters = Voter.count()
 		def importFileService = new ImportFileService()
-		importFileService.importVoters(division,election,'Sample.xls')
+		def numberOfVotersImported = importFileService.importVoters(division,election,'Sample.xls')
 
 
 		assertEquals((Voter.count() - initialNumberOfVoters), 13)
 		assertEquals((Voter.count() - initialNumberOfVoters), VoterElection.count())
+		assertEquals 13, numberOfVotersImported
     }
 
 }

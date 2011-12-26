@@ -53,6 +53,8 @@ class VoterNewFormComposer extends GrailsComposer {
 
 	def voterService
 	def springSecurityService
+
+	def voterFacade
 	
    def afterCompose = { window ->
 		if(springSecurityService.isLoggedIn()){
@@ -141,17 +143,18 @@ class VoterNewFormComposer extends GrailsComposer {
 			identificationType : identificationTypeListbox.getSelectedItem()?.getValue(),
 			sex : sexListbox.getSelectedItem()?.getValue(),
 			pollStation : pollStationListbox.getSelectedItem()?.getValue(),
-			//pledge : pledgeListbox.getSelectedItem()?.getValue(),
 			affiliation: affiliationListbox.getSelectedItem()?.getValue(),
 			address: addressParams
 		]
 
 		if(voterInstance.id){
 			params.voter = voterInstance
-			voterInstance = voterService.save(params)
+			//voterInstance = voterService.save(params)
 		}else{
-			voterInstance = voterService.add(params)
+			//voterInstance = voterService.add(params)
 		}
+
+		voterInstance = voterFacade.save(params)
 
 		if(voterInstance.retrieveErrors()){
 			errorMessages.append{

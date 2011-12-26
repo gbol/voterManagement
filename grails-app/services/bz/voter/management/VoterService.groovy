@@ -10,6 +10,34 @@ class VoterService {
 
 	 def personService
 
+	 static String LIST_BY_DIVISION_QUERY = "select v " +
+			"from Voter as v " +
+			"inner join v.pollStation as poll " +
+			"inner join v.person as person " +
+			"where  poll.division =:division " +
+			"order by person.lastName"
+
+	static String SEARCH_BY_DIVISION_QUERY = "select v " +
+			"from Voter as v " +
+			"inner join v.person as p "+
+			"inner join v.pollStation as poll " +
+			"where poll.division =:division " +
+		   "and ((lower(p.firstName) like lower(:firstName)) " 
+
+	static String GET_COUNT_OF_SEARCH_BY_DIVISION_QUERY = "select count(v) " +
+			"from Voter as v " +
+			"inner join v.person as p "+
+			"inner join v.pollStation as poll " +
+			"where poll.division =:division " +
+		   "and ((lower(p.firstName) like lower(:firstName)) " 
+
+	static String GET_COUNT_OF_ALL_VOTERS_IN_A_DIVISIOIN_QUERY = "select count(v) " +
+			"from Voter as v " +
+			"inner join v.pollStation as poll " +
+			"inner join v.person as person " +
+			"where  poll.division =:division " 
+
+
 	/*
 	Save a new instance of voters.
 	@param params : a map containing the fields for adding a new voter:
@@ -85,7 +113,7 @@ class VoterService {
 	}
 
 
-	def add(HashMap params,Election election){
+	def add(HashMap params,Election election, boolean flush){
 		def voterInstance = save(params)
 
 		if(!voterInstance.hasErrors()){
@@ -95,9 +123,9 @@ class VoterService {
 
 			for(e in elections){
 				if(e == election){
-					VoterElection.create(voterInstance,election,params.pledge,true)
+					VoterElection.create(voterInstance,election,params.pledge,flush)
 				}else{
-					VoterElection.create(voterInstance,e,null,true)
+					VoterElection.create(voterInstance,e,null,flush)
 				}
 			}
 			
@@ -149,17 +177,14 @@ class VoterService {
 	 }
 
 
-	 def searchByDivision(String searchString, Division division){
+	 def searchByDivision(String searchString, Division division, int offset, int max){
 	 	def searchParams
 		def results
+		def firstName
+		def lastName
 
+		def query = SEARCH_BY_DIVISION_QUERY
 
-		def query = "select v " +
-			"from Voter as v " +
-			"inner join v.person as p "+
-			"inner join v.pollStation as poll " +
-			"where poll.division =:division " +
-		   "and ((lower(p.firstName) like lower(:firstName)) " 
 
 	 	if(!searchString.isAllWhitespace()){
 	 		searchParams = searchString.split(',').collect{it}
@@ -168,28 +193,32 @@ class VoterService {
 				query = query + 
 					" or (lower(p.lastName) like lower(:lastName)))"
 
-				results = Voter.executeQuery(query, [
-					firstName: '%' + searchParams[0].trim() + '%',
-					lastName: '%' + searchParams[0].trim() + '%',
-					division: division])
+				firstName = "%${searchParams[0].trim()}%"
+				lastName = "%${searchParams[0].trim()}%"
 			}else{
 				query = query + 
 					" and (lower(p.lastName) like lower(:lastName)))"
 
+				firstName = "%${searchParams[0].trim()}%"
+				lastName = "%${searchParams[1].trim()}%"
+			}
+
+			if(max>0){
 				results = Voter.executeQuery(query, [
-					firstName: '%' + searchParams[0].trim() + '%',
-					lastName: '%' + searchParams[1].trim() + '%',
-					division: division])
+					division: division,
+					firstName: firstName,
+					lastName: lastName,
+					offset: offset,
+					max: max])
+			}else{
+				results = Voter.executeQuery(query, [
+					division: division,
+					firstName: firstName,
+					lastName: lastName])
 			}
 
 		}else{
-			query = "select v " +
-				"from Voter as v " +
-				"inner join v.pollStation as p " +
-				"where p.division =:division"
-			results = Voter.executeQuery(query, [
-				division: division
-			])
+			results = listByDivision(division, offset, max)
 		}
 
 		return results
@@ -197,14 +226,69 @@ class VoterService {
 	 }
 
 
-	 def listByDivision(Division division){
-	 	def query = "select v " +
-			"from Voter as v " +
-			"inner join v.pollStation as poll " +
-			"where  poll.division =:division"
+	 /**
+	 This is used for pagination. An offset and maximum number of records are specified.
+	 @args division : the Division that we want to get the voters from.
+	 @args offset the offset from where to start the query
+	 @args max the maximum number of records to acquire
+	 **/
+	 def listByDivision(Division division, int offset, int max){
+	 	def results
 
-		return Voter.executeQuery(query, [division: division])
+		results = Voter.executeQuery(LIST_BY_DIVISION_QUERY,
+			[division: division,
+			 offset: offset,
+			 max: max
+			])
+
+		return results
 	 	
 	 }
+
+
+	 def listByDivision(Division division){
+		Voter.executeQuery(LIST_BY_DIVISION_QUERY,[division:division])
+	 }
+
+
+	/**
+	Returns the total number of voters in a division.
+	@arg division 
+	@returns int total number of voters in division.
+	**/
+	 def countByDivision(Division division){
+	 	def results = Voter.executeQuery(GET_COUNT_OF_ALL_VOTERS_IN_A_DIVISIOIN_QUERY, 
+			[division: division])
+
+		return results[0]
+ 	}
+
+
+	def countByDivisionAndSearch(Division division, String searchString){
+		def firstName
+		def lastName
+	 	def searchParams = searchString.split(',').collect{it}
+
+		def query = GET_COUNT_OF_SEARCH_BY_DIVISION_QUERY
+
+		if(searchParams.size() == 1){
+			query = query + 
+				" or (lower(p.lastName) like lower(:lastName)))"
+
+			firstName = "%${searchParams[0].trim()}%"
+			lastName = "%${searchParams[0].trim()}%"
+		}else{
+			query = query + 
+				" and (lower(p.lastName) like lower(:lastName)))"
+
+			firstName = "%${searchParams[0].trim()}%"
+			lastName = "%${searchParams[1].trim()}%"
+		}
+
+		def results = Voter.executeQuery(query ,
+			[division:division, firstName: firstName, lastName: lastName])
+
+		results[0]
+	}
 
 }

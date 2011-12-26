@@ -2,10 +2,21 @@ package bz.voter.management
 
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
+import org.zkoss.zk.ui.event.ForwardEvent
+import org.zkoss.zul.Messagebox
+import org.zkoss.zul.Grid
+import org.zkoss.zul.Paging
+import org.zkoss.zul.ListModelList
+import org.zkoss.zul.Window
+import org.zkoss.zul.Paging
+import org.zkoss.zul.RowRenderer
+import org.zkoss.zul.Label
+import org.zkoss.zul.event.PagingEvent
 
-import org.zkoss.zul.*
+import org.zkoss.zklargelivelist.model.DivisionVotersPagingListModel
 
 import bz.voter.management.zk.ComposerHelper
+import bz.voter.management.zk.VoterRenderer
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -14,6 +25,7 @@ class VoterComposer extends GrailsComposer {
 	def addVoterButton
 	def filterBtn
 	def searchVoterButton
+	def printButton
 
 	def voterSearchTextbox
 
@@ -25,15 +37,28 @@ class VoterComposer extends GrailsComposer {
 
 	def division
 
+	Grid votersGrid
+	Paging voterPaging
+
+	DivisionVotersPagingListModel voterModel = null
 	ListModelList divisionModel
+
 
 	def springSecurityService
 	def voterService
+
+
+	private final int _pageSize = 10
+	private int _startPageNumber = 0
+	private int _totalSize = 0
+	private boolean _needsTotalSizeUpdate = true
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
 			divisionModel = new ListModelList(Division.list([sort:'name']))
 			voterDivisionListbox.setModel(divisionModel)
+
+			votersGrid.setRowRenderer(new VoterRenderer())
 		}else{
 			execution.sendRedirect('/login')
 		}
@@ -44,8 +69,7 @@ class VoterComposer extends GrailsComposer {
 
 	 	if(division){
 	 		def searchText = voterSearchTextbox.getValue()?.trim()
-			def votersList = voterService.searchByDivision(searchText,division)
-			showVoters(votersList)
+			refreshModel(searchText,0)
 		}else{
 			Messagebox.show("You must select a division!",
 				"Message", Messagebox.OK, Messagebox.EXCLAMATION)
@@ -65,8 +89,9 @@ class VoterComposer extends GrailsComposer {
 	 		def divisionInstance = voterDivisionListbox.getSelectedItem().getValue()
 			if(divisionInstance){
 				def divisionVoters = voterService.listByDivision(divisionInstance)
+				voterSearchTextbox.setValue("")
 				if(divisionVoters.size()>0){
-					showVoters(divisionVoters)
+					refreshModel(_startPageNumber)
 				}else{
 					votersListRows.getChildren().clear()
 					Messagebox.show("No voters exist in ${divisionInstance.name}!",
@@ -89,32 +114,59 @@ class VoterComposer extends GrailsComposer {
 	 }
 
 
-	 def showVoters(divisionVoters){
-	 	votersListRows.getChildren().clear()
-		//for(voter in Voter.list()){
-		for(voter in divisionVoters){
-			def voterInstance = voter
-			votersListRows.append{
-				row{
-					label(value: voter.registrationNumber)
-					label(value: voter.person.lastName)
-					label(value: voter.person.firstName)
-					label(value: voter.person.age)
-					label(value: voter.person.sex)
-					label(value: voter.person.homePhone)
-					label(value: voter.person.cellPhone)
-					label(value: voter.affiliation)
-					button(label: 'Edit', onClick:{
-						//center.getChildren().clear()
-						final Window win = Executions.createComponents("voterNewForm.zul", null,
-							[id:voterInstance.id]) 
-						win.doModal()
-					})
-					button(label: 'Manage', onClick:{
-					})
-				}
-			}
+	 def onClick_printButton(){
+	 	if(division){
+	 		Executions.sendRedirect("/person/pdf?division=${division.id}")
+		}else{
+			Messagebox.show("You must select a division!", "Message", Messagebox.OK,
+				Messagebox.EXCLAMATION)
 		}
-		
 	 }
+
+
+	public void onPaging_voterPaging(ForwardEvent event){
+		final PagingEvent pagingEvent = (PagingEvent) event.getOrigin()
+		_startPageNumber = pagingEvent.getActivePage()
+		if(voterSearchTextbox.getValue().isAllWhitespace()){
+			refreshModel(_startPageNumber)
+		}else{
+			refreshModel(voterSearchTextbox.getValue().trim(),_startPageNumber)
+		}
+	}
+
+
+  private void refreshModel(int activePage){
+  		voterPaging.setPageSize(_pageSize)
+		voterModel = new DivisionVotersPagingListModel(division,activePage, _pageSize)
+		voterPaging.setTotalSize(voterModel.getTotalSize())
+
+		if(_needsTotalSizeUpdate || activePage == 0){
+			_totalSize = voterModel.getTotalSize()
+			_needsTotalSizeUpdate = false
+		}
+
+		votersGrid.setModel(voterModel)
+  }
+
+
+  private void refreshModel(String search, int activePage){
+  		voterPaging.setPageSize(_pageSize)
+		voterModel = new DivisionVotersPagingListModel(search,division,activePage, _pageSize)
+		voterPaging.setTotalSize(voterModel.getTotalSize())
+
+		if(_needsTotalSizeUpdate || activePage == 0){
+			_totalSize = voterModel.getTotalSize()
+			voterPaging.setDetailed(true)
+			_needsTotalSizeUpdate = false
+		}
+
+		if(_totalSize < _pageSize){
+			voterPaging.setDetailed(false)
+		}
+
+		votersGrid.setModel(voterModel)
+  }
+
 }
+
+

@@ -27,6 +27,11 @@ class ImportFileService {
 		println "Sending to VoterExcelImporter: " +  fileName
       VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
       def votersMapList = excelImporter.getVoters()
+
+		def numberOfVoters = 0
+
+		def flush = false
+		def transactionCount = 0
         
       votersMapList.each { Map voterParams ->
 		  		def municipality = Municipality.findByName(voterParams.municipality) ?:  Municipality.findByName('Unknown')
@@ -47,8 +52,21 @@ class ImportFileService {
 
 				voterParams.address = addressParams
 				if(!voterService) voterService = new VoterService()
-				def voter = voterService.add(voterParams,election)
+
+				transactionCount += 1
+
+				if(transactionCount == 100 || transactionCount == votersMapList.size()){
+					flush = true
+					println "\nFlushing\n"
+					transactionCount = 0
+				}
+
+				def voter = voterService.add(voterParams,election, flush)
+
+				numberOfVoters = voter.id ? (numberOfVoters + 1) : numberOfVoters
        } 
+
+		 return numberOfVoters
 
     }
 
