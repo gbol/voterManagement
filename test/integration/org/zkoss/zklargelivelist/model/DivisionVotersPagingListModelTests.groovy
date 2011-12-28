@@ -25,7 +25,6 @@ class DivisionVotersPagingListModelTests extends GroovyTestCase {
 	 	DivisionVotersPagingListModel divisionVotersPagingListModel = 
 			new DivisionVotersPagingListModel(division,0,5)
 
-
 			assertEquals 13, divisionVotersPagingListModel.getTotalSize()
 
     }

@@ -4,11 +4,26 @@ import java.util.Calendar
 
 class VoterElectionService {
 
+   static transactional = true
+
+	static String  QUERY =  "select ve from VoterElection as ve " +
+									"inner join ve.voter as v " +
+							      "inner join v.person as p " +
+					 			   "inner join v.pollStation as poll " +
+									"where ve.election =:election " +
+									"and poll.division =:division "
+
+	static String  COUNT_BY_SEARCH_QUERY =  "select count(ve.voter) from VoterElection as ve " +
+												"inner join ve.voter as v " +
+							      			"inner join v.person as p " +
+					 			   			"inner join v.pollStation as poll " +
+												"where ve.election =:election " +
+												"and poll.division =:division "
+
+
 	def sessionFactory
 
-    static transactional = true
-
-    def addAllVoters(Election election) {
+   def addAllVoters(Election election) {
 	 	if(VoterElection.findAllByElection(election).size() < 1){
 			//Add all voters to election
 			def pledge = Pledge.findByCode('U')
@@ -33,99 +48,118 @@ class VoterElectionService {
     }
 
 
-
 	List<VoterElection> findAllByElection(Election election){
-		//println "\nSearching for voters in election: ${election?.year} | ${election?.electionType?.name}\n\n"
 		(List<VoterElection>) VoterElection.findAllByElection(election)
 	}
 
 	 /**
 	 Search for voters in an election by first name and/or last name.
-	 @param searchString : first name and/or last name separated by a comma
-	 @param election: the election where we want to search for a voter
+	 @arg searchString : first name and/or last name separated by a comma
+	 @arg election: the election where we want to search for a voter
+	 @arg offset the offset for the query
+	 @arg max the maximum size of the results returned
 	 @return a List of VoterElection
 	 **/
 
-	 def search(String searchString, Election election, Division division){
+	 def search(String searchString, Election election, Division division, int offset, int max){
+		executeQuery(searchString, QUERY,election,division,offset,max)
+
+	 }
+
+
+	/**
+	Lists all voters in a certain division registered to vote in a specific election.
+	@arg election is the election 
+	@arg division is the division
+	@arg offset offset
+	@arg max maximum size of the results
+	@returns List<VoterElection> of voters registered to vote in a division for a specific election.
+	**/
+	public List<VoterElection> listByElectionAndDivision(Election election, Division division, int offset, int max){
+		return VoterElection.executeQuery(QUERY, 
+			[election: election, 
+			division: division,
+			offset: offset,
+			max: max])
+	}
+
+	def countByElectionAndDivision(Election election, Division division){
+		return VoterElection.executeQuery(COUNT_BY_SEARCH_QUERY,[
+			election: election,
+			division: division])
+	}
+
+	 
+	 /**
+	 Get count of voters in an election by first name and/or last name.
+	 @arg searchString : first name and/or last name separated by a comma
+	 @arg election: the election where we want to search for a voter
+	 @return total number of records/voters returned by a search.
+	 **/
+	public int countVoters(String searchString,Election election, Division division){
+		def result 
+		if(searchString.isAllWhitespace()){
+			result = countByElectionAndDivision(election,division)
+		}else{
+			result = executeQuery(searchString, COUNT_BY_SEARCH_QUERY, election,division,0,0)
+		}
+		return result[0]
+	}
+
+
+
+	def executeQuery(String searchString, String searchQuery, Election election, Division division, int offset, int max){
 	 	def searchParams
 		def results
-		def query = "select ve from VoterElection as ve " +
-						"inner join ve.voter as v " +
-						"inner join v.person as p " 
+		def query = searchQuery
+		def firstName
+		def lastName
 
 	 	if(!searchString.isAllWhitespace()){
 	 		searchParams = searchString.split(',').collect{it}
 
 			if(searchParams.size() == 1){
-				if(division){
-					println "\n Searching for voters with name ${searchString} in ${division}\n"
 
-					query = query + " inner join v.pollStation as poll " +
-						"where ((lower(p.firstName) like lower(:firstName)) " +
-						"or (lower(p.lastName) like lower(:lastName))) " +
-						"and ve.election =:election and poll.division =:division"
+				query +=  "and ((lower(p.firstName) like lower(:firstName)) " +
+							"or (lower(p.lastName) like lower(:lastName))) " 
 
-					results = VoterElection.executeQuery("${query}", [
-							firstName: '%' + searchParams[0].trim() + '%', 
-							lastName: '%' + searchParams[0].trim() + '%', 
-							division: division,
-							election: election])
-					println "results: ${results}\n"
+				firstName =  '%' + searchParams[0].trim() + '%'
+				lastName = '%' + searchParams[0].trim() + '%' 
 
-				}else{
-
-					query = query + " where (lower(p.firstName) like lower(:firstName) " +
-						"or lower(p.lastName) like lower(:lastName)) " +
-						"and ve.election =:election"
-
-					results = VoterElection.executeQuery("${query}", [
-							firstName: '%' + searchParams[0].trim() + '%', 
-							lastName: '%' + searchParams[0].trim() + '%', 
-							election: election])
-				}
 
 			}else{
 
-				if(division){
-					query = query + " inner join v.pollStation as poll " +
-						"where (lower(p.firstName) like lower(:firstName) "+
-						"and lower(p.lastName) like lower(:lastName)) " +
-						"and ve.election =:election and poll.division =:division"
+				query +=  "and (lower(p.firstName) like lower(:firstName) "+
+							"and lower(p.lastName) like lower(:lastName)) " 
 
-					results = VoterElection.executeQuery("${query}", [
-							firstName: '%' + searchParams[0].trim() + '%', 
-							lastName: '%' + searchParams[1].trim() + '%', 
-							division: division,
-							election: election])
-				}else{
-					query = query + " where (lower(p.firstName) like lower(:firstName) "+
-						"and lower(p.lastName) like lower(:lastName)) " +
-						"and ve.election =:election"
-
-					results = VoterElection.executeQuery("${query}", [
-							firstName: '%' + searchParams[0].trim() + '%', 
-							lastName: '%' + searchParams[1].trim() + '%', 
-							election: election])
-				}
+				firstName =  '%' + searchParams[0].trim() + '%' 
+				lastName =  '%' + searchParams[1].trim() + '%' 
 
 			}
+
+			if(max == 0){
+				results = VoterElection.executeQuery("${query}", [
+						firstName: firstName, 
+						lastName: lastName, 
+						division: division,
+						election: election])
+			}else{
+				results = VoterElection.executeQuery("${query}", [
+						firstName: firstName, 
+						lastName: lastName, 
+						division: division,
+						election: election,
+						offset: offset,
+						max: max])
+		}
 
 		}else{
-			if(division){
-				query = query + " inner join v.pollStation as poll " +
-				"where ve.election =:election and poll.division =:division"
-				results = VoterElection.executeQuery("${query}", [
-					election: election,
-					division: division])
+			results = listByElectionAndDivision(election,division,offset, max)
 
-			}else{
-				results = VoterElection.findAllByElection(election)
-			}
 		}
 
 		return results
-
-	 }
-
+		
+	}
 
 }

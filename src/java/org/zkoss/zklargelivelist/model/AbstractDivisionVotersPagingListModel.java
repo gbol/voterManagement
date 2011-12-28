@@ -29,10 +29,7 @@ public abstract class AbstractDivisionVotersPagingListModel<T> extends AbstractL
 	public AbstractDivisionVotersPagingListModel(Division division, int startPageNumber, int pageSize) {
 		super();
 		
-		this._startPageNumber = startPageNumber;
-		this._pageSize = pageSize;
-		this._itemStartNumber = startPageNumber * pageSize;
-		this._division = division;
+		initialize(division, startPageNumber, pageSize);
 		
 		_items = getPageData(_division,_itemStartNumber, _pageSize);
 	}
@@ -41,14 +38,17 @@ public abstract class AbstractDivisionVotersPagingListModel<T> extends AbstractL
 	public AbstractDivisionVotersPagingListModel(String search,Division division, int startPageNumber, int pageSize) {
 		super();
 		
-		this._startPageNumber = startPageNumber;
-		this._pageSize = pageSize;
-		this._itemStartNumber = startPageNumber * pageSize;
-		this._division = division;
+		initialize(division, startPageNumber, pageSize);
 		
 		_items = getPageData(search, _division,_itemStartNumber, _pageSize);
 	}
 
+	private void initialize(Division division, int startPageNumber, int pageSize){
+		this._division = division;
+		this._startPageNumber = startPageNumber;
+		this._pageSize = pageSize;
+		this._itemStartNumber = startPageNumber * pageSize;
+	}
 	
 	public abstract int getTotalSize();
 	protected abstract List<T> getPageData(Division division, int itemStartNumber, int pageSize);

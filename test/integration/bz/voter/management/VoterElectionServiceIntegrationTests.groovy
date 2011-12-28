@@ -85,9 +85,9 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		def results = voterElectionService.search('f',election,albertDivision)
+		def results = voterElectionService.search('f',election,albertDivision,0,3)
 
-		assertEquals 6, results.size()
+		assertEquals 3, results.size()
 	 }
 
 
@@ -98,11 +98,21 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		def results = voterElectionService.search('Fe, re ',election,albertDivision)
+		def results = voterElectionService.search('Fe, re ',election,albertDivision, 0 ,5)
 
 		assertEquals 1, results.size()
 	 }
 
+
+	void test_list_by_Election_And_Division_Should_Return_List_Of_Voters_Registered_In_A_Division_For_An_Election(){
+		def election = new Election()
+		election.year = 2008
+		election.electionType = ElectionType.findByName("General")
+		election.save()
+		voterElectionService.addAllVoters(election)
+
+		assertEquals 5, voterElectionService.listByElectionAndDivision(election,albertDivision,0, 5).size()
+	}
 
 	 void test_Search_For_Voters_With_Empty_String_Should_Return_All_Voters(){
 	 	def election = new Election()
@@ -111,9 +121,41 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		def results = voterElectionService.search('  ',election,albertDivision)
+		def results = voterElectionService.search('  ',election,albertDivision, 0, 10)
 
-		assertEquals VoterElection.findAllByElection(election).size(), results.size()
+		assertEquals voterElectionService.listByElectionAndDivision(election,albertDivision, 0, 10).size(), results.size()
 	 	
 	 }
+
+	 void test_countVoters_With_Empty_String_Should_Return_All_Voters_Registered_At_A_Division_For_An_Elecction(){
+	 	def election = new Election()
+		election.year = 2008
+		election.electionType = ElectionType.findByName('General')
+		election.save()
+		voterElectionService.addAllVoters(election)
+
+		assertEquals 13, voterElectionService.countVoters('',election,albertDivision)
+	 }
+
+	 void test_countByElectionAndDivision_Returns_All_Voters_Registered_To_Vote_At_Division_For_Election(){
+	 	def election = new Election()
+		election.year = 2008
+		election.electionType = ElectionType.findByName('General')
+		election.save()
+		voterElectionService.addAllVoters(election)
+
+		assertEquals([13], voterElectionService.countByElectionAndDivision(election,albertDivision))
+	 	
+	 }
+
+	 void test_count_voters_registered_in_division_for_election_by_Search_String(){
+	 	def election = new Election()
+		election.year = 2008
+		election.electionType = ElectionType.findByName('General')
+		election.save()
+		voterElectionService.addAllVoters(election)
+
+		assertEquals 6, voterElectionService.countVoters("f", election, albertDivision)
+	 }
+
 }
