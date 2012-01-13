@@ -53,9 +53,11 @@ class VoterServiceTests extends GrailsUnitTestCase {
 
 		new Election(year: 2010, electionType: ElectionType.findByName('General')).save()
 		new Election(year: 2011, electionType: ElectionType.findByName('General')).save()
-		new Election(year: 2012, electionType: ElectionType.findByName('General')).save()
+		def election = new Election(year: 2012, electionType: ElectionType.findByName('General')).save()
 		new Election(year: 2008, electionType: ElectionType.findByName('General')).save()
 		new Election(year: 2007, electionType: ElectionType.findByName('General')).save()
+
+		def pledge = new Pledge(name:'Yes', code:'Y').save()
 
 
 		def addressParams = [
@@ -75,7 +77,8 @@ class VoterServiceTests extends GrailsUnitTestCase {
 			pollStation: pollStation,
 			pledge: Pledge.findByName('Yes'),
 			affiliation: Affiliation.findByName('PUP'),
-			address: addressParams
+			address: addressParams,
+			pledge: pledge
 		]
 
 
@@ -99,16 +102,13 @@ class VoterServiceTests extends GrailsUnitTestCase {
 		}]
 
 
-		def voter = voterService.add(params)
-
-		println "voter: ${voter.person}"
-		println "errors: ${voter.errors}"
+		def voter = voterService.add(params,election, true)
 
 		assertNotNull voter.id
 		assertEquals 'John', voter.person.firstName
 		assertEquals 'N/A', voter.person.address.street
 
-		assertEquals 3, VoterElection.findAllByVoter(voter).size()
+		assertEquals 1, VoterElection.findAllByVoter(voter).size()
 
     }
 

@@ -9,7 +9,6 @@ import java.util.*
 import bz.voter.management.*
 import bz.voter.management.importer.*
 
-import grails.util.Environment
 
 
 class BootStrap {
@@ -26,6 +25,7 @@ class BootStrap {
    static String fileName = ConfigurationHolder.config.files.dir + "Sample.xls"
    static String albertFile = "/usr/local/files/albert.xlsx"
    static String caribbeanShoresFile = "/usr/local/files/caribbean_shores.xlsx"
+   static String appDivision = ConfigurationHolder.config.division
 
     def init = { servletContext ->
 
@@ -37,6 +37,10 @@ class BootStrap {
 				}
 			}
 		}
+
+        if(!Division.findByName(appDivision)){
+            new Division(name: appDivision).save()
+        }
 
 		if(Sex.count() == 0){
 	 		new Sex(name:'Male', code:'M').save()
@@ -67,18 +71,17 @@ class BootStrap {
 
 		if(IdentificationType.count() == 0){
 	//	new IdentificationType(name:'Passport').save()
-		new IdentificationType(name:'Social Security Card').save()
-		new IdentificationType(name:'Voter Id').save()
-
-		new IdentificationType(name:'PASSPORT').save()
-      new IdentificationType(name:'BIRTH CERTIFICATE').save()
-      new IdentificationType(name:'NATURALIZATION DOC.').save()
-      new IdentificationType(name:'BAPTISMAL CERTIFICATE').save()
-      new IdentificationType(name:'UNKNOWN').save()
-      new IdentificationType(name:'DEED POLL').save()
-      new IdentificationType(name:'ADOPTION CERTIFICATE').save()
-      new IdentificationType(name:'AFFIDAVIT').save()
-      new IdentificationType(name:'SCHEDULE I').save(flush:true)
+		    new IdentificationType(name:'Social Security Card').save()
+		    new IdentificationType(name:'Voter Id').save()
+		    new IdentificationType(name:'PASSPORT').save()
+            new IdentificationType(name:'BIRTH CERTIFICATE').save()
+            new IdentificationType(name:'NATURALIZATION DOC.').save()
+            new IdentificationType(name:'BAPTISMAL CERTIFICATE').save()
+            new IdentificationType(name:'UNKNOWN').save()
+            new IdentificationType(name:'DEED POLL').save()
+            new IdentificationType(name:'ADOPTION CERTIFICATE').save()
+            new IdentificationType(name:'AFFIDAVIT').save()
+            new IdentificationType(name:'SCHEDULE I').save(flush:true)
 		}
 
 		if(ElectionType.count() == 0){
@@ -102,9 +105,10 @@ class BootStrap {
 		}
 
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
-      def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
-      def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION') ?: new SecRole(authority: 'ROLE_POLL_STATION').save(failOnError: true)
-      def officeStationRole = SecRole.findByAuthority('ROLE_OFFICE_STATION') ?: new SecRole(authority: 'ROLE_OFFICE_STATION').save(failOnError: true)
+        def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
+        def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION') ?: new SecRole(authority: 'ROLE_POLL_STATION').save(failOnError: true)
+        def officeStationRole = SecRole.findByAuthority('ROLE_OFFICE_STATION') ?: new SecRole(authority: 'ROLE_OFFICE_STATION').save(failOnError: true)
+        def printVotersRole = SecRole.findByAuthority('ROLE_PRINT_VOTERS') ?: new SecRole(authority: 'ROLE_PRINT_VOTERS').save(failOnError: true)
 		def adminUser = SecUser.findByUsername('admin') ?: new SecUser(
                 username: 'admin',
                 password: 'p4ssw0rd',
@@ -114,39 +118,20 @@ class BootStrap {
             SecUserSecRole.create adminUser, adminRole
         }
 
-		//sessionFactory.currentSession.flush()
 
 		Environment.executeForCurrentEnvironment{
 			development{
-				//populateTestData()
 
 			}//End of development
 			
 			test{
-				populateTestData()
+				def division =  Division.findByName('Albert') ?: new Division(name:'Albert').save()
+				def election = Election.findByYear(2011) ?: new Election(year: 2011, electionType: ElectionType.findByName('General')).save()
+				importFileService.importVoters(division,election,'Sample.xls')
+
 			}
 
 			production{
-				/*if(Voter.count() == 0 ){
-					def albertDiv = Division.findByName('Albert')
-					def caribbeanShoresDiv = Division.findByName('Caribbean Shores')
-					if(albertDiv){
-						if(voterService.listByDivision(albertDiv).size() == 0){
-							populateDataFromXLSForProduction('Albert',albertFile)
-						}
-					}else{
-						albertDiv = new Division(name:'Albert').save(flush:true)
-						populateDataFromXLSForProduction('Albert',albertFile)
-					}
-					if(caribbeanShoresDiv){
-						if(voterService.listByDivision(caribbeanShoresDiv).size() == 0){
-							populateDataFromXLSForProduction('Caribbean Shores',caribbeanShoresFile)
-						}
-					}else{
-						caribbeanShoresDiv = new Division(name:'Caribbean Shores').save(flush:true)
-						populateDataFromXLSForProduction('Caribbean Shores',caribbeanShoresFile)
-					}
-				}*/
 			}
 		}
 
@@ -158,13 +143,6 @@ class BootStrap {
 
     }
 
-
-	 def populateTestData(){
-		def division = new Division(name:'Albert').save()
-		def election = new Election(year: 2011, electionType: ElectionType.findByName('General')).save()
-		importFileService.importVoters(division,election,'Sample.xls')
-
-	 }
 
 
 	 def populateDataFromXLSForProduction(String divisionName, String fileName){
@@ -193,7 +171,6 @@ class BootStrap {
 	 }
 
 	 def populateDataFromXLSForDev(){
-      //VoterExcelImporter importer3 = new VoterExcelImporter(fileName);
       new VoterExcelImporter(fileName);
 	 }
 

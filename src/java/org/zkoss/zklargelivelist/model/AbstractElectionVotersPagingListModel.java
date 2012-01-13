@@ -34,7 +34,7 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 		
 		initialize(election,division, startPageNumber, pageSize);
 
-		_items = getPageData(_election,_division,_itemStartNumber, _pageSize);
+		_items = getPageData(_itemStartNumber, _pageSize);
 	}
 
 
@@ -44,7 +44,7 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 		initialize(election,division, startPageNumber, pageSize);
 		_searchString = searchString;
 		
-		_items = getPageData(_searchString, _election,_division,_itemStartNumber, _pageSize);
+		_items = getPageData(_searchString, _itemStartNumber, _pageSize);
 	}
 
 	private void initialize(Election election,Division division, int startPageNumber, int pageSize){
@@ -56,8 +56,8 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 	}
 	
 	public abstract int getTotalSize();
-	protected abstract List<T> getPageData(Election election,Division division, int itemStartNumber, int pageSize);
-	protected abstract List<T> getPageData(String search,Election election,Division division, int itemStartNumber, int pageSize);
+	protected abstract List<T> getPageData(int itemStartNumber, int pageSize);
+	protected abstract List<T> getPageData(String search, int itemStartNumber, int pageSize);
 	
 	@Override
 	public Object getElementAt(int index) {

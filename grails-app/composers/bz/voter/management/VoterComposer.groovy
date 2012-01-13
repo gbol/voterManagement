@@ -43,10 +43,12 @@ class VoterComposer extends GrailsComposer {
 	DivisionVotersPagingListModel voterModel = null
 	ListModelList divisionModel
 
-
 	def springSecurityService
 	def voterService
 
+    def voterListFacade
+
+    private Division division
 
 	private final int _pageSize = 10
 	private int _startPageNumber = 0
@@ -55,8 +57,9 @@ class VoterComposer extends GrailsComposer {
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
-			divisionModel = new ListModelList(Division.list([sort:'name']))
-			voterDivisionListbox.setModel(divisionModel)
+			//divisionModel = new ListModelList(Division.list([sort:'name']))
+			//voterDivisionListbox.setModel(divisionModel)
+            division = voterListFacade.getSystemDivision()
 
 			votersGrid.setRowRenderer(new VoterRenderer())
 		}else{
@@ -79,14 +82,15 @@ class VoterComposer extends GrailsComposer {
 
 
 	 def onSelect_voterDivisionListbox(){
-		division = voterDivisionListbox.getSelectedItem()?.getValue()
+		//division = voterDivisionListbox.getSelectedItem()?.getValue()
 
 	 }
 
 
 	 def onClick_filterBtn(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
-	 		def divisionInstance = voterDivisionListbox.getSelectedItem().getValue()
+	 		//def divisionInstance = voterDivisionListbox.getSelectedItem().getValue()
+            def divisionInstance = division
 			if(divisionInstance){
 				def divisionVoters = voterService.listByDivision(divisionInstance)
 				voterSearchTextbox.setValue("")

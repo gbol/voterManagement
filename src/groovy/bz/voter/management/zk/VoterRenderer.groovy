@@ -29,6 +29,13 @@ public class VoterRenderer implements RowRenderer{
 			}
 		})
 
+
+        manageButton.addEventListener("onClick", new EventListener(){
+            public void onEvent(Event event) throws Exception{
+                println "\nClicked manage button"
+            }
+        })
+
 		row.getChildren().add(new Label("${voter.registrationNumber}"))
 		row.getChildren().add(new Label("${voter.person.lastName}"))
 		row.getChildren().add(new Label("${voter.person.firstName}"))

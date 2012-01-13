@@ -6,6 +6,11 @@
 //                             "file:${userHome}/.grails/${appName}-config.properties",
 //                             "file:${userHome}/.grails/${appName}-config.groovy"]
 
+//Default properties are stored in this location.
+//Required property is division and should be declared as : division = DivisionName
+//When app boots up, a division with this name will be created if it doesn't exist.
+//Actions will only be allowed in this division, even if other divisions exist in the database.
+grails.config.locations = ["file:/usr/local/${appName}0.properties"]
 // if(System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }

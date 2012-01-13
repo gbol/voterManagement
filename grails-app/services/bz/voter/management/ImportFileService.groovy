@@ -24,7 +24,6 @@ class ImportFileService {
     def importVoters(Division division,Election election, String fileName) {
 	 	
 		fileName = ConfigurationHolder.config.files.dir + fileName
-		println "Sending to VoterExcelImporter: " +  fileName
       VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
       def votersMapList = excelImporter.getVoters()
 
@@ -57,7 +56,6 @@ class ImportFileService {
 
 				if(transactionCount == 100 || transactionCount == votersMapList.size()){
 					flush = true
-					println "\nFlushing\n"
 					transactionCount = 0
 				}
 

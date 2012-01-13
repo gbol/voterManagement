@@ -28,20 +28,25 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
 	/**
 	Gets a list of voters in a specified division whose first and/or last name match the search string.
 	@arg search the search string that is used to search for the voters.
-	@arg division the division you want voters from
 	@arg itemStartNumber the offset
 	@arg pageSize the size of the results returned
 	@returns List<Voter> a list of voters
 	**/
 	@Override
-	protected List<Voter> getPageData(String search, Election election,Division division, int itemStartNumber, int pageSize) {
+	protected List<Voter> getPageData(String search, int itemStartNumber, int pageSize) {
 		voterElectionService = new VoterElectionService()
 		return voterElectionService.search(search, getElection(), getDivision(), itemStartNumber, pageSize)
 	}
 
 
+	/**
+	Gets a list of voters in a specified division eligible to vote in an election.
+	@arg itemStartNumber the offset
+	@arg pageSize the size of the results returned
+	@returns List<Voter> a list of voters
 	@Override
-	protected List<Voter> getPageData(Election election,Division division, int itemStartNumber, int pageSize) {
+	**/
+	protected List<Voter> getPageData(int itemStartNumber, int pageSize) {
 		voterElectionService = new VoterElectionService()
 		return voterElectionService.listByElectionAndDivision(getElection(),getDivision(), itemStartNumber, pageSize )
 	}
