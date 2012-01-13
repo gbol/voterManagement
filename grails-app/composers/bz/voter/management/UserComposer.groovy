@@ -21,6 +21,7 @@ class UserComposer extends GrailsComposer {
 	def userRoleCheckbox
 	def officeStationRoleCheckbox
 	def pollStationRoleCheckbox
+    def printVotersRoleCheckbox
 	def enabledCheckbox
 
 	def userIdLabel
@@ -69,6 +70,7 @@ class UserComposer extends GrailsComposer {
 			def adminRole = SecRole.findByAuthority('ROLE_ADMIN')
 			def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION')
 			def officeStationRole = SecRole.findByAuthority('ROLE_OFFICE_STATION')
+            def printVotersRole = SecRole.findByAuthority('ROLE_PRINT_VOTERS')
 
 			userInstance = (userIdLabel.getValue()) ? (SecUser.get(userIdLabel.getValue())) : (new SecUser())
 
@@ -121,6 +123,16 @@ class UserComposer extends GrailsComposer {
 						SecUserSecRole.remove(userInstance,officeStationRole,true)
 					}
 				}
+
+                if(printVotersRoleCheckbox.isChecked()){
+                    if(!SecUserSecRole.get(userInstance.id, printVotersRole.id)){
+                        SecUserSecRole.create(userInstance, printVotersRole,true)
+                    }
+                }else{
+                    if(SecUserSecRole.get(userInstance.id, printVotersRole.id)){
+                        SecUserSecRole.remove(userInstance,printVotersRole,true)
+                    }
+                }
 
 				hideUserForm()
 				Messagebox.show('User Saved','User Message', Messagebox.OK,

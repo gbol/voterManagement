@@ -49,6 +49,10 @@
 								<checkbox id="officeStationRoleCheckbox" />
 							</row>
 							<row>
+								<label value="PRINT_VOTERS_ROLE" />
+								<checkbox id="printVotersRoleCheckbox" />
+							</row>
+							<row>
 								<cell colspan="2" style="text-align: left;">
 									<button id="userSaveButton" label="Save" />
 									<button id="userCancelButton" label="Cancel" />

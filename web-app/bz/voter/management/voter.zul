@@ -13,8 +13,7 @@
 				<panel title="Voters List" style="padding:4px;" border="normal" vflex='1'>
 					<panelchildren style="padding:5px;">
 					<toolbar>
-						<listbox id="voterDivisionListbox" rows="1" mold="select" />
-						<button label="Filter By Division" id="filterBtn" />
+						<button label="Show All Voters" id="showAllVotersBtn" />
 						<button id="addVoterButton" label="New Voter" />
 						<button id="printButton" label="Print" />
 					</toolbar>

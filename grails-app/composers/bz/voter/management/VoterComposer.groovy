@@ -23,7 +23,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 class VoterComposer extends GrailsComposer {
 
 	def addVoterButton
-	def filterBtn
+	def showAllVotersBtn
 	def searchVoterButton
 	def printButton
 
@@ -33,7 +33,6 @@ class VoterComposer extends GrailsComposer {
 	
 	def votersListRows
 
-	def voterDivisionListbox
 
 	def division
 
@@ -41,7 +40,6 @@ class VoterComposer extends GrailsComposer {
 	Paging voterPaging
 
 	DivisionVotersPagingListModel voterModel = null
-	ListModelList divisionModel
 
 	def springSecurityService
 	def voterService
@@ -57,8 +55,6 @@ class VoterComposer extends GrailsComposer {
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
-			//divisionModel = new ListModelList(Division.list([sort:'name']))
-			//voterDivisionListbox.setModel(divisionModel)
             division = voterListFacade.getSystemDivision()
 
 			votersGrid.setRowRenderer(new VoterRenderer())
@@ -81,15 +77,9 @@ class VoterComposer extends GrailsComposer {
 	 }
 
 
-	 def onSelect_voterDivisionListbox(){
-		//division = voterDivisionListbox.getSelectedItem()?.getValue()
 
-	 }
-
-
-	 def onClick_filterBtn(){
+	 def onClick_showAllVotersBtn(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
-	 		//def divisionInstance = voterDivisionListbox.getSelectedItem().getValue()
             def divisionInstance = division
 			if(divisionInstance){
 				def divisionVoters = voterService.listByDivision(divisionInstance)
@@ -119,12 +109,16 @@ class VoterComposer extends GrailsComposer {
 
 
 	 def onClick_printButton(){
-	 	if(division){
-	 		Executions.sendRedirect("/person/pdf?division=${division.id}")
-		}else{
-			Messagebox.show("You must select a division!", "Message", Messagebox.OK,
-				Messagebox.EXCLAMATION)
-		}
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_PRINT_VOTERS')){
+	 	    if(division){
+	 		    Executions.sendRedirect("/person/pdf?division=${division.id}")
+		    }else{
+			    Messagebox.show("You must select a division!", "Message", Messagebox.OK,
+				    Messagebox.EXCLAMATION)
+		    }
+        }else{
+            ComposerHelper.permissionDeniedBox()
+        }
 	 }
 
 
