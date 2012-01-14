@@ -16,7 +16,7 @@ import org.zkoss.zul.event.PagingEvent
 import org.zkoss.zklargelivelist.model.ElectionVotersPagingListModel
 
 import bz.voter.management.zk.ComposerHelper
-import bz.voter.management.zk.VoterRenderer
+import bz.voter.management.zk.OfficeStationVoterRenderer
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -25,12 +25,16 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 	def springSecurityService
 	def voterElectionService
-	def searchTextbox
 
 	def votersListRows
+    Grid electionOfficeVotersGrid
+    Paging voterPaging
+
+	def searchTextbox
+
 	def election
 
-	def filterBtn
+	def showAllVotersButton
 	def searchVoterButton
 
 	def divisionInstance
@@ -41,37 +45,46 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
     def voterListFacade
 
+    ElectionVotersPagingListModel electionVoterModel = null 
+
+	private final int _pageSize             = 10
+	private int _startPageNumber            = 0
+	private int _totalSize                  = 0
+	private boolean _needsTotalSizeUpdate   = true
+
     def afterCompose = { window ->
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
             divisionInstance = voterListFacade.getSystemDivision()
 			election = Election.get(Executions.getCurrent().getArg().id)
-			divisionModel = new ListModelList(Division.list([sort:'name']))
-			divisionListbox.setModel(divisionModel)
+            electionOfficeVotersGrid.setRowRenderer(new OfficeStationVoterRenderer())
 		}else{
 			ComposerHelper.permissionDeniedBox()
 		}
     }
 
 
-
-	def onSelect_divisionListbox(){
-	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
-	}
-
-	 def onClick_filterBtn(){
-	 	//divisionInstance = divisionListbox.getSelectedItem()?.getValue()
-		if(divisionInstance){
-			def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
-			showVoters(votersList)
-		}
+	 def onClick_showAllVotersButton(){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+		    if(divisionInstance){
+                def numberOfVoters = voterElectionService.countByElectionAndDivision(election,divisionInstance)
+                if(numberOfVoters>0){
+                    refreshModel(_startPageNumber)
+                }else{
+                    votersListRows.getChildren().clear()
+                    Messagebox.show('No voters exist!', 'Poll Station Message', 
+                        Messagebox.OK, Messagebox.INFORMATION)
+                }
+		    }
+        }else{
+            ComposerHelper.permissionDeniedBox()
+        }
 	 }
 
 
 	def onClick_searchVoterButton(){
 		if(divisionInstance){
 			def searchText = searchTextbox.getValue()?.trim()
-			def votersList = voterElectionService.search(searchText, election,divisionInstance)
-			showVoters(votersList)
+            refreshModel(searchText,0)
 		}else{
 			Messagebox.show("You must select a division!",
 				"Message", Messagebox.OK, Messagebox.EXCLAMATION)
@@ -79,56 +92,56 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	}
 
 
-	 def showVoters(def votersElection){
-		votersListRows.getChildren().clear()
-		for(_voterElection in votersElection){
-			def voterElectionInstance = _voterElection
-			def _voter = _voterElection.voter
-			def _election = _voterElection.election
-			def pickupTimeButtonLabel = voterElectionInstance.pickupTime ? 'Edit' : 'Add'
-			votersListRows.append{
-				row(style: "font-size: 0.5em; margin:0",height: "32px"){
-					label(value: voterElectionInstance.voter.registrationNumber)
-					label(value: voterElectionInstance.voter.person.lastName)
-					label(value: voterElectionInstance.voter.person.firstName)
-					label(value: voterElectionInstance.voter.person.age)
-					label(value: voterElectionInstance.voter.person.sex.code)
-					label(value: voterElectionInstance.voter.pollStation.pollNumber)
-					label(value: voterElectionInstance.voter.affiliation)
-					label(value: voterElectionInstance.pledge)
-					label(value: voterElectionInstance.voted ? 'Yes' : 'No')
-					textbox(value: voterElectionInstance.pickupTime, onChange:{e->
-						voterElectionInstance.pickupTime = e.getTarget().getValue()
-					})
-					button(label: pickupTimeButtonLabel, onClick:{evt->
-						if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
-						def HOUR = /10|11|12|[0-9]/
-						def MINUTE = /[0-5][0-9]/
-						def TIME = /($HOUR):($MINUTE)/
-						def valid = (voterElectionInstance.pickupTime =~ TIME).matches()
-						if(valid){
-							voterElectionInstance.save(flush:true)
-							evt.getTarget().setLabel("Edit")
-							Messagebox.show("Saved Pickup Time Successfully!", "Pickup Time Message",
-								Messagebox.OK, Messagebox.INFORMATION)
-						}else{
-							Messagebox.show("Wrong Time Format", "Time Format Message", Messagebox.OK,
-								Messagebox.ERROR)
-						}
-						}else{
-							ComposerHelper.permissionDeniedBox()
-						}
-						
-					})
-					button(label: 'Details', onClick:{
-						final Window win = (Window) Executions.createComponents("voterGeneralInformation.zul", 
-							null, [id: _voter.id, electionId: _election.id])
-						win.doModal()
-						win.setPosition("top,center")
-					})
-				}
-			}//End of votersListRows.append
+    /**
+    This controls the paging event. Calls refreshModel() telling it to get the next batch of voters starting at
+    _startPageNumber.
+    **/
+	public void onPaging_voterPaging(ForwardEvent event){
+		final PagingEvent pagingEvent = (PagingEvent) event.getOrigin()
+		_startPageNumber = pagingEvent.getActivePage()
+		if(searchTextbox.getValue().isAllWhitespace()){
+			refreshModel(_startPageNumber)
+		}else{
+			refreshModel(searchTextbox.getValue().trim(),_startPageNumber)
+		}
+	}
+
+
+    /**
+    Refreshes the grid's model that displays  the voters.
+    **/
+    private void refreshModel(int activePage){
+  		voterPaging.setPageSize(_pageSize)
+		electionVoterModel = new ElectionVotersPagingListModel(election,divisionInstance,activePage, _pageSize)
+		voterPaging.setTotalSize(electionVoterModel.getTotalSize())
+
+		if(_needsTotalSizeUpdate || activePage == 0){
+			_totalSize = electionVoterModel.getTotalSize()
+			_needsTotalSizeUpdate = false
 		}
 
-	 }
+		electionOfficeVotersGrid.setModel(electionVoterModel)
+    }
+
+    /**
+    Refreshes the grid's model based on a search string.
+    **/
+    private void refreshModel(String search, int activePage){
+  		voterPaging.setPageSize(_pageSize)
+		electionVoterModel = new ElectionVotersPagingListModel(search,election,divisionInstance,activePage, _pageSize)
+		voterPaging.setTotalSize(electionVoterModel.getTotalSize())
+
+		if(_needsTotalSizeUpdate || activePage == 0){
+			_totalSize = electionVoterModel.getTotalSize()
+			voterPaging.setDetailed(true)
+			_needsTotalSizeUpdate = false
+		}
+
+		if(_totalSize < _pageSize){
+			voterPaging.setDetailed(false)
+		}
+
+		electionOfficeVotersGrid.setModel(electionVoterModel)
+    }
+
 }

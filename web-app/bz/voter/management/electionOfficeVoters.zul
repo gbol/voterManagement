@@ -15,19 +15,17 @@
 				border="normal" vflex='1'>
 				<panelchildren style="padding:5px" vflex='1'>
 					<toolbar>
-						<listbox id="divisionListbox" rows="1" mold="select" />
-						<button label="Filter By Division" id="filterBtn" />
-					</toolbar>
-					<toolbar>
 						<textbox id="searchTextbox" />
 						<button id="searchVoterButton" label="Search" />
 						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
 							style="cursor:help" />
 						<label value="Tips" tooltip="searchHelp" />
+						<button label="Show All Voters" id="showAllVotersButton" />
 
 					</toolbar>
 
-					<grid mold="paging" pageSize="10"  vflex='1'>
+					<paging id="voterPaging" autohide="true" detailed="true"/>
+					<grid  vflex='1' id="electionOfficeVotersGrid">
 						<columns menupopup="auto" width="100%">
 							<column label="Reg #" align="left" width="8%" sort="auto" />
 							<column label="Last Name" align="left" sort="auto" />

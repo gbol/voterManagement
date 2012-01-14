@@ -103,7 +103,8 @@ class VoterElectionService {
 		if(searchString.isAllWhitespace()){
 			result = countByElectionAndDivision(election,division)
 		}else{
-			result = executeQuery(searchString, COUNT_BY_SEARCH_QUERY, election,division,0,0)
+			def resultCount = executeQuery(searchString, COUNT_BY_SEARCH_QUERY, election,division,0,0)
+            result = resultCount[0]
 		}
 		return result
 	}

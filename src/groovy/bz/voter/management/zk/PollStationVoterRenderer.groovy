@@ -74,54 +74,6 @@ public class PollStationVoterRenderer implements RowRenderer{
         row.getChildren().add(saveButton)
         row.getChildren().add(detailsButton)
 
-        /*
-		row(style: "background-color: ${backgroundColor}"){
-		    label(value: _voterElection.voter.registrationNumber)
-			label(value: _voterElection.voter.registrationDate.format("dd-MMM-yyyy"))
-			label(value: _voterElection.voter.person.lastName)
-			label(value: _voterElection.voter.person.firstName)
-			label(value: _voterElection.voter.person.address.houseNumber)
-			label(value: _voterElection.voter.person.address.street)
-			label(value: _voterElection.voter.person.sex.code)
-			label(value: _voterElection.voter.person.age)
-			label(value: _voterElection.voter.person.birthDate.format("dd-MMM-yyyy"))
-			label(value: _voterElection.voter.pollStation.pollNumber)
-			checkbox(checked: voted, onCheck: {event->
-				if(_voterElectionInstance.voted){
-					_voterElectionInstance.voted = false
-					_voterElectionInstance.voteTime = null
-				}else{
-					_voterElectionInstance.voted = true
-					_voterElectionInstance.voteTime = new Date()
-				}
-			})
-			button(label: 'Save', onClick:{evt->
-				if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_POLL_STATION')){
-					_voterElectionInstance.save(flush:true)
-					Messagebox.show("Saved Successfuly!", "Voter", 
-						Messagebox.OK, Messagebox.INFORMATION)
-					if(_voterElectionInstance.voted){
-						evt.getTarget().getParent().setStyle("background-color:red")
-					}else{
-						evt.getTarget().getParent().setStyle("background-color: white")
-					}
-				}else{
-					ComposerHelper.permissionDeniedBox()
-				}
-
-
-			})
-			button(label: 'Details', onClick:{
-				final Window win = (Window) Executions.createComponents("/bz/voter/management/voterGeneralInformation.zul", 
-					null, [id: _voterElectionInstance.voter.id, electionId: _voterElectionInstance.election.id])
-				win.doModal()
-				win.setPosition("top,center")
-			})
-
-			style(content: "background-color: red;")
-					
-		}
-        */
     }
 
 }

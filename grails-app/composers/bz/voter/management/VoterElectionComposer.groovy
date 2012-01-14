@@ -65,8 +65,6 @@ class VoterElectionComposer extends GrailsComposer {
 	 def onClick_filterBtn(){
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_POLL_STATION')){
 		    if(divisionInstance){
-			    //def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
-			    //showVoters(election,votersList)
                 def numberOfVoters = voterElectionService.countByElectionAndDivision(election,divisionInstance)
                 if(numberOfVoters>0){
                     refreshModel(_startPageNumber)
@@ -85,8 +83,9 @@ class VoterElectionComposer extends GrailsComposer {
 	def onClick_searchVoterButton(){
 		if(divisionInstance){
 			def searchText = searchTextbox.getValue()?.trim()
-			def votersList = voterElectionService.search(searchText, election,divisionInstance)
-			showVoters(election, votersList)
+			//def votersList = voterElectionService.search(searchText, election,divisionInstance)
+			//showVoters(election, votersList)
+            refreshModel(searchText, 0)
 		}else{
 			Messagebox.show('You must to select a division!', 'Message', 
 				Messagebox.OK, Messagebox.EXCLAMATION)
@@ -94,66 +93,6 @@ class VoterElectionComposer extends GrailsComposer {
 	}
 
 
-	 def showVoters(Election election, def voterList){
-	 	votersListRows.getChildren().clear()
-
-		for(_voterElection in voterList){
-			def voterElectionInstance = _voterElection
-			def _voter = Voter.load(_voterElection.voter.id)
-			def _election = Election.load(_voterElection.election.id)
-			def voted = _voterElection.voted ? true : false
-			votersListRows.append{
-				def backgroundColor = voted ? "red" : "white"
-				row(style: "background-color: ${backgroundColor}"){
-					label(value: _voterElection.voter.registrationNumber)
-					label(value: _voterElection.voter.registrationDate.format("dd-MMM-yyyy"))
-					label(value: _voterElection.voter.person.lastName)
-					label(value: _voterElection.voter.person.firstName)
-					label(value: _voterElection.voter.person.address.houseNumber)
-					label(value: _voterElection.voter.person.address.street)
-					label(value: _voterElection.voter.person.sex.code)
-					label(value: _voterElection.voter.person.age)
-					label(value: _voterElection.voter.person.birthDate.format("dd-MMM-yyyy"))
-					label(value: _voterElection.voter.pollStation.pollNumber)
-					checkbox(checked: voted, onCheck: {event->
-						if(voterElectionInstance.voted){
-							voterElectionInstance.voted = false
-							voterElectionInstance.voteTime = null
-						}else{
-							voterElectionInstance.voted = true
-							voterElectionInstance.voteTime = new Date()
-						}
-					})
-					button(label: 'Save', onClick:{evt->
-						if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_POLL_STATION')){
-							voterElectionInstance.save(flush:true)
-							Messagebox.show("Saved Successfuly!", "Voter", 
-								Messagebox.OK, Messagebox.INFORMATION)
-							if(voterElectionInstance.voted){
-								evt.getTarget().getParent().setStyle("background-color:red")
-							}else{
-								evt.getTarget().getParent().setStyle("background-color: white")
-							}
-						}else{
-							ComposerHelper.permissionDeniedBox()
-						}
-
-
-					})
-					button(label: 'Details', onClick:{
-						final Window win = (Window) Executions.createComponents("voterGeneralInformation.zul", 
-							null, [id: voterElectionInstance.voter.id, electionId: voterElectionInstance.election.id])
-						win.doModal()
-						win.setPosition("top,center")
-					})
-
-					style(content: "background-color: red;")
-					
-				}
-			}
-		}
-		
-	 }
 
     /**
     This controls the paging event. Calls refreshModel() telling it to get the next batch of voters starting at
