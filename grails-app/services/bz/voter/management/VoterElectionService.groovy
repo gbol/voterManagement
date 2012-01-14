@@ -84,9 +84,11 @@ class VoterElectionService {
 	}
 
 	def countByElectionAndDivision(Election election, Division division){
-		return VoterElection.executeQuery(COUNT_BY_SEARCH_QUERY,[
+		def numberOfVoters = VoterElection.executeQuery(COUNT_BY_SEARCH_QUERY,[
 			election: election,
 			division: division])
+
+       return numberOfVoters[0]
 	}
 
 	 
@@ -103,7 +105,7 @@ class VoterElectionService {
 		}else{
 			result = executeQuery(searchString, COUNT_BY_SEARCH_QUERY, election,division,0,0)
 		}
-		return result[0]
+		return result
 	}
 
 

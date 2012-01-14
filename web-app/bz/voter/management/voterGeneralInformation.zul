@@ -18,61 +18,61 @@
 			<rows>
 				<row>
 					<label value="First Name" class="varLabel" width="20%"/>
-					<label value="@{wndVoterInfo$composer.voter.person.firstName}" class="varValue"/>
+					<label value="@{wndVoterInfo$composer.details.firstName}" class="varValue"/>
 				</row>
 				<row>
 					<label value="Middle Name" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.voter.person.middleName}" class="varValue" />
+					<label value="@{wndVoterInfo$composer.details.middleName}" class="varValue" />
 				</row>
 				<row>
 					<label value="Last Name" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.voter.person.lastName}" class="varValue" />
+					<label value="@{wndVoterInfo$composer.details.lastName}" class="varValue" />
 				</row>
 				<row>
 					<label value="Birth Date" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.birthDate}" class="varValue" />
+					<label value="@{wndVoterInfo$composer.details.birthDate}" class="varValue" />
 				</row>
 				<row>
 					<label value="Age" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.voter.person.age}" class="varValue" />
+					<label value="@{wndVoterInfo$composer.details.age}" class="varValue" />
 				</row>
 				<row>
 					<label value="Sex" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.voter.person.sex.name}" class="varValue" />
+					<label value="@{wndVoterInfo$composer.details.sex}" class="varValue" />
 				</row>
 				<row>
 					<label value="Address" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.voter.person.address}"
+					<label value="@{wndVoterInfo$composer.details.address}"
 						class="varValue" />
 				</row>
 				<row>
 					<label value="Poll Station" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.voter.pollStation}" 
+					<label value="@{wndVoterInfo$composer.details.pollStation}" 
 							class="varValue" />
 				</row>
 				<row>
 					<label value="Affiliation" class="varLabel" width="40%" />
-					<label value="@{wndVoterInfo$composer.voter.affiliation}" 
+					<label value="@{wndVoterInfo$composer.details.affiliation}" 
 						class="varValue" />
 				</row>
 				<row>
 					<label value="Pledge" class="varLabel" width="40%" />
-					<label value="@{wndVoterInfo$composer.pledge}" 
+					<label value="@{wndVoterInfo$composer.details.pledge}" 
 						class="varValue" />
 				</row>
 				<row>
 					<label value="Registration Date" class="varLabel" width="40%" />
-					<label value="@{wndVoterInfo$composer.registrationDate}" 
+					<label value="@{wndVoterInfo$composer.details.registrationDate}" 
 						class="varValue" />
 				</row>
 				<row>
 					<label value="Registration Number" class="varLabel" width="40%" />
-					<label value="@{wndVoterInfo$composer.voter.registrationNumber}" 
+					<label value="@{wndVoterInfo$composer.details.registrationNumber}" 
 						class="varValue" />
 				</row>
 				<row>
 					<label value="Time Voted" class="varLabel"  width="40%" />
-					<label value="@{wndVoterInfo$composer.voteTime}"
+					<label value="@{wndVoterInfo$composer.details.voteTime}"
 						class="varValue" />
 				</row>
 			</rows>

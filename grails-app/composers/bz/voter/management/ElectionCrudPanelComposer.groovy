@@ -46,7 +46,7 @@ class ElectionCrudPanelComposer extends GrailsComposer {
 
 
 	 def onClick_addElectionButton(){
-	 	if(SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
 			showElectionFormGrid(null)
 		}else{
 			ComposerHelper.permissionDeniedBox()

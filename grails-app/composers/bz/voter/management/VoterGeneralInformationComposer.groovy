@@ -13,14 +13,20 @@ class VoterGeneralInformationComposer extends GrailsComposer {
 
 	def springSecurityService
 
+    def voterFacade
+    def details
+
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
-			voter = Voter.load(Executions.getCurrent().getArg().id)
-			def voterElection = VoterElection.get(voter.id, Executions.getCurrent().getArg().electionId)
-			birthDate = voter.person.birthDate.format('dd-MMM-yyyy')
+			//voter = Voter.load(Executions.getCurrent().getArg().id)
+			//def voterElection = VoterElection.get(voter.id, Executions.getCurrent().getArg().electionId)
+			def voterElection = Executions.getCurrent().getArg().voterElection
+            details = voterFacade.getBasicSummary(voterElection)
+			/*birthDate = voter.person.birthDate.format('dd-MMM-yyyy')
 			registrationDate = voter.registrationDate.format('dd-MMM-yyyy')
 			voteTime = voterElection.voteTime
 			pledge = voterElection.pledge
+            */
 		}else{
 			execution.sendRedirect('/login')
 		}

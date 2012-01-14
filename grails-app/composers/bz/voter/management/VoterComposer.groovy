@@ -56,7 +56,6 @@ class VoterComposer extends GrailsComposer {
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
             division = voterListFacade.getSystemDivision()
-
 			votersGrid.setRowRenderer(new VoterRenderer())
 		}else{
 			execution.sendRedirect('/login')
@@ -65,7 +64,6 @@ class VoterComposer extends GrailsComposer {
 
 
 	 def onClick_searchVoterButton(){
-
 	 	if(division){
 	 		def searchText = voterSearchTextbox.getValue()?.trim()
 			refreshModel(searchText,0)
@@ -82,9 +80,11 @@ class VoterComposer extends GrailsComposer {
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             def divisionInstance = division
 			if(divisionInstance){
-				def divisionVoters = voterService.listByDivision(divisionInstance)
+				//def divisionVoters = voterService.listByDivision(divisionInstance)
+				def divisionVoters = voterService.countByDivision(divisionInstance)
 				voterSearchTextbox.setValue("")
-				if(divisionVoters.size()>0){
+				//if(divisionVoters.size()>0){
+				if(divisionVoters>0){
 					refreshModel(_startPageNumber)
 				}else{
 					votersListRows.getChildren().clear()

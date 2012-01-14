@@ -2,9 +2,21 @@ package bz.voter.management
 
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
-import org.zkoss.zul.*
+import org.zkoss.zk.ui.event.ForwardEvent
+import org.zkoss.zul.Messagebox
+import org.zkoss.zul.Grid
+import org.zkoss.zul.Paging
+import org.zkoss.zul.ListModelList
+import org.zkoss.zul.Window
+import org.zkoss.zul.Paging
+import org.zkoss.zul.RowRenderer
+import org.zkoss.zul.Label
+import org.zkoss.zul.event.PagingEvent
+
+import org.zkoss.zklargelivelist.model.ElectionVotersPagingListModel
 
 import bz.voter.management.zk.ComposerHelper
+import bz.voter.management.zk.VoterRenderer
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -27,8 +39,11 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 	ListModelList divisionModel
 
+    def voterListFacade
+
     def afterCompose = { window ->
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+            divisionInstance = voterListFacade.getSystemDivision()
 			election = Election.get(Executions.getCurrent().getArg().id)
 			divisionModel = new ListModelList(Division.list([sort:'name']))
 			divisionListbox.setModel(divisionModel)
@@ -44,7 +59,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	}
 
 	 def onClick_filterBtn(){
-	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
+	 	//divisionInstance = divisionListbox.getSelectedItem()?.getValue()
 		if(divisionInstance){
 			def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
 			showVoters(votersList)

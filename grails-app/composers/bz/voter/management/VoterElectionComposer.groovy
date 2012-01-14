@@ -2,9 +2,21 @@ package bz.voter.management
 
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
-import org.zkoss.zul.*
+import org.zkoss.zk.ui.event.ForwardEvent
+import org.zkoss.zul.Messagebox
+import org.zkoss.zul.Grid
+import org.zkoss.zul.Paging
+import org.zkoss.zul.ListModelList
+import org.zkoss.zul.Window
+import org.zkoss.zul.Paging
+import org.zkoss.zul.RowRenderer
+import org.zkoss.zul.Label
+import org.zkoss.zul.event.PagingEvent
+
+import org.zkoss.zklargelivelist.model.ElectionVotersPagingListModel
 
 import bz.voter.management.zk.ComposerHelper
+import bz.voter.management.zk.PollStationVoterRenderer
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -21,21 +33,29 @@ class VoterElectionComposer extends GrailsComposer {
 	def filterBtn
 	def searchVoterButton
 
-	def divisionListbox
 
 	def divisionInstance
 
 	def votersListRows
+    Grid pollStationVotersGrid
+    Paging voterPaging
+
+    ElectionVotersPagingListModel electionVoterModel = null 
 
 	def election 
 
-	ListModelList divisionModel
+    def voterListFacade
+
+	private final int _pageSize = 10
+	private int _startPageNumber = 0
+	private int _totalSize = 0
+	private boolean _needsTotalSizeUpdate = true
 
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
 			election = Election.get(Executions.getCurrent().getArg().id)
-			divisionModel = new ListModelList(Division.list([sort:'name']))
-			divisionListbox.setModel(divisionModel)
+            divisionInstance = voterListFacade.getSystemDivision()
+            pollStationVotersGrid.setRowRenderer(new PollStationVoterRenderer())
 		}else{
 			execution.sendRedirect('/login')
 		}
@@ -43,16 +63,26 @@ class VoterElectionComposer extends GrailsComposer {
 
 
 	 def onClick_filterBtn(){
-	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
-		if(divisionInstance){
-			def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
-			showVoters(election,votersList)
-		}
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_POLL_STATION')){
+		    if(divisionInstance){
+			    //def votersList = VoterElection.getAllVotersByElectionAndDivision(election,divisionInstance)
+			    //showVoters(election,votersList)
+                def numberOfVoters = voterElectionService.countByElectionAndDivision(election,divisionInstance)
+                if(numberOfVoters>0){
+                    refreshModel(_startPageNumber)
+                }else{
+                   votersListRows.getChildren().clear() 
+                   Messagebox.show('No voters exist!', 'Poll Station Message', 
+                        Messagebox.OK, Messagebox.INFORMATION)
+                }
+		    }
+        }else{
+            ComposerHelper.permissionDeniedBox()
+        }
 	 }
 
 
 	def onClick_searchVoterButton(){
-	 	divisionInstance = divisionListbox.getSelectedItem()?.getValue()
 		if(divisionInstance){
 			def searchText = searchTextbox.getValue()?.trim()
 			def votersList = voterElectionService.search(searchText, election,divisionInstance)
@@ -124,4 +154,52 @@ class VoterElectionComposer extends GrailsComposer {
 		}
 		
 	 }
+
+    /**
+    This controls the paging event. Calls refreshModel() telling it to get the next batch of voters starting at
+    _startPageNumber.
+    **/
+	public void onPaging_voterPaging(ForwardEvent event){
+		final PagingEvent pagingEvent = (PagingEvent) event.getOrigin()
+		_startPageNumber = pagingEvent.getActivePage()
+		if(searchTextbox.getValue().isAllWhitespace()){
+			refreshModel(_startPageNumber)
+		}else{
+			refreshModel(searchTextbox.getValue().trim(),_startPageNumber)
+		}
+	}
+
+
+    private void refreshModel(int activePage){
+  		voterPaging.setPageSize(_pageSize)
+		electionVoterModel = new ElectionVotersPagingListModel(election,divisionInstance,activePage, _pageSize)
+		voterPaging.setTotalSize(electionVoterModel.getTotalSize())
+
+		if(_needsTotalSizeUpdate || activePage == 0){
+			_totalSize = electionVoterModel.getTotalSize()
+			_needsTotalSizeUpdate = false
+		}
+
+		pollStationVotersGrid.setModel(electionVoterModel)
+    }
+
+
+    private void refreshModel(String search, int activePage){
+  		voterPaging.setPageSize(_pageSize)
+		electionVoterModel = new ElectionVotersPagingListModel(search,election,divisionInstance,activePage, _pageSize)
+		voterPaging.setTotalSize(electionVoterModel.getTotalSize())
+
+		if(_needsTotalSizeUpdate || activePage == 0){
+			_totalSize = electionVoterModel.getTotalSize()
+			voterPaging.setDetailed(true)
+			_needsTotalSizeUpdate = false
+		}
+
+		if(_totalSize < _pageSize){
+			voterPaging.setDetailed(false)
+		}
+
+		pollStationVotersGrid.setModel(electionVoterModel)
+    }
+
 }

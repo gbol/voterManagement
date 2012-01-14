@@ -6,8 +6,8 @@ import java.text.DateFormat
 class Voter implements Serializable{
 	
 
-	static transients = ["firstName", "lastName", "birthDate",
-		"age", "sex"]
+	static transients = ["firstName", "middleName","lastName", "birthDate",
+		"age", "sex", "address"]
 
 	Person person
 	Date registrationDate
@@ -41,24 +41,33 @@ class Voter implements Serializable{
 
 
 	 String getFirstName(){
-	 	person.firstName
+	 	this.person.firstName
 	 }
 
 	 String getLastName(){
-	 	person.lastName
+	 	this.person.lastName
+	 }
+
+	 String getMiddleName(){
+	 	this.person.middleName
 	 }
 
 	 def getBirthDate(){
-	 	DateFormat.getDateInstance(DateFormat.MEDIUM,Locale.UK).format(person.birthDate)
+	 	//DateFormat.getDateInstance(DateFormat.MEDIUM,Locale.UK).format(person.birthDate)
+        this.person.birthDate
 	 }
 
 	 int getAge(){
-	 	person.age
+	 	this.person.age
 	 }
 
 	 Sex getSex(){
-	 	person.sex
+	 	this.person.sex
 	 }
+
+     String getAddress(){
+        "${this.person.address}"
+     }
 
 	 static totalVotersByPollStation(PollStation pollStation){
 	 	Voter.countByPollStation(pollStation)
