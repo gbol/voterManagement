@@ -13,7 +13,7 @@
         apply="bz.voter.management.display.panel.BasicInformationPanelComposer">
 
         <panelchildren>
-            <grid oddRowSclass="none">
+            <grid>
                 <columns>
                     <column width="20%" align="right" />
                     <column />

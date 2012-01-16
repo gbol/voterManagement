@@ -11,6 +11,7 @@ class Person implements Serializable{
 	String homePhone
 	String cellPhone
 	String workPhone
+    String emailAddress
 	String comments
 	Sex sex
 	Address address
@@ -29,6 +30,7 @@ class Person implements Serializable{
 		workPhone(nullable:true)
 		comments(nullable:true)
 		ethnicity(nullable:true)
+        emailAddress(email:true, nullable:true)
     }
 
     def beforeInsert(){

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./contactInformationPanel"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <panel id="contactInformationPanel" title="Contact Information" vflex="1" hflex="1"
+        border="normal" apply="bz.voter.management.display.panel.ContactInformationTabComposer">
+
+        <panelchildren>
+            <grid>
+                <columns>
+                    <column width="20%" align="right" />
+                    <column />
+                </columns>
+                <rows>
+                    <row>
+                        <label value="Home Phone Number"/>
+                        <textbox id="homePhoneTextbox" 
+                            value="@{contactInformationPanel$composer.contactInformation.homePhone}" />
+                    </row>
+                    <row>
+                        <label value="Cell Phone Number" />
+                        <textbox id="cellPhoneTextbox"
+                            value="@{contactInformationPanel$composer.contactInformation.cellPhone}" />
+                    </row>
+                    <row>
+                        <label value="Work Phone Number" />
+                        <textbox id="workPhoneTextbox"
+                            value="@{contactInformationPanel$composer.contactInformation.workPhone}" />
+                   </row>
+                    <row>
+                        <label value="Email Address" />
+                        <textbox id="emailTextbox"
+                            value="@{contactInformationPanel$composer.contactInformation.emailAddress}" />
+                   </row>
+                </rows>
+            </grid>
+
+            <toolbar>
+                <button label="Save" id="saveContactInformationButton" />
+            </toolbar>
+
+        </panelchildren>
+
+    </panel>
+
+</zk>

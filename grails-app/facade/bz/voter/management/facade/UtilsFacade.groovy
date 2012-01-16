@@ -2,9 +2,13 @@ package bz.voter.management.facade
 
 import org.zkoss.zkgrails.*
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+
 import bz.voter.management.Sex
 import bz.voter.management.District
 import bz.voter.management.Municipality
+import bz.voter.management.Division
+import bz.voter.management.PollStation
 
 class UtilsFacade {
 
@@ -47,4 +51,17 @@ class UtilsFacade {
         Municipality.findAllByDistrict(district,[sort:'name'])
     }
 
+
+    /**
+    List all polling stations in the system's division
+    @return List of polling stations.
+    **/
+    List<PollStation> listPollingStations(){
+        PollStation.findAllByDivision(getSystemDivision())
+    }
+
+
+    Division getSystemDivision(){
+        Division.findByName(ConfigurationHolder.config.division)
+    }
 }

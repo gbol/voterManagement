@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./registrationInformationTab"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <panel id="registrationInformationPanel" title="Registration Information" vflex="1" hflex="1"
+        border="normal" apply="bz.voter.management.display.panel.RegistrationInformationComposer">
+
+        <panelchildren>
+            <grid>
+                <columns>
+                    <column width="20%" align="right" />
+                    <column />
+                </columns>
+                <rows>
+                    <row>
+                        <label value='Registration Number' />
+                        <textbox id="registrationNumberTextbox" constraint="no empty"
+                            value="@{registrationInformationPanel$composer.information.registrationNumber}" />
+                    </row>
+                    <row>
+                        <label value="Registration Date" />
+                        <datebox id="registrationDatebox" constraint="no empty" format="dd-MMM-yyyy"
+                            value="@{registrationInformationPanel$composer.information.registrationDate}" />
+                    </row>
+                    <row>
+                        <label value="Polling Station" />
+                        <listbox id="pollingStationListbox" mold="select" rows="1"/>
+                    </row>
+                </rows>
+            </grid>
+
+            <toolbar>
+                <button label="Save" id="saveRegistrationInformationButton" />
+            </toolbar>
+
+        </panelchildren>
+
+    </panel>
+
+</zk>

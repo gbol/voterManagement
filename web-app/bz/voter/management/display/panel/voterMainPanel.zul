@@ -18,6 +18,8 @@
             <tabs>
                 <tab label="General Information" style="font-size: 6px" />
                 <tab label="Address" style="font-size: 6px" />
+                <tab label="Contact Information" style="font-size: 6px" />
+                <tab label="Registration Infomation" style="font-size: 6px" />
                 <tab label="Dependents" style="font-size: 6px" />
                 <tab label="Activities" style="font-size: 6px" />
                 <tab label="Pledges" style="font-size: 6px"/>
@@ -26,6 +28,8 @@
             <tabpanels vflex="1" style="overflow:auto">
                 <tabpanel vflex="1" id="generalInformationTab"/>
                 <tabpanel vflex="1" id="addressTab"/>
+                <tabpanel vflex="1" id="contactInformationTab"/>
+                <tabpanel vflex="1" id="registrationInformationTab"/>
                 <tabpanel vflex="1" id="dependentsTab"/>
                 <tabpanel vflex="1" id="activitiesTab"/>
                 <tabpanel vflex="1" id="pledgesTab"/>

@@ -186,6 +186,120 @@ class VoterFacade {
     }
 
 
+    /**
+    Get a voter's registration information.
+    @return A map with the voter's registration information:
+    <ul>
+        <li>registrationNumber</li>
+        <li>registrationDate</li>
+        <li>pollStation</li>
+    </ul>
+    **/
+    def getRegistrationInformation(){
+        this.voter = Voter.load(voter.id)
+        def information = [
+            registrationNumber: voter.registrationNumber,
+            registrationDate: voter.registrationDate,
+            pollStation: voter.pollStation
+        ]
+
+        return information
+
+    }
+
+
+
+    /**
+    Save a voter's registration information.
+    @param Map with the registration information to be saved:
+    <ul>
+        <li>registrationNumber</li>
+        <li>registrationDate</li>
+        <li>pollStation</li>
+    </ul>
+    @return Voter instance.
+    **/
+    def saveRegistrationInformation(params){
+        this.voter = Voter.load(voter.id)
+
+        voter.registrationNumber = params.registrationNumber ?: voter.registrationNumber
+        voter.registrationDate = params.registrationDate ?: voter.registrationDate
+        voter.pollStation = params.pollStation ?: voter.pollStation
+
+
+        voter.validate()
+
+        if(voter.hasErrors()){
+            log.error voter.retrieveErrors()
+        }else{
+            voter.save()
+        }
+
+
+        return voter
+    }
+
+
+
+    /**
+    Gets a voter's contact information.
+    @return Map with contact information:
+     <ul>
+        <li>homePhone</li>
+        <li>cellPhone</li>
+        <li>workPhone</li>
+        <li>emailAddress</li>
+     </ul>
+    **/
+    def getContactInformation(){
+        this.voter = Voter.load(voter.id)
+        def personInstance = voter.person
+
+        def contactInformation =[
+            homePhone:      personInstance.homePhone,
+            cellPhone:      personInstance.cellPhone,
+            workPhone:      personInstance.workPhone,
+            emailAddress:   personInstance.emailAddress
+        ]
+
+        return contactInformation
+
+    }
+
+
+    /**
+    Save a voter's contact information
+    @param Map with the voter's contact information that should be saved:
+    <ul>
+        <li>homePhone</li>
+        <li>cellPhone</li>
+        <li>workPhone</li>
+        <li>emailAddress</li>
+    </ul>
+    @return An instance of person.
+    **/
+    def saveContactInformation(params){
+        this.voter = Voter.load(voter.id)
+        def personInstance = voter.person
+
+        personInstance.homePhone        = params.homePhone ?: personInstance.homePhone
+        personInstance.cellPhone        = params.cellPhone ?: personInstance.cellPhone
+        personInstance.workPhone        = params.workPhone ?: personInstance.workPhone
+        personInstance.emailAddress     = params.emailAddress ?: personInstance.emailAddress
+
+        personInstance.validate()
+        if(personInstance.hasErrors()){
+            log.error personInstance.retrieveErrors()
+        }else{
+            personInstance.save()
+        }
+
+
+        return personInstance
+
+    }
+
+
 	 def flushSession(){
 	 	sessionFactory.currentSession.flush()
 	 	sessionFactory.currentSession.clear()

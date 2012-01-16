@@ -17,6 +17,14 @@ class PollStation implements Serializable{
     }
 
 
+    public boolean equalsTo(other){
+        if(!(other instanceof PollStation)){
+            return false
+        }
+
+        other.id == this.id
+    }
+
 	 def getName(){
 	 	pollNumber
 	 }
