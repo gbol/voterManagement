@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./basicInformationPanel"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <panel id="basicInformationPanel" title="Basic Information" border="normal"
+        vflex="1" hflex="1" 
+        apply="bz.voter.management.display.panel.BasicInformationPanelComposer">
+
+        <panelchildren>
+            <grid oddRowSclass="none">
+                <columns>
+                    <column width="20%" align="right" />
+                    <column />
+                </columns>
+                <rows>
+                    <row>
+                        <label value="First Name" />
+                        <textbox id="firstNameTextbox"  constraint="no empty"
+                            value="@{basicInformationPanel$composer.basicInformation.firstName}" />
+                    </row>
+                    <row>
+                        <label value="Middle Name" />
+                        <textbox id="middleNameTextbox"
+                            value="@{basicInformationPanel$composer.basicInformation.middleName}" />
+                    </row>
+                    <row>
+                        <label value="Last Name" />
+                        <textbox id="lastNameTextbox" constraint="no empty"
+                            value="@{basicInformationPanel$composer.basicInformation.lastName}" />
+                    </row>
+                    <row>
+                        <label value="Birth Date" />
+                        <datebox id="birthDatebox" constraint="no empty, no future" format="dd-MMM-yyyy"
+                            value="@{basicInformationPanel$composer.basicInformation.birthDate}" />
+                    </row>
+                    <row>
+                        <label value="Age" />
+                        <label id="ageValueLabel" />
+                    </row>
+                    <row>
+                        <label value="Sex" />
+                        <listbox id="sexListbox" mold="select" rows="1" />
+                    </row>
+                    <row>
+                        <label value="Deceased" />
+                        <checkbox id="deceasedCheckbox" />
+                    </row>
+               </rows>
+           </grid>
+                <toolbar>
+                    <button id="saveBasicInformationButton" label="Save"/>
+                </toolbar>
+       </panelchildren>
+
+    </panel>
+
+</zk>

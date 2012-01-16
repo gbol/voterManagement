@@ -31,6 +31,10 @@ class Person implements Serializable{
 		ethnicity(nullable:true)
     }
 
+    def beforeInsert(){
+        this.alive = true
+    }
+
 
 	 def beforeValidate(){
 	 	firstName = firstName?.trim()?.capitalize()
@@ -40,7 +44,6 @@ class Person implements Serializable{
 		cellPhone = cellPhone?.trim()
 		workPhone = workPhone?.trim()
 		comments = comments?.trim()?.capitalize()
-		alive = alive ?: true
 	 }
 
 

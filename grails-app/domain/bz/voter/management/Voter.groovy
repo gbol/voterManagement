@@ -7,7 +7,7 @@ class Voter implements Serializable{
 	
 
 	static transients = ["firstName", "middleName","lastName", "birthDate",
-		"age", "sex", "address"]
+		"age", "sex", "address", "alive"]
 
 	Person person
 	Date registrationDate
@@ -26,6 +26,7 @@ class Voter implements Serializable{
 	 def beforeValidate(){
 	 	registrationNumber = registrationNumber?.trim()
 	 }
+
 
 	 def getNumberOfYearsRegistered(){
 
@@ -64,6 +65,12 @@ class Voter implements Serializable{
 	 Sex getSex(){
 	 	this.person.sex
 	 }
+
+
+     def isAlive(){
+        this.person.alive
+     }
+
 
      String getAddress(){
         "${this.person.address}"

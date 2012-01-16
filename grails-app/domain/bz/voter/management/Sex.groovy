@@ -18,4 +18,8 @@ class Sex implements Serializable{
 	 	this.name = this.name?.trim()?.capitalize()
 	 	this.code = this.code?.trim()?.toUpperCase()
 	 }
+
+     public boolean equalsTo(def sexInstance){
+        this.id == sexInstance.id
+     }
 }

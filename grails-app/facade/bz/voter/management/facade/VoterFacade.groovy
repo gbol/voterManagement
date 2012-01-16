@@ -4,6 +4,7 @@ import org.zkoss.zkgrails.*
 
 import bz.voter.management.VoterElection
 import bz.voter.management.Voter
+import bz.voter.management.Address
 
 class VoterFacade {
 
@@ -33,7 +34,7 @@ class VoterFacade {
     small pop-up window.
     @param voterElection is an instance that holds the voter and the election. A voter's information varies 
     from election to election.
-    @returns a map with the basic information
+    @return a map with the basic information
     **/
     def getBasicSummary(VoterElection voterElection ){
         voterElection = voterElection.merge()
@@ -56,6 +57,132 @@ class VoterFacade {
         ]
 
         return details
+    }
+
+
+    /**
+    Gets basic demographic information about a voter. Primary use is for displaying this information in a zk view.
+    @return a map with the following fields:
+    <ol>
+        <li>firstName</li>
+        <li>middleName</li>
+        <li>lastName</li>
+        <li>birthDate</li>
+        <li>age</li>
+        <li>sex</li>
+        <li>alive</li>
+    </ol>
+    **/
+    def getBasicInformation(){
+        this.voter = Voter.load(voter.id)
+        def basicInfo = [
+            firstName: voter.firstName,
+            middleName: voter.middleName,
+            lastName: voter.lastName,
+            birthDate: voter.birthDate,
+            age: voter.age,
+            sex: voter.sex,
+            alive: voter.isAlive()
+        ]
+
+        return basicInfo
+    }
+
+
+
+    /**
+    Saves a voter's basic information.
+    @param a map with the basci information to save:
+    <ul>
+        <li>firstName</li>
+        <li>middleName</li>
+        <li>lastName</li>
+        <li>birthDate</li>
+        <li>age</li>
+        <li>sex</li>
+        <li>alive</li>
+    </ul>
+    **/
+    def saveBasicInformation(params){
+        voter = Voter.load(voter.id)
+        def person = voter.person
+        
+        person.firstName = params.firstName ?: person.firstName
+        person.middleName = params.middleName ?: person.middleName
+        person.lastName = params.lastName ?: person.lastName
+        person.birthDate = params.birthDate ?: person.birthDate
+        person.sex = params.sex ?: person.sex
+        person.alive = params.alive
+
+        person.validate()
+
+        if(person.hasErrors()){
+            log.error person.retrieveErrors()
+        }else{
+            person.save()
+        }
+
+        flushSession()
+
+        return person
+    }
+
+
+    
+    /**
+    Returns the address of a particular voter.
+    @return A map with the address information 
+    <ol>
+        <li>houseNumber</li>
+        <li>street</li>
+        <li>district</li>
+        <li>municipality</li>
+    </ol>
+    **/
+    def getAddress(){
+        //def addressInstance = Address.load(voterInstance.person.address.id)
+        this.voter = Voter.load(voter.id)
+        def addressInstance = this.voter.person.address
+        def addressInfo = [
+            houseNumber: addressInstance.houseNumber,
+            street: addressInstance.street,
+            district: addressInstance.municipality.district,
+            municipality: addressInstance.municipality
+        ]
+
+        return addressInfo
+    }
+
+
+    /**
+    Saves a voter's address.
+    @param A map with the address values we wish to save.
+    @return A map with the address information
+    <ul>
+        <li>houseNmumber</li>
+        <li>street</li>
+        <li>municipality</li>
+    </ul>
+    **/
+    def saveAddress(params){
+        this.voter = Voter.load(voter.id)
+        def addressInstance = this.voter.person.address
+
+        addressInstance.houseNumber = params.houseNumber ?: addressInstance.houseNumber
+        addressInstance.street = params.street ?: addressInstance.street
+        addressInstance.municipality = params.municipality ?: addressInstance.municipality
+
+        addressInstance.validate()
+
+        if(addressInstance.hasErrors()){
+            log.error addressInstance.retrieveErrors()
+        }else{
+            addressInstance.save()
+        }
+
+        flushSession()
+
+        return addressInstance
     }
 
 

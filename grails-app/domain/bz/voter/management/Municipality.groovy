@@ -15,4 +15,9 @@ class Municipality implements Serializable{
 	 def beforeValidate(){
 	 	name = name?.trim()?.capitalize()
 	 }
+
+
+     public boolean equalsTo(def municipalityInstance){
+        this.id == municipalityInstance.id
+     }
 }

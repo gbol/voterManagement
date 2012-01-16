@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./voterMainWindow"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:a="http://www.zkoss.org/2005/zk/annotation"
+    xmlns:w="http://www.zkoss.org/2005/zk/client"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <window id="voterMainWindow" border="normal" vflex="max" hflex="max"
+        apply="bz.voter.management.display.panel.VoterMainPanelComposer">
+
+        <tabbox tabscroll="true" style="padding:4px 10px 4px 4px" >
+
+            <tabs>
+                <tab label="General Information" style="font-size: 6px" />
+                <tab label="Address" style="font-size: 6px" />
+                <tab label="Dependents" style="font-size: 6px" />
+                <tab label="Activities" style="font-size: 6px" />
+                <tab label="Pledges" style="font-size: 6px"/>
+            </tabs>
+
+            <tabpanels vflex="1" style="overflow:auto">
+                <tabpanel vflex="1" id="generalInformationTab"/>
+                <tabpanel vflex="1" id="addressTab"/>
+                <tabpanel vflex="1" id="dependentsTab"/>
+                <tabpanel vflex="1" id="activitiesTab"/>
+                <tabpanel vflex="1" id="pledgesTab"/>
+            </tabpanels>
+        </tabbox>
+
+    </window>
+
+</zk>

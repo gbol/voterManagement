@@ -18,4 +18,9 @@ class District implements Serializable{
 	 	this.name = this.name?.trim()?.capitalize()
 	 	this.code = this.code?.trim()?.toUpperCase()
 	 }
+
+
+     public boolean equalsTo(def districtInstance){
+        this.id == districtInstance.id
+     }
 }

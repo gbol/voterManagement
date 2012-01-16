@@ -33,7 +33,6 @@ class VoterComposer extends GrailsComposer {
 	
 	def votersListRows
 
-
 	def division
 
 	Grid votersGrid
@@ -57,6 +56,7 @@ class VoterComposer extends GrailsComposer {
 	 	if(springSecurityService.isLoggedIn()){
             division = voterListFacade.getSystemDivision()
 			votersGrid.setRowRenderer(new VoterRenderer())
+            showVoters()
 		}else{
 			execution.sendRedirect('/login')
 		}
@@ -75,29 +75,31 @@ class VoterComposer extends GrailsComposer {
 	 }
 
 
-
-	 def onClick_showAllVotersBtn(){
+    def onClick_showAllVotersBtn(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
-            def divisionInstance = division
-			if(divisionInstance){
-				//def divisionVoters = voterService.listByDivision(divisionInstance)
-				def divisionVoters = voterService.countByDivision(divisionInstance)
-				voterSearchTextbox.setValue("")
-				//if(divisionVoters.size()>0){
-				if(divisionVoters>0){
-					refreshModel(_startPageNumber)
-				}else{
-					votersListRows.getChildren().clear()
-					Messagebox.show("No voters exist in ${divisionInstance.name}!",
-						"Division Message", Messagebox.OK,
-						Messagebox.INFORMATION)
-				}
+            showVoters()
+        }else{
+			ComposerHelper.permissionDeniedBox()
+        }
+    }
+
+
+	 def showVoters(){
+        def divisionInstance = division
+		if(divisionInstance){
+		    def divisionVoters = voterService.countByDivision(divisionInstance)
+			voterSearchTextbox.setValue("")
+			if(divisionVoters>0){
+				refreshModel(_startPageNumber)
 			}else{
-				Messagebox.show("Error: division does not exist!", "Error",
-					Messagebox.OK, Messagebox.ERROR)
+				votersListRows.getChildren().clear()
+				Messagebox.show("No voters exist in ${divisionInstance.name}!",
+					"Division Message", Messagebox.OK,
+					Messagebox.INFORMATION)
 			}
 		}else{
-			ComposerHelper.permissionDeniedBox()
+			Messagebox.show("Error: division does not exist!", "Error",
+				Messagebox.OK, Messagebox.ERROR)
 		}
 	 }
 

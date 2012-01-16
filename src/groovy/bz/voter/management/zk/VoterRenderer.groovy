@@ -15,24 +15,26 @@ import bz.voter.management.Voter
 
 public class VoterRenderer implements RowRenderer{
 
+
+    def grid
+    def panel
+    def centerPanel
+
 	public void render(Row row, java.lang.Object data){
 		Voter voter = (Voter) data
 
-		Button editButton = new Button("Edit")
-		Button manageButton = new Button("Manage")
+        grid = row.getParent()
+        panel = grid.getParent().getParent()
+        centerPanel = panel.getParent().getParent()
 
-		editButton.addEventListener("onClick", new EventListener(){
-			public void onEvent(Event event) throws Exception{
-				final Window win = Executions.createComponents("/bz/voter/management/voterNewForm.zul", null,
-					[id:voter.id]) 
-				win.doModal()
-			}
-		})
+		Button manageButton = new Button("Manage")
 
 
         manageButton.addEventListener("onClick", new EventListener(){
             public void onEvent(Event event) throws Exception{
-                println "\nClicked manage button"
+                centerPanel.getChildren().clear()
+                Executions.createComponents("/bz/voter/management/display/panel/voterMainPanel.zul",
+                    centerPanel, [voter: voter])
             }
         })
 
@@ -44,7 +46,6 @@ public class VoterRenderer implements RowRenderer{
 		row.getChildren().add(new Label("${voter.person.homePhone}"))
 		row.getChildren().add(new Label("${voter.person.cellPhone}"))
 		row.getChildren().add(new Label("${voter.affiliation}"))
-		row.getChildren().add(editButton)
 		row.getChildren().add(manageButton)
 	}
 

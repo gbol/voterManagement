@@ -66,6 +66,8 @@ class BootStrap {
 			new Ethnicity(name:'Indian').save()
 			new Ethnicity(name:'Garifuna').save()
 			new Ethnicity(name:'Chinese').save()
+			new Ethnicity(name:'Mestizo').save()
+			new Ethnicity(name:'Maya').save()
 		}
 
 
@@ -96,13 +98,36 @@ class BootStrap {
 			new District(name:'Belize', code:'BZ').save()
 			new District(name:'Cayo', code:'CY').save()
 			new District(name:'Stann Creek',code:'SC').save()
-			new District(name:'Toledo',code:'TO').save(flush:true)
+			new District(name:'Toledo',code:'TO').save()
+			new District(name:'Unknown',code:'UN').save(flush:true)
 		}
 
 		if(Municipality.count() == 0){
 			new Municipality(name:'Belmopan',district:District.findByCode('CY')).save()
+            new Municipality(name: 'Unknown', district:District.findByCode('CY')).save()
+            new Municipality(name: 'Unknown', district:District.findByCode('CZ')).save()
+            new Municipality(name: 'Unknown', district:District.findByCode('OW')).save()
+            new Municipality(name: 'Unknown', district:District.findByCode('SC')).save()
+            new Municipality(name: 'Unknown', district:District.findByCode('TO')).save()
+            new Municipality(name: 'Unknown', district:District.findByCode('UN')).save()
 			unknownMunicipality = new Municipality(name:'Unknown', district: District.findByCode('BZ')).save(flush:true)
 		}
+
+
+        if(Relation.count() == 0){
+            new Relation(name: 'Son').save()
+            new Relation(name: 'Daughter').save()
+            new Relation(name: 'Mother').save()
+            new Relation(name: 'Father').save()
+            new Relation(name: 'Grandchild').save()
+            new Relation(name: 'Grandparent').save()
+            new Relation(name: 'Husband').save()
+            new Relation(name: 'Wife').save()
+            new Relation(name: 'Aunt').save()
+            new Relation(name: 'Uncle').save()
+            new Relation(name: 'Nephew').save()
+            new Relation(name: 'Niece').save()
+        }
 
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
         def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)

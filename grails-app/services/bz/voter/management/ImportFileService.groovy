@@ -33,7 +33,7 @@ class ImportFileService {
 		def transactionCount = 0
         
       votersMapList.each { Map voterParams ->
-		  		def municipality = Municipality.findByName(voterParams.municipality) ?:  Municipality.findByName('Unknown')
+		  		def municipality = Municipality.findByName(voterParams.municipality) ?:  Municipality.findByNameAndDistrict('Unknown',District.findByCode('UN'))
 
 		  		def addressParams = [
 					houseNumber: voterParams.houseNumber,

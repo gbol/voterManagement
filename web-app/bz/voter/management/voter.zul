@@ -37,7 +37,6 @@
 							<column label="Cell #" align="left" sort="auto" />
 							<column label="Affiliation" align="left" sort="auto" />
 							<column />
-							<column />
 						</columns>
 						<rows id="votersListRows" style="font-size: 0.5em">
 						</rows>
