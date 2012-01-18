@@ -28,7 +28,6 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		  person.lastName = 'Doe'
 		  person.birthDate = new Date().parse('dd-MM-yyyy','15-04-1980')
 		  person.sex = Sex.findByCode('M')
-		  person.address = address
 		  person.save()
 
 		  def person1 = new Person()
@@ -36,7 +35,6 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		  person1.lastName = 'User'
 		  person1.birthDate = new Date().parse('dd-MM-yyyy','15-04-1980')
 		  person1.sex = Sex.findByCode('M')
-		  person1.address = address
 		  person1.save()
 
 		  def voter = new Voter()
@@ -144,7 +142,7 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 		election.save()
 		voterElectionService.addAllVoters(election)
 
-		assertEquals([13], voterElectionService.countByElectionAndDivision(election,albertDivision))
+		assertEquals(13, voterElectionService.countByElectionAndDivision(election,albertDivision))
 	 	
 	 }
 

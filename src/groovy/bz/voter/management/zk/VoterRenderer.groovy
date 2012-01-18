@@ -21,7 +21,9 @@ public class VoterRenderer implements RowRenderer{
     def centerPanel
 
 	public void render(Row row, java.lang.Object data){
-		Voter voter = (Voter) data
+		//Voter voter = (Voter) data
+        def _voter = data
+        Voter voter = _voter.voter
 
         grid = row.getParent()
         panel = grid.getParent().getParent()
@@ -38,14 +40,14 @@ public class VoterRenderer implements RowRenderer{
             }
         })
 
-		row.getChildren().add(new Label("${voter.registrationNumber}"))
-		row.getChildren().add(new Label("${voter.person.lastName}"))
-		row.getChildren().add(new Label("${voter.person.firstName}"))
-		row.getChildren().add(new Label("${voter.person.age}"))
-		row.getChildren().add(new Label("${voter.person.sex}"))
-		row.getChildren().add(new Label("${voter.person.homePhone}"))
-		row.getChildren().add(new Label("${voter.person.cellPhone}"))
-		row.getChildren().add(new Label("${voter.affiliation}"))
+		row.getChildren().add(new Label("${_voter.registrationNumber}"))
+		row.getChildren().add(new Label("${_voter.lastName}"))
+		row.getChildren().add(new Label("${_voter.firstName}"))
+		row.getChildren().add(new Label("${_voter.age}"))
+		row.getChildren().add(new Label("${_voter.sex}"))
+		row.getChildren().add(new Label("${_voter.phoneNumber1}"))
+		row.getChildren().add(new Label("${_voter.phoneNumber2}"))
+		row.getChildren().add(new Label("${_voter.affiliation}"))
 		row.getChildren().add(manageButton)
 	}
 

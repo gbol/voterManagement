@@ -41,8 +41,18 @@
 					<label value="@{wndVoterInfo$composer.details.sex}" class="varValue" />
 				</row>
 				<row>
-					<label value="Address" class="varLabel" width="20%" />
-					<label value="@{wndVoterInfo$composer.details.address}"
+					<label value="Registration Address" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.details.registrationAddress}"
+						class="varValue" />
+				</row>
+				<row>
+					<label value="Work Address" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.details.workAddress}"
+						class="varValue" />
+				</row>
+				<row>
+					<label value="Alternate Address" class="varLabel" width="20%" />
+					<label value="@{wndVoterInfo$composer.details.alternateAddress}"
 						class="varValue" />
 				</row>
 				<row>

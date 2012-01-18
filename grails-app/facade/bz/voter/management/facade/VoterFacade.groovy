@@ -5,6 +5,7 @@ import org.zkoss.zkgrails.*
 import bz.voter.management.VoterElection
 import bz.voter.management.Voter
 import bz.voter.management.Address
+import bz.voter.management.AddressType
 
 class VoterFacade {
 
@@ -47,13 +48,17 @@ class VoterFacade {
             birthDate: voterInstance.birthDate.format('dd-MMM-yyyy'),
             age: voterInstance.age,
             sex: voterInstance.sex,
-            address: voterInstance.address,
+            registrationAddress: "${Address.findByPersonAndAddressType(voterInstance.person, AddressType.findByName('Registration'))}",
+            workAddress: "${Address.findByPersonAndAddressType(voterInstance.person, AddressType.findByName('Work'))}",
+            alternateAddress: "${Address.findByPersonAndAddressType(voterInstance.person, AddressType.findByName('Alternate'))}",
             pollStation: voterInstance.pollStation,
-            affiliation: voterInstance.affiliation,
-            pledge: voterElection.pledge,
+            pollNumber: voterInstance.pollStation.pollNumber,
             registrationDate: voterInstance.registrationDate.format('dd-MMM-yyyy'),
             registrationNumber: voterInstance.registrationNumber,
-            voteTime: voterElection.voteTime
+            voteTime: voterElection.voteTime,
+            affiliation: "${voterInstance.affiliation}",
+            pledge:     "${voterElection.pledge}",
+            pickupTime: "${voterElection.pickupTime}"
         ]
 
         return details

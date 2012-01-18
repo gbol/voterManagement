@@ -4,10 +4,7 @@ class PersonService {
 
     static transactional = true
 
-
 	 def messageSource
-	 def addressService
-
 
 	/**
 	This adds a new instance of person. It forwards the request to save(params).
@@ -20,25 +17,19 @@ class PersonService {
 	/**
 	Saves an instance of person
 	@param A map of values that match the fields in Person and Address:
-	1. firstName
-	2. middleName
-	3. lastName
-	4. dateOfBirth
-	5. sex
-	6. ethnicity
-	7. homePhone
-	8. workPhone
-	9. cellPhone
-	10. address : this is a map with the following keys: houseNumber, street, municipality
+    <ul>
+	    <li>firstName</li>
+	    <li>middleName</li>
+	    <li>lastName</li>
+	    <li>dateOfBirth</li>
+	    <li>sex</li>
+	    <li>ethnicity</li>
+    </ul>
 	**/
 	 def save(def params) {
 	 	def personInstance 
-		def addressInstance
 		def errorMessages
 
-		if(!addressService){
-			addressService = new AddressService()
-		}
 
 		if(params.person?.id){
 			personInstance = params.person
@@ -46,46 +37,26 @@ class PersonService {
 			personInstance = new Person()
 		}
 
-		if(params.address && params.address.id){
-			addressInstance = addressService.save(params.address)
-		}else if(params.address){
-			addressInstance = addressService.add(params.address)
-		}else{
-			addressInstance = personInstance.address ?: null
-		}
+	    personInstance.firstName = params.firstName ?: personInstance.firstName
+		personInstance.lastName = params.lastName ?: personInstance.lastName
+		personInstance.middleName = params.middleName ?: personInstance.middleName
+		personInstance.birthDate = params.birthDate ?: personInstance.birthDate
+		personInstance.sex = params.sex ?: personInstance.sex
+        personInstance.emailAddress = params.emailAddress ?: personInstance.emailAddress
 
-		if(addressInstance?.hasErrors()){
-			for(error in addressInstance.errors.allErrors){
+		personInstance.validate()
+
+		if(personInstance.hasErrors()){
+			for(error in personInstance.errors.allErrors){
 				log.error error
-				errorMessages = errorMessages + "\n" + (messageSource.getMessage(error,null))
 			}
 
-			personInstance.errors.rejectValue("address","address.error", errorMessages)
 		}else{
-
-			personInstance.firstName = params.firstName ?: personInstance.firstName
-			personInstance.lastName = params.lastName ?: personInstance.lastName
-			personInstance.middleName = params.middleName ?: personInstance.middleName
-			personInstance.birthDate = params.birthDate ?: personInstance.birthDate
-			personInstance.sex = params.sex ?: personInstance.sex
-			personInstance.address = addressInstance?.errors ? addressInstance : personInstance.address
-			personInstance.comments = params.comments ?: personInstance.comments
-			personInstance.workPhone = params.workPhone ?: personInstance.workPhone
-			personInstance.cellPhone = params.cellPhone ?: personInstance.cellPhone
-			personInstance.homePhone = params.homePhone ?: personInstance.homePhone
-
-			personInstance.validate()
-
-			if(personInstance.hasErrors()){
-				for(error in personInstance.errors.allErrors){
-					log.error error
-				}
-
-			}else{
-				personInstance.save()
-			}
+			personInstance.save()
 		}
 
 		return personInstance
 	 }
+
+
 }

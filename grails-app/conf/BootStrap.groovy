@@ -129,6 +129,13 @@ class BootStrap {
             new Relation(name: 'Niece').save()
         }
 
+
+        if(AddressType.count() == 0 ){
+            new AddressType(name: 'Registration').save()
+            new AddressType(name: 'Work').save()
+            new AddressType(name: 'Home').save()
+        }
+
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)
         def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
         def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION') ?: new SecRole(authority: 'ROLE_POLL_STATION').save(failOnError: true)

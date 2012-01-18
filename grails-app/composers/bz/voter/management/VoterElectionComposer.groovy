@@ -30,7 +30,7 @@ class VoterElectionComposer extends GrailsComposer {
 
 	def searchTextbox
 
-	def filterBtn
+	def showAllVotersBtn
 	def searchVoterButton
 
 
@@ -56,27 +56,15 @@ class VoterElectionComposer extends GrailsComposer {
 			election = Election.get(Executions.getCurrent().getArg().id)
             divisionInstance = voterListFacade.getSystemDivision()
             pollStationVotersGrid.setRowRenderer(new PollStationVoterRenderer())
+            showVoters()
 		}else{
 			execution.sendRedirect('/login')
 		}
     }
 
 
-	 def onClick_filterBtn(){
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_POLL_STATION')){
-		    if(divisionInstance){
-                def numberOfVoters = voterElectionService.countByElectionAndDivision(election,divisionInstance)
-                if(numberOfVoters>0){
-                    refreshModel(_startPageNumber)
-                }else{
-                   votersListRows.getChildren().clear() 
-                   Messagebox.show('No voters exist!', 'Poll Station Message', 
-                        Messagebox.OK, Messagebox.INFORMATION)
-                }
-		    }
-        }else{
-            ComposerHelper.permissionDeniedBox()
-        }
+	 def onClick_showAllVotersBtn(){
+        showVoters()
 	 }
 
 
@@ -93,6 +81,23 @@ class VoterElectionComposer extends GrailsComposer {
 	}
 
 
+    
+    def showVoters(){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_POLL_STATION')){
+		    if(divisionInstance){
+                def numberOfVoters = voterElectionService.countByElectionAndDivision(election,divisionInstance)
+                if(numberOfVoters>0){
+                    refreshModel(_startPageNumber)
+                }else{
+                   votersListRows.getChildren().clear() 
+                   Messagebox.show('No voters exist!', 'Poll Station Message', 
+                        Messagebox.OK, Messagebox.INFORMATION)
+                }
+		    }
+        }else{
+            ComposerHelper.permissionDeniedBox()
+        }
+    }
 
     /**
     This controls the paging event. Calls refreshModel() telling it to get the next batch of voters starting at

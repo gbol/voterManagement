@@ -1,15 +1,16 @@
 package org.zkoss.zklargelivelist.model;
 
 import java.util.List;
-import bz.voter.management.Voter
+import bz.voter.management.VoterElection
 import bz.voter.management.VoterElectionService
 import bz.voter.management.Division
 import bz.voter.management.Election
 
 
-public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingListModel<Voter> {
+public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingListModel<VoterElection> {
 
 	def voterElectionService
+    def sessionFactory
 
 	public ElectionVotersPaginListModel(){
 	}
@@ -30,12 +31,58 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
 	@arg search the search string that is used to search for the voters.
 	@arg itemStartNumber the offset
 	@arg pageSize the size of the results returned
-	@returns List<Voter> a list of voters
+	@returns List<Map> a list of voters. We return a map because zk has issues maintaing
+    a hibernate session across requests:
+    <ul>
+        <li>voterElection</li>
+        <li>voter</li>
+        <li>registrationDate</li>
+        <li>lastName</li>
+        <li>firstName</li>
+        <li>houseNumber</li>
+        <li>street</li>
+        <li>sex</li>
+        <li>age</li>
+        <li>birthDate</li>
+        <li>pollNumber</li>
+        <li>voted</li>
+        <li>pollStation</li>
+        <li>affiliation</li>
+        <li>pickupTime</li>
+        <li>pledge</li>
+    </ul>
 	**/
 	@Override
-	protected List<Voter> getPageData(String search, int itemStartNumber, int pageSize) {
+	protected List<Map> getPageData(String search, int itemStartNumber, int pageSize) {
 		voterElectionService = new VoterElectionService()
-		return voterElectionService.search(search, getElection(), getDivision(), itemStartNumber, pageSize)
+        def votersMap = []
+		for(_voterElection in voterElectionService.search(search, getElection(), getDivision(), itemStartNumber, pageSize)){
+            def _addressInstance = _voterElection.voter.registrationAddress
+            def _voter = _voterElection.voter
+            def instance = [
+                voterElection:      _voterElection,
+                voter:              _voter,
+                registrationDate:   _voter.registrationDate,
+                registrationNumber: _voter.registrationNumber,
+                lastName:           _voter.lastName,
+                firstName:          _voter.firstName,
+                houseNumber:        _addressInstance.houseNumber,
+                street:             _addressInstance.street,
+                sex:                _voter.sex,
+                age:                _voter.age,
+                birthDate:          _voter.birthDate,
+                pollStation:        _voter.pollStation,
+                pollNumber:         _voter.pollStation.pollNumber,
+                voted:              _voterElection.voted,
+                affiliation:        _voter.affiliation,
+                pickupTime:         _voterElection.pickupTime,
+                pledge:             _voterElection.pledge
+
+            ]
+
+            votersMap.push(instance)
+        }
+        return votersMap
 	}
 
 
@@ -43,12 +90,59 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
 	Gets a list of voters in a specified division eligible to vote in an election.
 	@arg itemStartNumber the offset
 	@arg pageSize the size of the results returned
-	@returns List<Voter> a list of voters
+	@returns List<Map> a list of voters. We return a map because zk has issues maintaing
+    a hibernate session across requests:
+    <ul>
+        <li>voterElection</li>
+        <li>voter</li>
+        <li>registrationDate</li>
+        <li>lastName</li>
+        <li>firstName</li>
+        <li>houseNumber</li>
+        <li>street</li>
+        <li>sex</li>
+        <li>age</li>
+        <li>birthDate</li>
+        <li>pollNumber</li>
+        <li>voted</li>
+        <li>pollStation</li>
+        <li>affiliation</li>
+        <li>pickupTime</li>
+        <li>pledge</li>
+    </ul>
 	@Override
 	**/
-	protected List<Voter> getPageData(int itemStartNumber, int pageSize) {
+	protected List<Map> getPageData(int itemStartNumber, int pageSize) {
 		voterElectionService = new VoterElectionService()
-		return voterElectionService.listByElectionAndDivision(getElection(),getDivision(), itemStartNumber, pageSize )
+        def votersMap = []
+		for(_voterElection in voterElectionService.listByElectionAndDivision(getElection(),getDivision(), itemStartNumber, pageSize )){
+            def _addressInstance = _voterElection.voter.registrationAddress
+            def _voter = _voterElection.voter
+            def instance = [
+                voterElection:      _voterElection,
+                voter:              _voter,
+                registrationDate:   _voter.registrationDate,
+                registrationNumber:   _voter.registrationNumber,
+                lastName:           _voter.lastName,
+                firstName:          _voter.firstName,
+                houseNumber:        _addressInstance.houseNumber,
+                street:             _addressInstance.street,
+                sex:                _voter.sex,
+                age:                _voter.age,
+                birthDate:          _voter.birthDate,
+                pollStation:        _voter.pollStation,
+                pollNumber:         _voter.pollStation.pollNumber,
+                voted:              _voterElection.voted,
+                affiliation:        _voterElection.voter.affiliation,
+                pickupTime:         _voterElection.pickupTime,
+                pledge:             _voterElection.pledge
+
+            ]
+
+            votersMap.push(instance)
+        }
+
+        return votersMap
 	}
 
 

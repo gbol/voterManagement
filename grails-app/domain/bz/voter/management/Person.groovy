@@ -8,27 +8,18 @@ class Person implements Serializable{
 	String middleName
 	String lastName
 	Date birthDate
-	String homePhone
-	String cellPhone
-	String workPhone
     String emailAddress
-	String comments
 	Sex sex
-	Address address
 	Ethnicity ethnicity
 	boolean alive
 
 
-	static transients = ['age','numberOfYearsRegistered']
+	static transients = ['age','numberOfYearsRegistered', 'registrationAddress']
 
     static constraints = {
 	 	firstName(blank: false)
 		lastName(blank: false)
 		middleName(nullable:true)
-		homePhone(nullable:true)
-		cellPhone(nullable:true)
-		workPhone(nullable:true)
-		comments(nullable:true)
 		ethnicity(nullable:true)
         emailAddress(email:true, nullable:true)
     }
@@ -42,22 +33,18 @@ class Person implements Serializable{
 	 	firstName = firstName?.trim()?.capitalize()
 		middleName = middleName?.trim()?.capitalize()
 		lastName = lastName?.trim()?.capitalize()
-		homePhone = homePhone?.trim()
-		cellPhone = cellPhone?.trim()
-		workPhone = workPhone?.trim()
-		comments = comments?.trim()?.capitalize()
 	 }
 
 
 	 def getAge(){
-	   Calendar today = Calendar.getInstance()
+	    Calendar today = Calendar.getInstance()
     	Calendar dob = Calendar.getInstance()
     
-   	dob.setTime(this.birthDate)
+   	    dob.setTime(this.birthDate)
         
     	int age = today.get(Calendar.YEAR)- dob.get(Calendar.YEAR)
     
-      dob.add(Calendar.YEAR,age)
+        dob.add(Calendar.YEAR,age)
     
     	if(today.before(dob)) {
         age = age-1
@@ -68,5 +55,10 @@ class Person implements Serializable{
 	String toString(){
 		"${lastName} , ${firstName}"
 	}
+
+
+    Address getRegistrationAddress(){
+        Address.findByPersonAndAddressType(this, AddressType.findByName('Registration'))
+    }
 
 }

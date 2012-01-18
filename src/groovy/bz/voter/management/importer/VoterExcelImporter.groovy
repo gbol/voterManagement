@@ -27,9 +27,9 @@ class VoterExcelImporter extends AbstractExcelImporter {
                 'R':'homePhone',
                 'S':'comments',
                 'F':'sex',
-					 'I': 'pollStation',
+			    'I': 'pollStation',
                 'T':'affiliation',
-					 'U':'pledge',
+			    'U':'pledge',
                 'Q':'identificationType',
                 'G':'houseNumber',
                 'H':'street',
@@ -43,8 +43,8 @@ class VoterExcelImporter extends AbstractExcelImporter {
          registrationNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
          identificationType: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
          affiliation: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
-			firstName: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
-			lastName: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
+		 firstName: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
+		 lastName: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'']),
          homePhone: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
          comments: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
          sex: ([expectedType: ExpectedPropertyType.StringType, defaultValue: '']),
@@ -52,8 +52,8 @@ class VoterExcelImporter extends AbstractExcelImporter {
          houseNumber: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null] ),
          street: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
          municipality: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown']),
-			pledge: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown']),
-			pollStation: ([expectedType: ExpectedPropertyType.StringType, defaultValue: 'N/A'])
+		 pledge: ([expectedType: ExpectedPropertyType.StringType, defaultValue:'Unknown']),
+		 pollStation: ([expectedType: ExpectedPropertyType.StringType, defaultValue: 'N/A'])
     ]
     
 

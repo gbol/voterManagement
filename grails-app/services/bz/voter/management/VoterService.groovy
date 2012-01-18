@@ -68,6 +68,7 @@ class VoterService {
 
 	def save(def params){
 
+
 		def errorMessages
 		def voterInstance
 		def personInstance

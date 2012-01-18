@@ -20,7 +20,7 @@
 						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
 							style="cursor:help" />
 						<label value="Tips" tooltip="searchHelp" />
-						<button label="Show All Voters" id="filterBtn" />
+						<button label="Show All Voters" id="showAllVotersBtn" />
 					</toolbar>
 					<paging id="voterPaging" autohide="true" detailed="true"/>
 					<grid  vflex='1' id="pollStationVotersGrid">

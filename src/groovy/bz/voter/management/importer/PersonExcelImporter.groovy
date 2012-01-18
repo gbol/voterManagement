@@ -37,8 +37,8 @@ class PersonExcelImporter extends AbstractExcelImporter {
         homePhone: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
         comments: ([expectedType: ExpectedPropertyType.StringType, defaultValue:null]),
         sex: ([expectedType: ExpectedPropertyType.IntType, defaultValue:0]),
-         birthDate: ([expectedType: ExpectedPropertyType.DateJavaType, defaultValue:null]),
-         address: ([expectedType: ExpectedPropertyType.IntType, defaultValue:0])
+        birthDate: ([expectedType: ExpectedPropertyType.DateJavaType, defaultValue:null]),
+        address: ([expectedType: ExpectedPropertyType.IntType, defaultValue:0])
       
     ]
     

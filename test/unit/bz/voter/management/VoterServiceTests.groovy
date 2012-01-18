@@ -58,14 +58,6 @@ class VoterServiceTests extends GrailsUnitTestCase {
 		new Election(year: 2007, electionType: ElectionType.findByName('General')).save()
 
 		def pledge = new Pledge(name:'Yes', code:'Y').save()
-
-
-		def addressParams = [
-			houseNumber: 2,
-			street: "None",
-			municipality: Municipality.findByName('Belmopan')
-		]
-
 		def params = [
 			firstName : 'John',
 			lastName : 'Doe',
@@ -77,36 +69,18 @@ class VoterServiceTests extends GrailsUnitTestCase {
 			pollStation: pollStation,
 			pledge: Pledge.findByName('Yes'),
 			affiliation: Affiliation.findByName('PUP'),
-			address: addressParams,
 			pledge: pledge
 		]
 
 
-
 		def voterService = new VoterService()
 		voterService.messageSource = [getMessage:{errors, locale-> return "error message"}]
-
-		voterService.personService = [save : {
-			def addressInstance = new Address(houseNumber: '0',
-								street: 'N/A',
-								municipality: Municipality.findByName('Belmopan')).save()
-			def person = new Person(
-				address: addressInstance,
-				firstName: params.firstName,
-				lastName: params.lastName,
-				birthDate: params.birthDate,
-				sex: params.sex
-			).save()
-
-			return person
-		}]
 
 
 		def voter = voterService.add(params,election, true)
 
 		assertNotNull voter.id
 		assertEquals 'John', voter.person.firstName
-		assertEquals 'N/A', voter.person.address.street
 
 		assertEquals 1, VoterElection.findAllByVoter(voter).size()
 
@@ -114,12 +88,6 @@ class VoterServiceTests extends GrailsUnitTestCase {
 
 
 	 def test_Save_New_Voter_With_Missing_FirstName_Should_Fail(){
-
-		def addressParams = [
-			houseNumber: 2,
-			street: "None",
-			municipality: Municipality.findByName('Belmopan')
-		]
 
 		def params = [
 			lastName : 'Doe',
@@ -130,8 +98,7 @@ class VoterServiceTests extends GrailsUnitTestCase {
 			identificationType: IdentificationType.findByName('Passport'),
 			pollStation: PollStation.findByPollNumber(1),
 			pledge: Pledge.findByName('Yes'),
-			affiliation: Affiliation.findByName('PUP'),
-			address: addressParams
+			affiliation: Affiliation.findByName('PUP')
 		]
 
 
@@ -140,11 +107,7 @@ class VoterServiceTests extends GrailsUnitTestCase {
 		voterService.messageSource = [getMessage:{errors, locale-> return "error message"}]
 
 		voterService.personService = [save : {
-			def addressInstance = new Address(houseNumber: '0',
-								street: 'N/A',
-								municipality: Municipality.findByName('Belmopan')).save()
 			def person = new Person(
-				address: addressInstance,
 				firstName: params.firstName,
 				lastName: params.lastName,
 				birthDate: params.birthDate,
@@ -167,27 +130,14 @@ class VoterServiceTests extends GrailsUnitTestCase {
 
 	 	def voterService = new VoterService()
 
-		def addressInstance = new Address(
-			houseNumber: '1',
-			street: 'N/A',
-			municipality: Municipality.findByName('Belmopan') 
-		).save()
-
 		def personInstance = new Person(
 			firstName: 'John',
 			lastName: 'Doe',
 			birthDate: new Date(77,04,15),
-			sex: Sex.findByCode('M'),
-			address: addressInstance
+			sex: Sex.findByCode('M')
 			
 		).save(flush:true)
 	 	
-		def addressParams = [ 
-			houseNumber: '1',
-			street: 'N/A',
-			municipality: Municipality.findByName('Belmopan') 
-		]
-	
 
 		def params = [
 			registrationNumber: '456',
@@ -199,8 +149,7 @@ class VoterServiceTests extends GrailsUnitTestCase {
 			identificationType: IdentificationType.findByName('Passport'),
 			pledge: Pledge.findByName('Yes'),
 			affiliation: Affiliation.findByName('PUP'),
-			pollStation: PollStation.findByPollNumber(1),
-			address: addressParams
+			pollStation: PollStation.findByPollNumber(1)
 		]
 
 
@@ -208,19 +157,20 @@ class VoterServiceTests extends GrailsUnitTestCase {
 
 		voterService.messageSource = [getMessage:{errors, locale-> return "error message"}]
 		voterService.personService = [save : {
-			/*def personInstance = Person.findByFirstNameIlike('John')
-			personInstance.firstName = 'John'
+			def person = new Person(
+				firstName: params.firstName,
+				lastName: params.lastName,
+				birthDate: params.birthDate,
+				sex: params.sex
+			)
 
-			personInstance.validate()
+			person.validate()
 
-			personInstance.save()*/
+			return person
 
-			return personInstance
 		}]
 
 		def voterInstance = voterService.save(params)
-		println "person: ${voterInstance.person}"
-		println "registrationDate: ${voterInstance.registrationDate}\n"
 
 		assertEquals 'John',voterInstance.person.firstName
 		assertEquals '456', voterInstance.registrationNumber

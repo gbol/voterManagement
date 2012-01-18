@@ -7,7 +7,7 @@ class Voter implements Serializable{
 	
 
 	static transients = ["firstName", "middleName","lastName", "birthDate",
-		"age", "sex", "address", "alive"]
+		"age", "sex", "address", "alive", "registrationAddress"]
 
 	Person person
 	Date registrationDate
@@ -79,5 +79,10 @@ class Voter implements Serializable{
 	 static totalVotersByPollStation(PollStation pollStation){
 	 	Voter.countByPollStation(pollStation)
 	 }
+
+    Address getRegistrationAddress(){
+        Address.findByPersonAndAddressType(this.person, AddressType.findByName('Registration'))
+    }
+
 
 }

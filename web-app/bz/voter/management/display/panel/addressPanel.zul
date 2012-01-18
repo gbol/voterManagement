@@ -12,6 +12,9 @@
         border="normal" apply="bz.voter.management.display.panel.AddressPanelComposer">
 
         <panelchildren>
+
+           <panel title="Registration Address">
+           <panelchildren>
             <grid>
                 <columns>
                     <column width="20%" align="right" />
@@ -41,6 +44,10 @@
               <toolbar>
                 <button label="Save" id="saveAddressButton" />
               </toolbar>
+              </panelchildren>
+              </panel>
+
+
            </panelchildren>
 
     </panel>

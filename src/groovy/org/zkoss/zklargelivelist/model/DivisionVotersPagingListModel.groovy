@@ -55,30 +55,118 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 
 	/**
 	Gets a list of voters in the specified division. This is used for paging.
-	@arg division the division you want voters from
-	@arg itemStartNumber the offset
-	@arg pageSize the size of the results returned
-	@returns List<Voter> a list of voters
+	@param division the division you want voters from
+	@param itemStartNumber the offset
+	@param pageSize the size of the results returned
+	@return List<Map> a list of voters
+    <ul>
+        <li>voter</li>
+        <li>registrationDate</li>
+        <li>registrationNumber</li>
+        <li>lastName</li>
+        <li>firstName</li>
+        <li>houseNumber</li>
+        <li>street</li>
+        <li>phoneNumber1</li>
+        <li>phoneNumber2</li>
+        <li>phoneNumber3</li>
+        <li>sex</li>
+        <li>age</li>
+        <li>birthDate</li>
+        <li>pollStation</li>
+        <li>pollNumber</li>
+        <li>affiliation</li>
+    </ul>
 	**/
 	@Override
-	protected List<Voter> getPageData(Division division, int itemStartNumber, int pageSize) {
+	protected List<Map> getPageData(Division division, int itemStartNumber, int pageSize) {
 		voterService = new VoterService()
-		return voterService.listByDivision(division, itemStartNumber, pageSize)
+        def votersList = []
+		for(_voter in  voterService.listByDivision(division, itemStartNumber, pageSize)){
+            def voter = _voter.read(_voter.id)
+            def address = voter.registrationAddress
+            def resultMap = [
+                voter:              voter,
+                registrationDate:   voter.registrationDate,
+                registrationNumber: voter.registrationNumber,
+                lastName:           voter.lastName,
+                firstName:          voter.firstName,
+                houseNumber:        address.houseNumber,
+                phoneNumber1:       address.phoneNumber1,
+                phoneNumber2:       address.phoneNumber2,
+                phoneNumber3:       address.phoneNumber3,
+                street:             address.street,
+                sex:                voter.sex,
+                age:                voter.age,
+                birthDate:          voter.birthDate,
+                pollStation:        voter.pollStation,
+                pollNumber:         voter.pollStation.pollNumber,
+                affiliation:        voter.affiliation
+            ]
+
+            votersList.push(resultMap)
+        }
+
+        return votersList
 	}
 
 
 	/**
 	Gets a list of voters in a specified division whose first and/or last name match the search string.
-	@arg search the search string that is used to search for the voters.
-	@arg division the division you want voters from
-	@arg itemStartNumber the offset
-	@arg pageSize the size of the results returned
-	@returns List<Voter> a list of voters
+	@param search the search string that is used to search for the voters.
+	@param division the division you want voters from
+	@param itemStartNumber the offset
+	@param pageSize the size of the results returned
+	@return List<Map> a list of voters
+    <ul>
+        <li>voter</li>
+        <li>registrationDate</li>
+        <li>registrationNumber</li>
+        <li>lastName</li>
+        <li>firstName</li>
+        <li>houseNumber</li>
+        <li>street</li>
+        <li>phoneNumber1</li>
+        <li>phoneNumber2</li>
+        <li>phoneNumber3</li>
+        <li>sex</li>
+        <li>age</li>
+        <li>birthDate</li>
+        <li>pollStation</li>
+        <li>pollNumber</li>
+        <li>affiliation</li>
+    </ul>
 	**/
 	@Override
 	protected List<Voter> getPageData(String search, Division division, int itemStartNumber, int pageSize) {
 		voterService = new VoterService()
-		return voterService.searchByDivision(search,division, itemStartNumber, pageSize)
+        def votersList = []
+		for(_voter in  voterService.searchByDivision(search,division, itemStartNumber, pageSize)){
+            def voter = _voter.read(_voter.id)
+            def address = voter.registrationAddress
+            def resultMap = [
+                voter:              voter,
+                registrationDate:   voter.registrationDate,
+                registrationNumber: voter.registrationNumber,
+                lastName:           voter.lastName,
+                firstName:          voter.firstName,
+                houseNumber:        address.houseNumber,
+                phoneNumber1:       address.phoneNumber1,
+                phoneNumber2:       address.phoneNumber2,
+                phoneNumber3:       address.phoneNumber3,
+                street:             address.street,
+                sex:                voter.sex,
+                age:                voter.age,
+                birthDate:          voter.birthDate,
+                pollStation:        voter.pollStation,
+                pollNumber:         voter.pollStation.pollNumber,
+                affiliation:        voter.affiliation
+            ]
+
+            votersList.push(resultMap)
+        }
+
+        return votersList
 	}
 
 

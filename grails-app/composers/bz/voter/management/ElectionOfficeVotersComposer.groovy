@@ -57,6 +57,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
             divisionInstance = voterListFacade.getSystemDivision()
 			election = Election.get(Executions.getCurrent().getArg().id)
             electionOfficeVotersGrid.setRowRenderer(new OfficeStationVoterRenderer())
+            showAllVoters()
 		}else{
 			ComposerHelper.permissionDeniedBox()
 		}
@@ -64,6 +65,11 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 
 	 def onClick_showAllVotersButton(){
+        showAllVoters()
+	 }
+
+
+     def showAllVoters(){
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
 		    if(divisionInstance){
                 def numberOfVoters = voterElectionService.countByElectionAndDivision(election,divisionInstance)
@@ -78,7 +84,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
         }else{
             ComposerHelper.permissionDeniedBox()
         }
-	 }
+     }
 
 
 	def onClick_searchVoterButton(){

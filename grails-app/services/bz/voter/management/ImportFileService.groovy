@@ -10,6 +10,7 @@ Service that has utilities to import files with voters into the database.
 class ImportFileService {
 
 	def voterService
+    def addressService
 
     static transactional = true
 
@@ -23,9 +24,9 @@ class ImportFileService {
 	**/
     def importVoters(Division division,Election election, String fileName) {
 	 	
-		fileName = ConfigurationHolder.config.files.dir + fileName
-      VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
-      def votersMapList = excelImporter.getVoters()
+	    fileName = ConfigurationHolder.config.files.dir + fileName
+        VoterExcelImporter excelImporter = new VoterExcelImporter(fileName)
+        def votersMapList = excelImporter.getVoters()
 
 		def numberOfVoters = 0
 
@@ -36,9 +37,13 @@ class ImportFileService {
 		  		def municipality = Municipality.findByName(voterParams.municipality) ?:  Municipality.findByNameAndDistrict('Unknown',District.findByCode('UN'))
 
 		  		def addressParams = [
+                    addressType: voterParams.addressType ?: AddressType.findByName('Registration'),
 					houseNumber: voterParams.houseNumber,
 					street: voterParams.street,
-					municipality:  municipality
+					municipality: Municipality.findByName(voterParams.municipality) ?: Municipality.findByNameAndDistrict('Unknown',District.findByCode('UN')),
+                    phoneNumber1: voterParams.workPhone,
+                    phoneNumber2: voterParams.homePhone,
+                    phoneNumber3: voterParams.cellPhone
 				]
 
 				voterParams.sex = Sex.findByCode(voterParams.sex)
@@ -60,6 +65,8 @@ class ImportFileService {
 				}
 
 				def voter = voterService.add(voterParams,election, flush)
+                addressParams.person = voter.person
+                addressService.add(addressParams)
 
 				numberOfVoters = voter.id ? (numberOfVoters + 1) : numberOfVoters
        } 

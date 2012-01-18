@@ -21,7 +21,7 @@ class VoterElectionService {
 												"and poll.division =:division "
 
 
-	def sessionFactory
+   def sessionFactory
 
    def addAllVoters(Election election) {
 	 	if(VoterElection.findAllByElection(election).size() < 1){
@@ -76,11 +76,13 @@ class VoterElectionService {
 	@returns List<VoterElection> of voters registered to vote in a division for a specific election.
 	**/
 	public List<VoterElection> listByElectionAndDivision(Election election, Division division, int offset, int max){
-		return VoterElection.executeQuery(QUERY, 
+		def votersList = VoterElection.executeQuery(QUERY, 
 			[election: election, 
 			division: division,
 			offset: offset,
 			max: max])
+
+        return votersList
 	}
 
 	def countByElectionAndDivision(Election election, Division division){
