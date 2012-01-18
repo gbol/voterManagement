@@ -8,44 +8,156 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <panel id="addressDisplayPanel" title="Address" vflex="1" hflex="1"
+    <panel id="addressDisplayPanel" title="Address" vflex="1" hflex="2"
         border="normal" apply="bz.voter.management.display.panel.AddressPanelComposer">
 
         <panelchildren>
 
-           <panel title="Registration Address">
+           <separator/>
+           <hlayout hflex="max">
+           <panel title="Registration Address" hflex="1">
            <panelchildren>
             <grid>
                 <columns>
+                    <column width="20%" align="right" />
+                    <column />
                     <column width="20%" align="right" />
                     <column />
                 </columns>
                 <rows>
                     <row>
                         <label value="House Number" />
-                        <textbox id="houseNumberTextbox"
-                            value="@{addressDisplayPanel$composer.address.houseNumber}" />
+                        <textbox id="registrationAddressHouseNumberTextbox"
+                            value="@{addressDisplayPanel$composer.registrationAddress.houseNumber}" />
+                        <label value="Phone # 1" />
+                        <textbox id="registrationAddressPhoneNumber1Textbox" width="90%"
+                            value="@{addressDisplayPanel$composer.registrationAddress.phoneNumber1}" />
                     </row>
                     <row>
                         <label value="Street" />
-                        <textbox id="streetTextbox"
-                            value="@{addressDisplayPanel$composer.address.street}" />
+                        <textbox id="registrationAddressStreetTextbox"
+                            value="@{addressDisplayPanel$composer.registrationAddress.street}" />
+                        <label value="Phone # 2" />
+                        <textbox id="registrationAddressPhoneNumber2Textbox" width="90%"
+                            value="@{addressDisplayPanel$composer.registrationAddress.phoneNumber2}" />
                     </row>
                     <row>
                         <label value="District" />
-                        <listbox id="districtListbox" mold="select" rows="1" />
+                        <listbox id="registrationAddressDistrictListbox" mold="select" rows="1" />
+                        <label value="Phone # 3" />
+                        <textbox id="registrationAddressPhoneNumber3Textbox" width="90%"
+                            value="@{addressDisplayPanel$composer.registrationAddress.phoneNumber3}" />
                     </row>
                     <row>
                         <label value="Municipality" />
-                        <listbox id="municipalityListbox" mold="select" rows="1" />
+                        <listbox id="registrationAddressMunicipalityListbox" mold="select" rows="1" />
+                        <cell colspan="2" />
                     </row>
                 </rows>
               </grid>
               <toolbar>
-                <button label="Save" id="saveAddressButton" />
+                <button label="Save" id="saveRegistrationAddressButton" />
               </toolbar>
               </panelchildren>
               </panel>
+
+              <panel title="Work Address" hflex="1">
+                <panelchildren>
+                    <grid>
+                        <columns>
+                            <column width="20%" align="right" />
+                            <column />
+                            <column width="20%" align="right" />
+                            <column />
+                        </columns>
+                        <rows>
+                            <row>
+                                <label value="House Number" />
+                                <textbox id="workAddressHouseNumberTextbox"
+                                    value="@{addressDisplayPanel$composer.workAddress.houseNumber}" />
+                                <label value="Phone # 1" />
+                                <textbox id="workAddressPhoneNumber1Textbox" width="90%"
+                                    value="@{addressDisplayPanel$composer.workAddress.phoneNumber1}" />
+                            </row>
+                            <row>
+                                <label value="Street" />
+                                <textbox id="workAddressStreetTextbox"
+                                    value="@{addressDisplayPanel$composer.workAddress.street}" />
+                                <label value="Phone # 2" />
+                                <textbox id="workAddressPhoneNumber2Textbox" width="90%"
+                                    value="@{addressDisplayPanel$composer.workAddress.phoneNumber2}" />
+                            </row>
+                            <row>
+                                <label value="District" />
+                                <listbox id="workAddressDistrictListbox" mold="select" rows="1" />
+                                <label value="Phone # 3" />
+                                <textbox id="workAddressPhoneNumber3Textbox" width="90%"
+                                    value="@{addressDisplayPanel$composer.workAddress.phoneNumber3}" />
+                            </row>
+                            <row>
+                                <label value="Municipality" />
+                                <listbox id="workAddressMunicipalityListbox" mold="select" rows="1" />
+                                <cell colspan="2" />
+                            </row>
+                        </rows>
+                    </grid>
+                    <toolbar>
+                        <button label="Save" id="saveWorkAddressButton" />
+                    </toolbar>
+                </panelchildren>
+              </panel>
+
+              </hlayout>
+
+              <separator/>
+
+              <hlayout hflex="2" >
+              <panel title="Alternate Address" hflex="1">
+                <panelchildren>
+                    <grid>
+                        <columns>
+                            <column width="20%" align="right" />
+                            <column />
+                            <column width="20%" align="right" />
+                            <column />
+                        </columns>
+                        <rows>
+                            <row>
+                                <label value="House Number" />
+                                <textbox id="alternateAddressHouseNumberTextbox"
+                                    value="@{addressDisplayPanel$composer.alternateAddress.houseNumber}" />
+                                <label value="Phone # 1" />
+                                <textbox id="alternateAddressPhoneNumber1Textbox" width="90%"
+                                    value="@{addressDisplayPanel$composer.alternateAddress.phoneNumber1}" />
+                            </row>
+                            <row>
+                                <label value="Street" />
+                                <textbox id="alternateAddressStreetTextbox"
+                                    value="@{addressDisplayPanel$composer.alternateAddress.street}" />
+                                <label value="Phone # 2" />
+                                <textbox id="alternateAddressPhoneNumber2Textbox" width="90%"
+                                    value="@{addressDisplayPanel$composer.alternateAddress.phoneNumber2}" />
+                            </row>
+                            <row>
+                                <label value="District" />
+                                <listbox id="alternateAddressDistrictListbox" mold="select" rows="1" />
+                                <label value="Phone # 3" />
+                                <textbox id="alternateAddressPhoneNumber3Textbox" width="90%"
+                                    value="@{addressDisplayPanel$composer.alternateAddress.phoneNumber3}" />
+                            </row>
+                            <row>
+                                <label value="Municipality" />
+                                <listbox id="alternateAddressMunicipalityListbox" mold="select" rows="1" />
+                                <cell colspan="2" />
+                            </row>
+                        </rows>
+                    </grid>
+                    <toolbar>
+                        <button label="Save" id="saveAlternateAddressButton" />
+                    </toolbar>
+                </panelchildren>
+              </panel>
+              </hlayout>
 
 
            </panelchildren>

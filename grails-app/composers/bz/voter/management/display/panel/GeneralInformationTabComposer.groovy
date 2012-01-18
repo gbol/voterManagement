@@ -21,8 +21,6 @@ class GeneralInformationTabComposer extends GrailsComposer {
 
     def afterCompose = { window ->
         voter = Executions.getCurrent().getArg().voter
-        println "\nVoter in generalInformationTab: ${voter}"
-
 
         Executions.createComponents("/bz/voter/management/display/panel/basicInformationPanel.zul",
             basicInformationDiv, [voter: voter])

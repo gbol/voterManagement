@@ -133,7 +133,7 @@ class BootStrap {
         if(AddressType.count() == 0 ){
             new AddressType(name: 'Registration').save()
             new AddressType(name: 'Work').save()
-            new AddressType(name: 'Home').save()
+            new AddressType(name: 'Alternate').save()
         }
 
 		def userRole = SecRole.findByAuthority('ROLE_USER') ?: new SecRole(authority: 'ROLE_USER').save(failOnError: true)

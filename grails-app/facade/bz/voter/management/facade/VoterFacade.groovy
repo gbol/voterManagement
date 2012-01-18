@@ -6,6 +6,7 @@ import bz.voter.management.VoterElection
 import bz.voter.management.Voter
 import bz.voter.management.Address
 import bz.voter.management.AddressType
+import bz.voter.management.utils.AddressEnum
 
 class VoterFacade {
 
@@ -137,26 +138,49 @@ class VoterFacade {
     /**
     Returns the address of a particular voter.
     @return A map with the address information 
-    <ol>
+    <ul>
+        <li>id</li>
         <li>houseNumber</li>
         <li>street</li>
         <li>district</li>
         <li>municipality</li>
-    </ol>
+        <li>phoneNumber1</li>
+        <li>phoneNumber2</li>
+        <li>phoneNumber3</li>
+    </ul>
     **/
-    def getAddress(){
-        //def addressInstance = Address.load(voterInstance.person.address.id)
+    def getAddress(AddressEnum addressType){
         this.voter = Voter.load(voter.id)
-        def addressInstance = this.voter.person.address
+        def person = voter.person
+        def addressInstance
+
+        switch(addressType){
+            case AddressEnum.REGISTRATION:
+                addressInstance = Address.findByPersonAndAddressType(person,AddressType.findByName('Registration'))
+                break
+            case AddressEnum.WORK:
+                addressInstance = Address.findByPersonAndAddressType(person,AddressType.findByName('Work'))
+                break
+            case AddressEnum.ALTERNATE:
+                addressInstance = Address.findByPersonAndAddressType(person,AddressType.findByName('Alternate'))
+                break
+        }
+
         def addressInfo = [
-            houseNumber: addressInstance.houseNumber,
-            street: addressInstance.street,
-            district: addressInstance.municipality.district,
-            municipality: addressInstance.municipality
+            id:             addressInstance?.id,
+            houseNumber:    addressInstance?.houseNumber,
+            street:         addressInstance?.street,
+            district:       addressInstance?.municipality?.district,
+            municipality:   addressInstance?.municipality,
+            phoneNumber1:   addressInstance?.phoneNumber1,
+            phoneNumber2:   addressInstance?.phoneNumber2,
+            phoneNumber3:   addressInstance?.phoneNumber3
         ]
 
         return addressInfo
     }
+
+
 
 
     /**
@@ -164,18 +188,40 @@ class VoterFacade {
     @param A map with the address values we wish to save.
     @return A map with the address information
     <ul>
-        <li>houseNmumber</li>
+        <li>id</li>
+        <li>houseNumber</li>
         <li>street</li>
         <li>municipality</li>
+        <li>phoneNumber1</li>
+        <li>phoneNumber2</li>
+        <li>phoneNumber3</li>
     </ul>
     **/
     def saveAddress(params){
-        this.voter = Voter.load(voter.id)
-        def addressInstance = this.voter.person.address
+        def addressInstance = Address.load(params.id) ?: new Address()
 
-        addressInstance.houseNumber = params.houseNumber ?: addressInstance.houseNumber
-        addressInstance.street = params.street ?: addressInstance.street
-        addressInstance.municipality = params.municipality ?: addressInstance.municipality
+        addressInstance.houseNumber = params.houseNumber ?: addressInstance?.houseNumber
+        addressInstance.street = params.street ?: addressInstance?.street
+        addressInstance.municipality = params.municipality ?: addressInstance?.municipality
+        addressInstance.phoneNumber1 = params.phoneNumber1 ?: addressInstance?.phoneNumber1
+        addressInstance.phoneNumber2 = params.phoneNumber2 ?: addressInstance?.phoneNumber2
+        addressInstance.phoneNumber3 = params.phoneNumber3 ?: addressInstance?.phoneNumber3
+
+        if(!addressInstance.id){
+            this.voter = Voter.load(voter.id)
+            def addressType
+            switch(params.addressType){
+                case AddressEnum.ALTERNATE:
+                    addressType = AddressType.findByName('Alternate')
+                    break
+                case AddressEnum.WORK:
+                    addressType = AddressType.findByName('Work')
+                    break
+            }
+
+            addressInstance.addressType = addressType
+            addressInstance.person = voter.person
+        }
 
         addressInstance.validate()
 

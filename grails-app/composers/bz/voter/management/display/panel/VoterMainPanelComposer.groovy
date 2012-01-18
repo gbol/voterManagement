@@ -20,7 +20,6 @@ class VoterMainPanelComposer extends GrailsComposer {
     def generalInformationTab
     def registrationInformationTab
     def addressTab
-    def contactInformationTab
     def dependentsTab
     def activitiesTab
     def pledgesTab
@@ -33,10 +32,10 @@ class VoterMainPanelComposer extends GrailsComposer {
             voter = Executions.getCurrent().getArg().voter
             Executions.createComponents("/bz/voter/management/display/panel/generalInformationTab.zul",
                 generalInformationTab, [voter: voter])
+
             Executions.createComponents("/bz/voter/management/display/panel/addressPanel.zul",
                 addressTab, [voter: voter])
-            Executions.createComponents("/bz/voter/management/display/panel/contactInformationTab.zul",
-                contactInformationTab, [voter: voter])
+
             Executions.createComponents("/bz/voter/management/display/panel/registrationInformation.zul",
                 registrationInformationTab, [voter: voter])
 

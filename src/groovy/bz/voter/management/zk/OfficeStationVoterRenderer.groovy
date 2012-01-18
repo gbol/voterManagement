@@ -22,7 +22,6 @@ public class OfficeStationVoterRenderer implements RowRenderer{
         //VoterElection _voterElection = (VoterElection) data
         def _voterElection = data
         def voterElection = _voterElection.voterElection
-        println "\n_voterElection: ${_voterElection}\n"
 
         def saveButtonLabel = _voterElection.pickupTime ? 'Edit' : 'Save'
         def votedLabel = _voterElection.voted ? 'Yes' : 'No'
