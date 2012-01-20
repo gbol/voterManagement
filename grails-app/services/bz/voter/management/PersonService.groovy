@@ -23,6 +23,7 @@ class PersonService {
 	    <li>lastName</li>
 	    <li>dateOfBirth</li>
 	    <li>sex</li>
+        <li>emailAddress</li>
 	    <li>ethnicity</li>
     </ul>
 	**/

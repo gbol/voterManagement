@@ -4,8 +4,10 @@ import org.zkoss.zkgrails.*
 
 import bz.voter.management.VoterElection
 import bz.voter.management.Voter
+import bz.voter.management.Person
 import bz.voter.management.Address
 import bz.voter.management.AddressType
+import bz.voter.management.Dependent
 import bz.voter.management.utils.AddressEnum
 
 class VoterFacade {
@@ -13,6 +15,7 @@ class VoterFacade {
     Voter voter
 
 	 def voterService
+     def personService
 
 	 def sessionFactory
 
@@ -349,6 +352,98 @@ class VoterFacade {
         return personInstance
 
     }
+
+
+    /**
+    Gets a voter's dependents.
+    @param Map with voter's dependents' information.
+    <ul>
+        <li>id</li>
+        <li>firstName</li>
+        <li>middleName</li>
+        <li>lastName</li>
+        <li>birthDate</li>
+        <li>age</li>
+        <li>emailAddress</li>
+        <li>sex</li>
+        <li>relation<li>
+    </ul>
+    **/
+    def getDependents(voter){
+        def dependents = []
+        voter = Voter.load(voter.id)
+        
+        for(voterDependent in Dependent.getByVoter(voter)){
+            def dependent = voterDependent.person
+            def _dependent = [
+                id:             dependent.id,
+                firstName:      dependent.firstName,
+                middleName:     dependent.middleName,
+                lastName:       dependent.lastName,
+                birthDate:      dependent.birthDate,
+                age:            dependent.age,
+                emailAddress:   dependent.emailAddress,
+                sex:            dependent.sex,
+                relation:       voterDependent.relation
+            ]
+
+            dependents.push(_dependent)
+        }
+
+        return dependents
+    }
+
+
+
+    /**
+    Saves a dependent instance.
+    @param Map with the dependent's information:
+    <ul>
+        <li>id</li>
+        <li>firstName</li>
+        <li>middleName</li>
+        <li>lastName</li>
+        <li>birthDate</li>
+        <li>emailAddress</li>	
+        <li>sex</li>
+        <li>relation</li>
+    </ul>
+    @return Dependent 
+    **/
+    def saveDependent(params){
+        this.voter = Voter.load(voter.id)
+        def person = Person.load(params.id)
+        params.person = Person.get(params.id) 
+
+        def personInstance = personService.save(params)
+        def dependentInstance
+
+        if(!personInstance.hasErrors()){
+            dependentInstance = Dependent.get(voter.id, personInstance.id)
+            if(!dependentInstance?.voter){
+                dependentInstance = Dependent.create(voter,personInstance,params.relation,true)
+            }else{
+                dependentInstance.relation = params.relation
+            }
+        }
+        
+        return dependentInstance 
+    }
+
+
+
+
+    /**
+    Deletes a dependent.
+    @param id person's id.
+    @return true if successful deletion.
+    **/
+    def deleteDependent(id){
+        voter = Voter.load(voter.id)
+        def person = Person.load(id)
+        Dependent.remove(voter,person,true)
+    }
+
 
 
 	 def flushSession(){

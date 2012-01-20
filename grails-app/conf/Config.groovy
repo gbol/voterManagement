@@ -61,7 +61,7 @@ files.dir='/usr/local/files/'
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://200.32.211.4:8080/${appName}"
+        grails.serverURL = "http://74.207.233.149:8080/${appName}"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"

@@ -5,6 +5,7 @@ import org.zkoss.zkgrails.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 import bz.voter.management.Sex
+import bz.voter.management.Relation
 import bz.voter.management.District
 import bz.voter.management.Municipality
 import bz.voter.management.Division
@@ -63,5 +64,10 @@ class UtilsFacade {
 
     Division getSystemDivision(){
         Division.findByName(ConfigurationHolder.config.division)
+    }
+
+
+    List<Relation> listRelations(){
+        Relation.list([sort: 'name'])
     }
 }

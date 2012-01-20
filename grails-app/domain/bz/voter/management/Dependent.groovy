@@ -39,6 +39,13 @@ class Dependent implements Serializable{
     }
 
 
+    /**
+    Deletes a Dependent.
+    @param Voter
+    @param Person
+    @param flush : a boolean
+    @return true if successful delete
+    **/
     static boolean remove(Voter voter, Person person, boolean flush=false){
         Dependent instance = Dependent.findByVoterAndPerson(voter,person)
 
@@ -53,6 +60,13 @@ class Dependent implements Serializable{
 
     static void removeAll(Voter voter, boolean flush=false){
         executeUpdate "DELETE FROM Dependent WHERE voter=:voter", [voter: voter]
+    }
+
+
+    
+    static List<Dependent> getByVoter(Voter voter){
+        findAll 'from Dependent where voter.id=:voterId',
+            [voterId: voter.id]
     }
 
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./dependentFormWindow" ?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <window id="dependentFormWindow" border="normal" shadow="true" 
+        width="35%" height="50%" closable="true" position="top,center"
+        action="show:slideDown;hide:slideUp" apply="bz.voter.management.display.panel.DependentFormComposer">
+
+        <grid>
+            <columns>
+                <column align="right" width="30%"/>
+                <column />
+            </columns>
+            <rows>
+                <row>
+                    <label value="First Name * " class="required"/>
+                    <textbox id="firstNameTextbox" constraint="no empty"
+                        value="@{dependentFormWindow$composer.dependent.firstName}" />
+                </row>
+                <row>
+                    <label value="Middle Name" class="requied" />
+                    <textbox id="middleNameTextbox" 
+                        value="@{dependentFormWindow$composer.dependent.middleName}" />
+                </row>
+                <row>
+                    <label value="Last Name *" class="required" />
+                    <textbox id="lastNameTextbox" 
+                        value="@{dependentFormWindow$composer.dependent.lastName}" />
+                </row>
+                <row>
+                    <label value="Birth Date *" class ="required" />
+                    <datebox id="birthDatebox" constraint="no empty" format="dd-MMM-yyyy"
+                        value="@{dependentFormWindow$composer.dependent.birthDate}" />
+                </row>
+                <row>
+                    <label value="Sex *" class="required" />
+                    <listbox id="sexListbox" mold="select" rows="1" />
+                </row>
+                <row>
+                    <label value="Email Address" />
+                    <textbox id="emailAddressTextbox"
+                        value="@{dependentFormWindow$composer.dependent.emailAddress}" />
+                </row>
+                <row>
+                    <label value="Relation" />
+                    <listbox id="relationListbox" mold="select" rows="1" />
+                </row>
+            </rows>
+        </grid>
+
+        <toolbar>
+            <button label="Save" id="saveDependentBtn" />
+        </toolbar>
+
+    </window>
+
+</zk>

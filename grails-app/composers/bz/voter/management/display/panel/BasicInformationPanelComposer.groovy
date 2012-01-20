@@ -43,7 +43,7 @@ class BasicInformationPanelComposer extends GrailsComposer {
 
         for(sex in utilsFacade.listSex()){
             sexListbox.append{
-                def selected = (sex.equalsTo(basicInformation.sex))? true : false 
+                def selected = (sex.equals(basicInformation.sex))? true : false 
                 listitem(value: sex, selected:selected){
                     listcell(label: sex.name)
                     listcell(label: sex.id)

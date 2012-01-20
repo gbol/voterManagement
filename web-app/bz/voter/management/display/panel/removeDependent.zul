@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./removeDependentWindow"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <window id="removeDependentWindow" width="30%" height="15%"
+        position="center" shadow="true"
+        apply="bz.voter.management.display.panel.RemoveDependentComposer">
+
+        
+        <vlayout>
+
+        <h:h5>Are you sure you want to delete this dependent?</h:h5>
+
+        <hlayout>
+            <button label="Cancel" id="cancelButton" />
+            <button label="Yes" id="deleteButton" />
+        </hlayout>
+
+        </vlayout>
+
+
+    </window>
+
+</zk>

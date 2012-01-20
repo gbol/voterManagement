@@ -14,7 +14,7 @@ class Person implements Serializable{
 	boolean alive
 
 
-	static transients = ['age','numberOfYearsRegistered', 'registrationAddress']
+	static transients = ['age', 'registrationAddress']
 
     static constraints = {
 	 	firstName(blank: false)
@@ -34,6 +34,15 @@ class Person implements Serializable{
 		middleName = middleName?.trim()?.capitalize()
 		lastName = lastName?.trim()?.capitalize()
 	 }
+
+
+     boolean equals(other){
+        if(!(other instanceof Person)){
+            returns false
+        }
+
+        other?.id == this.id
+     }
 
 
 	 def getAge(){

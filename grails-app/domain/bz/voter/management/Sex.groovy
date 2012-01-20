@@ -19,7 +19,10 @@ class Sex implements Serializable{
 	 	this.code = this.code?.trim()?.toUpperCase()
 	 }
 
-     public boolean equalsTo(def sexInstance){
-        this.id == sexInstance.id
+     public boolean equals(other){
+        if(!(other instanceof Sex)){
+            return false
+        }
+        this.id == other.id
      }
 }

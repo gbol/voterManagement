@@ -39,6 +39,9 @@ class VoterMainPanelComposer extends GrailsComposer {
             Executions.createComponents("/bz/voter/management/display/panel/registrationInformation.zul",
                 registrationInformationTab, [voter: voter])
 
+            Executions.createComponents("/bz/voter/management/display/panel/dependents.zul",
+                dependentsTab, [voter: voter])
+
         }else{
             ComposerHelper.permissionDeniedBox()
         }

@@ -157,15 +157,17 @@ class UserComposer extends GrailsComposer {
 		usersListRows.append{
 			for(_user in SecUser.list([sort:'username'])){
 				def userInstance = _user
-				row{
-					label(value: _user.username)
-					label(value: _user.enabled)
-					label(value: 
-		SecUserSecRole.findAllBySecUser(_user).collect { it.secRole.authority } ) 
-					button(label: 'Edit', onClick:{
-						showUserForm(userInstance)
-					})
-				}
+                if(_user.username != 'admin'){
+				    row{
+					    label(value: _user.username)
+					    label(value: _user.enabled)
+					    label(value: 
+		                    SecUserSecRole.findAllBySecUser(_user).collect { it.secRole.authority } ) 
+					    button(label: 'Edit', onClick:{
+						    showUserForm(userInstance)
+					    })
+				    }
+                }
 			}
 		}// End of usersListRows.append
 		}else{
