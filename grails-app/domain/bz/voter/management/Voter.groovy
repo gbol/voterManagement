@@ -7,7 +7,7 @@ class Voter implements Serializable{
 	
 
 	static transients = ["firstName", "middleName","lastName", "birthDate",
-		"age", "sex", "address", "alive", "registrationAddress"]
+		"age", "sex", "address", "alive", "registrationAddress", "emailAddress"]
 
 	Person person
 	Date registrationDate
@@ -82,6 +82,10 @@ class Voter implements Serializable{
 
     Address getRegistrationAddress(){
         Address.findByPersonAndAddressType(this.person, AddressType.findByName('Registration'))
+    }
+
+    String getEmailAddress(){
+        this.person.emailAddress
     }
 
 

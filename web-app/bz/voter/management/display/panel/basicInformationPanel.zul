@@ -21,18 +21,23 @@
                 <rows>
                     <row>
                         <label value="First Name" />
-                        <textbox id="firstNameTextbox"  constraint="no empty"
+                        <textbox id="firstNameTextbox"  constraint="no empty" width="30%"
                             value="@{basicInformationPanel$composer.basicInformation.firstName}" />
                     </row>
                     <row>
                         <label value="Middle Name" />
-                        <textbox id="middleNameTextbox"
+                        <textbox id="middleNameTextbox" width="30%"
                             value="@{basicInformationPanel$composer.basicInformation.middleName}" />
                     </row>
                     <row>
                         <label value="Last Name" />
-                        <textbox id="lastNameTextbox" constraint="no empty"
+                        <textbox id="lastNameTextbox" constraint="no empty" width="30%"
                             value="@{basicInformationPanel$composer.basicInformation.lastName}" />
+                    </row>
+                    <row>
+                        <label value="Email Address" />
+                        <textbox id="voterEmailAddressTextbox"  width="30%"
+                            value="@{basicInformationPanel$composer.basicInformation.emailAddress}" />
                     </row>
                     <row>
                         <label value="Birth Date" />

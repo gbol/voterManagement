@@ -23,6 +23,7 @@ class BasicInformationPanelComposer extends GrailsComposer {
     def birthDatebox
     def sexListbox
     def deceasedCheckbox
+    def voterEmailAddressTextbox
 
     def saveBasicInformationButton
 
@@ -64,6 +65,7 @@ class BasicInformationPanelComposer extends GrailsComposer {
                 lastName:       lastNameTextbox.getValue()?.trim(),
                 birthDate:      birthDatebox.getValue(),
                 sex:            sexListbox.getSelectedItem()?.getValue(),
+                emailAddress:   voterEmailAddressTextbox.getValue()?.trim(),
                 alive:          deceasedCheckbox.isChecked() ? false : true
 
             ]

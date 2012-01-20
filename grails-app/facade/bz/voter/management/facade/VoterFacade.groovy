@@ -79,6 +79,7 @@ class VoterFacade {
         <li>birthDate</li>
         <li>age</li>
         <li>sex</li>
+        <li>emailAddress</li>
         <li>alive</li>
     </ol>
     **/
@@ -91,6 +92,7 @@ class VoterFacade {
             birthDate: voter.birthDate,
             age: voter.age,
             sex: voter.sex,
+            emailAddress: voter.emailAddress,
             alive: voter.isAlive()
         ]
 
@@ -109,6 +111,7 @@ class VoterFacade {
         <li>birthDate</li>
         <li>age</li>
         <li>sex</li>
+        <li>emailAddress</li>
         <li>alive</li>
     </ul>
     **/
@@ -122,6 +125,7 @@ class VoterFacade {
         person.birthDate = params.birthDate ?: person.birthDate
         person.sex = params.sex ?: person.sex
         person.alive = params.alive
+        person.emailAddress = params.emailAddress
 
         person.validate()
 
