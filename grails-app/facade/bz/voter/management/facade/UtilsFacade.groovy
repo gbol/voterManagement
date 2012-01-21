@@ -10,6 +10,7 @@ import bz.voter.management.District
 import bz.voter.management.Municipality
 import bz.voter.management.Division
 import bz.voter.management.PollStation
+import bz.voter.management.Affiliation
 
 class UtilsFacade {
 
@@ -69,5 +70,10 @@ class UtilsFacade {
 
     List<Relation> listRelations(){
         Relation.list([sort: 'name'])
+    }
+
+
+    List<Affiliation> listAffiliations(){
+        Affiliation.list([sort:'name'])
     }
 }

@@ -24,6 +24,7 @@ class BasicInformationPanelComposer extends GrailsComposer {
     def sexListbox
     def deceasedCheckbox
     def voterEmailAddressTextbox
+    def affiliationListbox
 
     def saveBasicInformationButton
 
@@ -52,6 +53,17 @@ class BasicInformationPanelComposer extends GrailsComposer {
             }
         }
 
+
+        for(affiliation in utilsFacade.listAffiliations()){
+            affiliationListbox.append{
+                def selected = affiliation.equals(basicInformation.affiliation) ? true : false
+                listitem(value: affiliation, selected: selected){
+                    listcell(label: affiliation.name)
+                    listcell(label: affiliation.id)
+                }
+            }
+        }
+
         deceasedCheckbox.checked = basicInformation.alive ? false : true
 
     }
@@ -66,6 +78,7 @@ class BasicInformationPanelComposer extends GrailsComposer {
                 birthDate:      birthDatebox.getValue(),
                 sex:            sexListbox.getSelectedItem()?.getValue(),
                 emailAddress:   voterEmailAddressTextbox.getValue()?.trim(),
+                affiliation:    affiliationListbox.getSelectedItem()?.getValue(),
                 alive:          deceasedCheckbox.isChecked() ? false : true
 
             ]

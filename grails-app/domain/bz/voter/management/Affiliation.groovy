@@ -11,6 +11,16 @@ class Affiliation implements Serializable{
 	 	name(unique:true,blank:false)
     }
 
+
+    public boolean equals(other){
+        if(!(other instanceof Affiliation)){
+            return false
+        }
+
+
+        other.id == this.id
+    }
+
 	 def beforeValidate(){
 	 	name = name?.trim()?.toUpperCase()
 	}

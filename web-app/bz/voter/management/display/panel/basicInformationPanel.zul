@@ -53,6 +53,10 @@
                         <listbox id="sexListbox" mold="select" rows="1" />
                     </row>
                     <row>
+                        <label value="Affiliation" />
+                        <listbox id="affiliationListbox" mold="select" rows="1" />
+                    </row>
+                    <row>
                         <label value="Deceased" />
                         <checkbox id="deceasedCheckbox" />
                     </row>

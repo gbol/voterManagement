@@ -9,6 +9,7 @@ import bz.voter.management.Address
 import bz.voter.management.AddressType
 import bz.voter.management.Dependent
 import bz.voter.management.utils.AddressEnum
+import bz.voter.management.Affiliation
 
 class VoterFacade {
 
@@ -81,6 +82,7 @@ class VoterFacade {
         <li>sex</li>
         <li>emailAddress</li>
         <li>alive</li>
+        <li>affiliation</li>
     </ol>
     **/
     def getBasicInformation(){
@@ -93,6 +95,7 @@ class VoterFacade {
             age: voter.age,
             sex: voter.sex,
             emailAddress: voter.emailAddress,
+            affiliation: voter.affiliation,
             alive: voter.isAlive()
         ]
 
@@ -112,6 +115,7 @@ class VoterFacade {
         <li>age</li>
         <li>sex</li>
         <li>emailAddress</li>
+        <li>affiliation</li>
         <li>alive</li>
     </ul>
     **/
@@ -133,6 +137,11 @@ class VoterFacade {
             log.error person.retrieveErrors()
         }else{
             person.save()
+
+            if(params.affiliation && (params.affiliation instanceof Affiliation)){
+                voter.affiliation = params.affiliation
+                voter.save()
+            }
         }
 
         flushSession()
