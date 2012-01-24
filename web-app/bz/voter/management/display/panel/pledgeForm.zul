@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./pledgeFormWindow" ?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?page zscriptLanguage="GroovyGrails"?>
 
@@ -8,13 +8,31 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <window apply="bz.voter.management.display.panel.PledgeFormComposer">
+    <window id="pledgeFormWindow" border="normal" shadow="true" 
+        width="35%" height="50%" closable="true" position="top,center"
+        action="show:slideDown;hide:slideUp"
+        apply="bz.voter.management.display.panel.PledgeFormComposer">
 
-        <hbox>
-            <image src="${z.resource(dir:'images', file:'grails_logo.png')}"/>
-        </hbox>
+        <grid>
+            <columns>
+                <column align="right" width="30%" />
+                <column />
+            </columns>
+            <rows>
+                <row>
+                    <label value="Election" />
+                    <listbox id="electionListbox" mold="select" rows="6" />
+                </row>
+                <row>
+                    <label value="Pledge" />
+                    <listbox id="pledgeListbox" mold="select" rows="1" />
+                </row>
+            </rows>
+        </grid>
 
-        <vbox id="scaffoldingBox"/>
+        <toolbar>
+            <button label="Save" id="savePledgeBtn" />
+        </toolbar>
 
     </window>
 

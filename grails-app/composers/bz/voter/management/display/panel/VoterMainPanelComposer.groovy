@@ -19,7 +19,7 @@ class VoterMainPanelComposer extends GrailsComposer {
 
     def generalInformationTab
     def registrationInformationTab
-    def addressTab
+    def addressTab 
     def dependentsTab
     def activitiesTab
     def pledgesTab
@@ -45,6 +45,9 @@ class VoterMainPanelComposer extends GrailsComposer {
             Executions.createComponents("/bz/voter/management/display/panel/activities.zul",
                 activitiesTab, [voter: voter])
 
+            Executions.createComponents("/bz/voter/management/display/panel/pledges.zul",
+                pledgesTab, [voter: voter])
+
         }else{
             ComposerHelper.permissionDeniedBox()
         }
@@ -62,8 +65,8 @@ class VoterMainPanelComposer extends GrailsComposer {
             case "Activities":
                 actitivitesTab.getChildren().clear()
 
-            case "Pledges":
-                pledgesTab.getChildren().clear()
+            //case "Pledges":
+                //pledgesTab.getChildren().clear()
         }
     }
 }

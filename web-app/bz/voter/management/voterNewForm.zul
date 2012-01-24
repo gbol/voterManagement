@@ -7,10 +7,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <window title="Voter Form" apply="bz.voter.management.VoterNewFormComposer" closable="true">
+    <window title="Add Voter" border="normal" shadow="true"
+        width="40%" height="75%" position="top,center" 
+        id="voterFormWindow" action="show:slideDown;hide:slideUp"
+        apply="bz.voter.management.VoterNewFormComposer" closable="true">
 	 	
 
-		<panel id="voterNewFormPanel" style="padding:4px;" border="normal">
+		<panel id="voterNewFormPanel" style="padding:4px;">
 			<panelchildren>
 				<vlayout style="padding:8px;">
 					<separator spacing="2px"/>
@@ -18,31 +21,47 @@
 					</vbox>
 					<separator spacing="2px"/>
 
-					<grid oddRowSclass="none">
+					<grid>
+                        <columns>
+                            <column align="right" width="40%" />
+                            <column/>
+                        </columns>
 						<rows>
 							<row>
-								<label value="First Name" style="text-align:right;" />
+								<label value="First Name"  />
 								<textbox id="firstNameTextbox" constraint="no empty"/>
-								<label value="Middle Name" style="text-align:right;"/>
+                            </row>
+                            <row>
+								<label value="Middle Name" />
 								<textbox id="middleNameTextbox"/>
+                            </row>
+                            <row>
 								<label value="Last Name" />
 								<textbox id="lastNameTextbox" constraint="no empty"/>
 							</row>
 							<row>
-								<label value="Birth Date" style="text-align:right;" />
+								<label value="Birth Date"  />
 								<datebox id="birthDateBox" format="dd-MM-yyyy" height="16px"
 									constraint="no empty" />
+                            </row>
+                            <row>
 								<label value="Sex" />
 								<listbox id="sexListbox" mold="select" rows="1" />
+                            </row>
+                            <row>
 								<label value="Identification Type" />
 								<listbox id="identificationTypeListbox" mold="select" rows="1"/>
 							</row>
 							<row>
 								<label value="Registration Number" />
 								<textbox id="registrationNumberTextbox" constraint="no empty" />
+                            </row>
+                            <row>
 								<label value="Registration Date" />
 								<datebox id="registrationDateBox" format="MM-dd-yyyy" 
 									height="100%"  constraint="no empty" />
+                            </row>
+                            <row>
 								<label value="Poll Station" />
 								<listbox id="pollStationListbox" mold="select" rows="1" />
 							</row>
@@ -53,27 +72,6 @@
 						</rows>
 					</grid>
 					
-					<panel title="Address" border="normal">
-						<panelchildren>
-							<grid oddRowSclass="none">
-								<rows>
-									<row>
-										<label value="House Number"/>
-										<textbox id="houseNumberTextbox" constraint="no empty"/>
-										<label value="Street"/>
-										<textbox id="streetTextbox" constraint="no empty" />
-									</row>
-									<row>
-										<label value="District" />
-										<listbox id="districtListbox" mold="select" rows="1" />
-										<label value="Municipality" />
-										<listbox id="municipalityListbox" mold="select" rows="1" />
-									</row>
-									</rows>
-							</grid>
-						</panelchildren>
-					</panel>
-
 
 					<toolbar>
 						<button id="saveButton" label="Save" />

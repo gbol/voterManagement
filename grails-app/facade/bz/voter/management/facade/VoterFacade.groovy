@@ -11,6 +11,7 @@ import bz.voter.management.Dependent
 import bz.voter.management.utils.AddressEnum
 import bz.voter.management.Affiliation
 import bz.voter.management.Activity
+import bz.voter.management.Pledge
 
 class VoterFacade {
 
@@ -533,6 +534,70 @@ class VoterFacade {
         
     }
 
+
+    /**
+    Gets a voter's list of pledges.
+    @return Map with details of pledges.
+    <ul>
+        <li>election</li>
+        <li>pledge</li>
+    </ul>
+    **/
+    def getPledges(){
+        voter = Voter.load(voter.id)
+
+        def results = [] 
+
+        for(ve in VoterElection.findAllByVoter(voter)){
+            def data = [
+                election: ve.election,
+                pledge:   ve.pledge
+            ]
+
+            results.push(data)
+        }
+
+        return results
+    }
+
+
+    /**
+    Save's a voter's pledge for an election.
+    @param Pledge 
+    @param Election
+    @return VoterElection instance
+    **/
+    def savePledge(election, pledge){
+
+        def voterElection = VoterElection.get(this.voter?.id, election?.id)
+
+        if(voterElection instanceof VoterElection){
+            voterElection.pledge = pledge
+            voterElection.validate()
+
+            if(voterElection.hasErrors()){
+                log.error voterElection.retrieveErrors()
+            }else{
+                voterElection.save()
+            }
+        }
+
+        flushSession()
+
+        return voterElection
+    }
+
+
+    /**
+    Gets a voter's pledge for a specific election.
+    @param Election
+    @return Pledge
+    **/
+    def getPledge(election){
+        def voterElection = VoterElection.get(voter?.id, election?.id)
+
+        return voterElection?.pledge
+    }
 
 
 	 def flushSession(){

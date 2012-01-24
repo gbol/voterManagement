@@ -18,4 +18,13 @@ class ElectionType implements Serializable{
 	 	name = name?.trim()?.capitalize()
 		code = code?.trim()?.toUpperCase()
 	}
+
+
+    public boolean equals(other){
+        if(!(other instanceof ElectionType)){
+            return false
+        }
+        
+        other.id == this.id
+    }
 }

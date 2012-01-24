@@ -7,6 +7,10 @@ class Election implements Serializable{
 	ElectionType electionType
     boolean complete //After an election is complete, no records pertaining to that election can be modified.
 
+    String toString(){
+        "${year} : ${electionType}"
+    }
+
     static constraints = {
 	 	electionDate(nullable: true)
 	 	year(validator: {val,obj->
@@ -16,6 +20,14 @@ class Election implements Serializable{
 		})
     }
 
+
+    public boolean equals(other){
+        if(!(other instanceof Election)){
+            return false
+        }
+
+        other.id == this.id
+    }
 
     def beforeInsert(){
         complete = false

@@ -11,6 +11,8 @@ import bz.voter.management.Municipality
 import bz.voter.management.Division
 import bz.voter.management.PollStation
 import bz.voter.management.Affiliation
+import bz.voter.management.Pledge
+import bz.voter.management.Election
 
 class UtilsFacade {
 
@@ -75,5 +77,16 @@ class UtilsFacade {
 
     List<Affiliation> listAffiliations(){
         Affiliation.list([sort:'name'])
+    }
+
+
+    List<Pledge> listPledges(){
+        Pledge.list([sort:'name'])
+    }
+
+
+
+    List<Election> listElections(){
+        Election.list([sort: 'year', order: 'desc'])
     }
 }

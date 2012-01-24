@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./pledgesPanel"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <panel id="pledgesPanel" title="Pledges" vflex="1" hflex="1"
+        border="normal" apply="bz.voter.management.display.panel.PledgesComposer">
+
+        <panelchildren>
+            <toolbar>
+                <button label="Add Pledge" id="addPledgeBtn"/>
+            </toolbar>
+
+            <grid mold="paging" pageSize="10">
+                <columns>
+                    <column label="Election Year" />
+                    <column label="Election Type" />
+                    <column label="Election Date" />
+                    <column label="Pledge" />
+                    <column/>
+                </columns>
+                <rows id="pledgesRows">
+                </rows>
+            </grid>
+
+        </panelchildren>
+
+    </panel>
+
+</zk>

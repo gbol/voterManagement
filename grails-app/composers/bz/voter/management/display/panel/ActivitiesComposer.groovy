@@ -5,7 +5,6 @@ import org.zkoss.zk.ui.event.Event
 import org.zkoss.zk.ui.event.EventQueue
 import org.zkoss.zk.ui.event.EventQueues
 import org.zkoss.zk.ui.event.EventListener
-import org.zkoss.zk.ui.event.ForwardEvent
 import org.zkoss.zk.ui.Executions
 
 import java.text.DateFormat
@@ -59,7 +58,6 @@ class ActivitiesComposer extends GrailsComposer {
         activitiesRows.getChildren().clear()
 
         for(_activity in voterFacade.getActivities()){
-            println "\n_activity: ${_activity}\n"
             def activityId = _activity.activityId
             def activityDate = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(_activity.date)
             activitiesRows.append{
