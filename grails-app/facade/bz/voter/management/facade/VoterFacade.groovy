@@ -10,6 +10,7 @@ import bz.voter.management.AddressType
 import bz.voter.management.Dependent
 import bz.voter.management.utils.AddressEnum
 import bz.voter.management.Affiliation
+import bz.voter.management.Activity
 
 class VoterFacade {
 
@@ -455,6 +456,81 @@ class VoterFacade {
         voter = Voter.load(voter.id)
         def person = Person.load(id)
         Dependent.remove(voter,person,true)
+    }
+
+
+    
+    /**
+    Lists all activities for a specific staff
+    @return List of activities
+    **/
+    def getActivities(){
+        voter = Voter.load(voter.id)
+
+        def activities = []
+
+        for(activity in Activity.findAllByVoter(voter)){
+            def data = [
+                activityId:     activity.id,
+                activityType:   activity.activityType,
+                notes:          activity.notes,
+                date:           activity.activityDate,
+                voter:          activity.voter
+            ]
+
+            activities.push(data)
+        }
+
+        return activities
+
+    }
+
+
+    
+    /**
+    Saves an activity that a voter participates in.
+    @param Map with required values to save an activity:
+    <ul>
+        <li>voterId</li>
+        <li>activityId</li>
+        <li>activityType</li>
+        <li>notes</li>
+        <li>activityDate</li>
+    </ul>
+    **/
+    def saveActivity(params){
+
+        voter = Voter.load(params.voterId.toLong())
+        def activity = Activity.get(params.activityId?.toLong())  ?: new Activity()
+
+        activity.voter = voter
+        activity.activityType = params.activityType ?: activity?.activityType
+        activity.activityDate = params.activityDate ?: activity?.activityDate
+        activity.notes = params.notes ?: activity?.notes
+
+        activity.validate()
+        if(activity.hasErrors()){
+            log.error activity.retrieveErrors()
+        }else{
+            activity.save()
+        }
+
+        flushSession()
+
+        return activity
+
+    }
+
+
+
+    def deleteActivity(activityId){
+        def activity = Activity.get(activityId?.toLong())
+        if(activity){
+            activity.delete()
+        }
+
+        flushSession()
+        
     }
 
 

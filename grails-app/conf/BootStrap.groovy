@@ -38,7 +38,7 @@ class BootStrap {
 			}
 		}
 
-        if(!Division.findByName(appDivision)){
+        if(Division.count() == 0){
             new Division(name: appDivision).save()
         }
 

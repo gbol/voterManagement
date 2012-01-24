@@ -13,48 +13,45 @@ import bz.voter.management.zk.ComposerHelper
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
-class RemoveDependentComposer extends GrailsComposer {
+class RemoveActivityComposer extends GrailsComposer {
 
-    def removeDependentWindow
+    def removeActivityWindow
 
     def cancelButton
-    def deleteButton
-
+    def deleteActivityButton
+    
     def voter
-    def personId
-
     def voterFacade
+    def activityId
 
     EventQueue queue
 
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
-
             voter = Executions.getCurrent().getArg().voter
-            voterFacade.voter = voter
-            personId = Executions.getCurrent().getArg().id
+            activityId = Executions.getCurrent().getArg().activityId
 
-            queue = EventQueues.lookup('dependent', EventQueues.DESKTOP,true)
+            queue = EventQueues.lookup('voterActivity', EventQueues.DESKTOP,true)
+
         }else{
             ComposerHelper.permissionDeniedBox()
         }
 
     }
 
+
     def onClick_cancelButton(){
-        removeDependentWindow.detach()
+        removeActivityWindow.detach()
     }
 
 
-    def onClick_deleteButton(){
+    def onClick_deleteActivityButton(){
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
-            def result = voterFacade.deleteDependent(personId)
-            if(result){
-                queue.publish(new Event("onDependentRemoved", null, null))
-            }
-            removeDependentWindow.detach()
-       }else{
+            voterFacade.deleteActivity(activityId)
+            queue.publish(new Event("onVoterActivity", null, null))
+            removeActivityWindow.detach()
+        }else{
             ComposerHelper.permissionDeniedBox()
-       }
+        }
     }
 }

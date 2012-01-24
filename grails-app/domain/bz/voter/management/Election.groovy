@@ -5,6 +5,7 @@ class Election implements Serializable{
 	Integer year
 	Date electionDate
 	ElectionType electionType
+    boolean complete //After an election is complete, no records pertaining to that election can be modified.
 
     static constraints = {
 	 	electionDate(nullable: true)
@@ -13,6 +14,11 @@ class Election implements Serializable{
 				return 'custom.error'
 			}
 		})
+    }
+
+
+    def beforeInsert(){
+        complete = false
     }
 
 

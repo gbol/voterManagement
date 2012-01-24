@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./activitiesPanel"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <panel id="activitiesPanel" title="Activities" vflex="1" hflex=""
+        border="normal" apply="bz.voter.management.display.panel.ActivitiesComposer">
+
+        <panelchildren>
+            <toolbar>
+                <button label="Add Activity" id="addActivityBtn" />
+            </toolbar>
+
+            <grid mold="paging" pageSize="10">
+                <columns>
+                    <column label="Activity" />
+                    <column label="Date" />
+                    <column label="Notes" />
+                    <column />
+                    <column />
+                </columns>
+                <rows id="activitiesRows" >
+                </rows>
+            </grid>
+
+        </panelchildren>
+
+    </panel>
+
+</zk>

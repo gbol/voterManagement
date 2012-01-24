@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./removeDependentWindow"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./removeActivityWindow" ?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?page zscriptLanguage="GroovyGrails"?>
 
@@ -8,22 +8,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <window id="removeDependentWindow" width="30%" height="15%"
+    <window id="removeActivityWindow" width="30%" height="15%" 
         position="top,center" shadow="true"
-        apply="bz.voter.management.display.panel.RemoveDependentComposer">
+        apply="bz.voter.management.display.panel.RemoveActivityComposer">
 
-        
         <vlayout>
 
-        <h:h5>Are you sure you want to delete this dependent?</h:h5>
+            <h:h5>Are you sure you want to delete this activity?</h:h5>
 
-        <hlayout>
-            <button label="Cancel" id="cancelButton" />
-            <button label="Yes" id="deleteButton" />
-        </hlayout>
-
+            <hlayout>
+                <button label="Cancel" id="cancelButton" />
+                <button label="Yes" id="deleteActivityButton" />
+            </hlayout>
         </vlayout>
-
 
     </window>
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./activityFormWindow" ?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <window id="activityFormWindow" border="normal" shadow="true"
+        width="35%" height="50%" closable="true" position="top,center"
+        action="show:slideDown;hide:slideUp" apply="bz.voter.management.display.panel.ActivitiesFormComposer">
+
+
+        <grid>
+            <columns>
+                <column align="right" width="30%" />
+                <column />
+                <column />
+            </columns>
+            <rows>
+                <row id="activityListRow">
+                    <label value="Activity"/>
+                    <listbox id="activityListbox" mold="select" rows="1" />
+                    <image id="createActivityBtn" src="/images/add.jpg" />
+                </row>
+                <row id="activityTypeRow" visible="false">
+                    <label value="New Activity Name" />
+                    <cell colspan = "2" >
+                        <textbox id="activityTypeTextbox" />
+                    </cell>
+                </row>
+                <row>
+                    <label value="Date" />
+                    <cell colspan="2" >
+                        <datebox id="activityDatebox" format="dd-MMM-yyyy" constraint="no empty" 
+                            value="@{activityFormWindow$composer.activity.activityDate}"/>
+                    </cell>
+                </row>
+                <row>
+                    <cell valign="top">
+                        <label value="Notes" />
+                    </cell>
+                    <cell colspan="2" >
+                        <textbox id="notesTextbox" rows="10" width="85%" 
+                            value="@{activityFormWindow$composer.activity.notes}"/>
+                    </cell>
+                </row>
+            </rows>
+        </grid>
+
+        <toolbar>
+            <button label="Save" id="saveActivityBtn" />
+        </toolbar>
+
+    </window>
+
+</zk>

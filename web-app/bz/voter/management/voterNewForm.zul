@@ -47,14 +47,6 @@
 								<listbox id="pollStationListbox" mold="select" rows="1" />
 							</row>
 							<row>
-								<label value="Home Phone" />
-								<textbox id="homePhoneTextbox" />
-								<label value="Cell Phone" />
-								<textbox id="cellPhoneTextbox" />
-								<label value="Work Phone" />
-								<textbox id="workPhoneTextbox" />
-							</row>
-							<row>
 								<label value="Affiliation" />
 								<listbox id="affiliationListbox" mold="select" rows="1" />
 							</row>
@@ -82,8 +74,6 @@
 						</panelchildren>
 					</panel>
 
-					<label value="Comments" />
-					<textbox id="commentsTextbox" rows="8" width="90%"/>
 
 					<toolbar>
 						<button id="saveButton" label="Save" />
