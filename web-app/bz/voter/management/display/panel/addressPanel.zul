@@ -8,11 +8,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <panel id="addressDisplayPanel" title="Address" vflex="1" hflex="2"
+    <panel id="addressDisplayPanel" title="Address" vflex="max" hflex="2"
         border="normal" apply="bz.voter.management.display.panel.AddressPanelComposer">
 
         <panelchildren>
 
+           <vlayout>
            <separator/>
            <hlayout hflex="max">
            <panel title="Registration Address" hflex="1">
@@ -111,7 +112,7 @@
 
               <separator/>
 
-              <hlayout hflex="2" >
+              <hlayout hflex="2" vflex="max" >
               <panel title="Alternate Address" hflex="1">
                 <panelchildren>
                     <grid>
@@ -159,6 +160,7 @@
               </panel>
               </hlayout>
 
+              </vlayout>
 
            </panelchildren>
 

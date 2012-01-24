@@ -58,7 +58,7 @@ class AddressPanelComposer extends GrailsComposer {
 
         for(district in utilsFacade.listDistricts()){
             registrationAddressDistrictListbox.append{
-                def selected = registrationAddress.district.equalsTo(district) ?: false
+                def selected = district.equalsTo(registrationAddress.district) ?: false
                 listitem(value: district, selected: selected){
                     listcell(label: district.name )
                     listcell(label: district.id )
@@ -66,7 +66,7 @@ class AddressPanelComposer extends GrailsComposer {
             }
 
             workAddressDistrictListbox.append{
-                def selected = workAddress?.district?.equalsTo(district) ?: false
+                def selected = district.equalsTo(workAddress?.district) ?: false
                 listitem(value: district, selected: selected){
                     listcell(label: district.name)
                     listcell(label: district.id)
@@ -74,7 +74,7 @@ class AddressPanelComposer extends GrailsComposer {
             }
 
             alternateAddressDistrictListbox.append{
-                def selected = alternateAddress?.district?.equalsTo(district) ?: false
+                def selected = district.equalsTo(alternateAddress?.district) ?: false
                 listitem(value: district, selected: selected){
                     listcell(label: district.name)
                     listcell(label: district.id)

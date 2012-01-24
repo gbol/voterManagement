@@ -12,6 +12,8 @@ import java.lang.reflect.Field
 
 class VoterNewFormComposer extends GrailsComposer {
 
+    def centerPanel
+
 	def saveButton
 	def voterIdLabel
 	def voterNewFormPanel
@@ -45,6 +47,8 @@ class VoterNewFormComposer extends GrailsComposer {
 	
    def afterCompose = { window ->
 		if(springSecurityService.isLoggedIn()){
+
+          centerPanel = voterFormWindow.getParent().getParent().getParent()
 
 		  if(Executions.getCurrent().getArg().id){
 				voterIdLabel.setValue(Executions.getCurrent().getArg().id.toString())
@@ -119,6 +123,10 @@ class VoterNewFormComposer extends GrailsComposer {
 		}else{
 			Messagebox.show("Voter Saved!", "Voter Message!", Messagebox.OK,
 				Messagebox.INFORMATION)
+            centerPanel.getChildren().clear()
+            Executions.createComponents("/bz/voter/management/display/panel/voterMainPanel.zul",
+                    centerPanel, [voter: voterInstance])
+            voterFormWindow.detach()
 		}
 
 		}else{

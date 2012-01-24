@@ -8,7 +8,7 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 
-    <div apply="bz.voter.management.VoterComposer" 
+    <div id="votersDiv" apply="bz.voter.management.VoterComposer" 
 	 	style="margin:2px;font-size: small" vflex='1'>
 				<panel title="Voters List" style="padding:4px;" border="normal" vflex='1'>
 					<panelchildren style="padding:5px;">
@@ -28,14 +28,14 @@
 					<grid id="votersGrid" style="font-size: 0.025em;" vflex='1'>
 						<columns menupopup="auto" width="100%" 
 							style="font-size: small;">
-							<column label="Reg #" align="left" sort="auto" />
-							<column label="Last Name" align="left" sort="auto" />
-							<column label="First Name" align="left" sort="auto" />
-							<column label="Age" align="left" width="10%" sort="auto" />
-							<column label="Sex" align="left" sort="auto" />
-							<column label="Home #" align="left" sort="auto" />
-							<column label="Cell #" align="left" sort="auto" />
-							<column label="Affiliation" align="left" sort="auto" />
+							<column label="Reg #" align="left"  />
+							<column label="Last Name" align="left"  />
+							<column label="First Name" align="left"  />
+							<column label="Age" align="left" width="10%"  />
+							<column label="Sex" align="left"  />
+							<column label="Home #" align="left" />
+							<column label="Cell #" align="left" />
+							<column label="Affiliation" align="left" />
 							<column />
 						</columns>
 						<rows id="votersListRows" style="font-size: 0.5em">

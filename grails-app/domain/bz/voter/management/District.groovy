@@ -21,6 +21,9 @@ class District implements Serializable{
 
 
      public boolean equalsTo(def districtInstance){
-        this.id == districtInstance.id
+        if(!(districtInstance instanceof District)){
+            return false
+        }
+        this.id == districtInstance?.id
      }
 }

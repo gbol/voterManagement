@@ -38,6 +38,8 @@ class VoterComposer extends GrailsComposer {
 	Grid votersGrid
 	Paging voterPaging
 
+    def votersDiv
+
 	DivisionVotersPagingListModel voterModel = null
 
 	def springSecurityService
@@ -105,7 +107,7 @@ class VoterComposer extends GrailsComposer {
 
 
 	 def onClick_addVoterButton(){
-		final Window win = (Window)Executions.createComponents("voterNewForm.zul",null ,null) //.doModal()
+		final Window win = (Window)Executions.createComponents("voterNewForm.zul",votersDiv ,null) //.doModal()
 		win.doModal()
 	 }
 
