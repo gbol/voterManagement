@@ -10,29 +10,29 @@ hibernate {
 environments {
     development {
         dataSource {
-		  		driverClassName = "org.postgresql.Driver"
-				username = "voter_management"
-				password = ".,password.\$"
+		  	driverClassName = "org.postgresql.Driver"
+			username = "voter_management"
+			password = ".,password.\$"
             dbCreate = "create-drop" // one of 'create', 'create-drop','update'
             url = "jdbc:postgresql://127.0.0.1:5432/voter-management-dev"
         }
     }
     test {
         dataSource {
-    			driverClassName = "org.hsqldb.jdbcDriver"
-    			username = "sa"
-    			password = ""
+    		driverClassName = "org.hsqldb.jdbcDriver"
+    		username = "sa"
+    		password = ""
             dbCreate = "create-drop"
             url = "jdbc:hsqldb:mem:testDb"
         }
     }
     production {
         dataSource {
-    			driverClassName = "org.postgresql.Driver"
-    			username = "voter_management"
-    			password = ".,password.\$"
+    		driverClassName = "org.postgresql.Driver"
+    		username = "voter_management"
+    		password = ".,password.\$"
             dbCreate = "update"
-				dialect = 'org.hibernate.dialect.PostgreSQLDialect'
+			dialect = 'org.hibernate.dialect.PostgreSQLDialect'
             url = "jdbc:postgresql://127.0.0.1:5432/voter-management"
         }
     }

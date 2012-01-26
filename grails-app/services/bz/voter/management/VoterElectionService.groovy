@@ -7,18 +7,18 @@ class VoterElectionService {
    static transactional = true
 
 	static String  QUERY =  "select ve from VoterElection as ve " +
-									"inner join ve.voter as v " +
-							      "inner join v.person as p " +
-					 			   "inner join v.pollStation as poll " +
-									"where ve.election =:election " +
-									"and poll.division =:division "
+							"inner join ve.voter as v " +
+						    "inner join v.person as p " +
+					 	    "inner join v.pollStation as poll " +
+							"where ve.election =:election " +
+							"and poll.division =:division " 
 
 	static String  COUNT_BY_SEARCH_QUERY =  "select count(ve.voter) from VoterElection as ve " +
-												"inner join ve.voter as v " +
+											"inner join ve.voter as v " +
 							      			"inner join v.person as p " +
 					 			   			"inner join v.pollStation as poll " +
-												"where ve.election =:election " +
-												"and poll.division =:division "
+											"where ve.election =:election " +
+											"and poll.division =:division "
 
 
    def sessionFactory
@@ -126,7 +126,7 @@ class VoterElectionService {
 			if(searchParams.size() == 1){
 
 				query +=  "and ((lower(p.firstName) like lower(:firstName)) " +
-							"or (lower(p.lastName) like lower(:lastName))) " 
+						  "or (lower(p.lastName) like lower(:lastName))) "  
 
 				firstName =  '%' + searchParams[0].trim() + '%'
 				lastName = '%' + searchParams[0].trim() + '%' 
@@ -135,7 +135,7 @@ class VoterElectionService {
 			}else{
 
 				query +=  "and (lower(p.firstName) like lower(:firstName) "+
-							"and lower(p.lastName) like lower(:lastName)) " 
+						  "and lower(p.lastName) like lower(:lastName)) " 
 
 				firstName =  '%' + searchParams[0].trim() + '%' 
 				lastName =  '%' + searchParams[1].trim() + '%' 

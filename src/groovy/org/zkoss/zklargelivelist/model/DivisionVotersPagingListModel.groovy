@@ -67,6 +67,7 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
         <li>firstName</li>
         <li>houseNumber</li>
         <li>street</li>
+        <li>municipality</li>
         <li>phoneNumber1</li>
         <li>phoneNumber2</li>
         <li>phoneNumber3</li>
@@ -92,10 +93,11 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
                 lastName:           voter.lastName,
                 firstName:          voter.firstName,
                 houseNumber:        address?.houseNumber,
+                street:             address?.street,
+                municipality:       address?.municipality,
                 phoneNumber1:       address?.phoneNumber1,
                 phoneNumber2:       address?.phoneNumber2,
                 phoneNumber3:       address?.phoneNumber3,
-                street:             address?.street,
                 sex:                voter.sex,
                 age:                voter.age,
                 birthDate:          voter.birthDate,
@@ -151,10 +153,11 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
                 lastName:           voter.lastName,
                 firstName:          voter.firstName,
                 houseNumber:        address?.houseNumber,
+                street:             address?.street,
+                municipality:       address?.municipality,
                 phoneNumber1:       address?.phoneNumber1,
                 phoneNumber2:       address?.phoneNumber2,
                 phoneNumber3:       address?.phoneNumber3,
-                street:             address?.street,
                 sex:                voter.sex,
                 age:                voter.age,
                 birthDate:          voter.birthDate,

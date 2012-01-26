@@ -26,21 +26,22 @@
 
 					<paging id="voterPaging" autohide="true" detailed="true"/>
 					<grid  vflex='1' id="electionOfficeVotersGrid">
-						<columns menupopup="auto" width="100%">
-							<column label="Reg #" align="left" width="8%" sort="auto" />
-							<column label="Last Name" align="left" sort="auto" />
-							<column label="First Name" align="left" sort="auto" />
-							<column label="Age" align="left" width="4%" sort="auto" />
-							<column label="Sex" align="left" width="4%" sort="auto" />
-							<column label="Poll Station" align="left" width="8%" sort="auto" />
-							<column label="Affiliation" align="left" width="8%" 
+						<columns menupopup="auto" width="100%" sizable="true">
+							<column label="Reg #" align="left" hflex="min" sort="auto" />
+							<column label="Last Name" align="left" hflex="min" sort="auto" />
+							<column label="First Name" align="left" hflex="min" sort="auto" />
+							<column label="House #" align="left" hflex="min" sort="auto" />
+							<column label="Street" align="left" hflex="min" sort="auto" />
+							<column label="Municipality" align="left" hflex="min" sort="auto" />
+							<column label="Poll #" align="left" hflex="min" sort="auto" />
+							<column label="Affiliation" align="left" hflex="min" 
 								sort="auto" />
-							<column label="Pledge" align="left" width="8%" 
+							<column label="Pledge" align="left" hflex="min" 
 								sort="auto" />
-							<column label="Voted" align="left" width="6%" />
+							<column label="Voted" align="left" hflex="min" />
 							<column label="Pickup Time" sort="auto" />
-							<column  width="12%"/>
-							<column width="12%"/>
+							<column  hflex="min"/>
+							<column hflex="min"/>
 						</columns>
 						<rows id="votersListRows" vflex='1'>
 						</rows>

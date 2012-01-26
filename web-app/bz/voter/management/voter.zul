@@ -26,17 +26,20 @@
 					</toolbar>
 					<paging id="voterPaging" autohide="true" detailed="true"/>
 					<grid id="votersGrid" style="font-size: 0.025em;" vflex='1'>
-						<columns menupopup="auto" width="100%" 
-							style="font-size: small;">
-							<column label="Reg #" align="left"  />
-							<column label="Last Name" align="left"  />
-							<column label="First Name" align="left"  />
-							<column label="Age" align="left" width="10%"  />
-							<column label="Sex" align="left"  />
-							<column label="Home #" align="left" />
-							<column label="Cell #" align="left" />
-							<column label="Affiliation" align="left" />
-							<column />
+						<columns menupopup="auto" sizable="true" width="100%"
+							style="font-size: small">
+							<column label="Reg #" align="left" hflex="min" />
+							<column label="Last Name" align="left"  hflex="min"/>
+							<column label="First Name" align="left"  hflex="min"/>
+							<column label="Age" align="left"  hflex="min"/>
+							<column label="Birth Date" align="left"  hflex="min"/>
+							<column label="House #" align="left" hflex="min"  />
+							<column label="Street" align="left"  hflex="min"/>
+							<column label="Municipality" align="left"  hflex="min"/>
+							<column label="Home #" align="left" hflex="min"/>
+							<column label="Cell #" align="left" hflex="min"/>
+							<column label="Affiliation" align="left" hflex="min"/>
+							<column  />
 						</columns>
 						<rows id="votersListRows" style="font-size: 0.5em">
 						</rows>

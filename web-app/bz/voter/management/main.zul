@@ -17,23 +17,36 @@
 </zscript>
 
 	<style>
-    .z-loading {
-        width : 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8) !important;
-    }
+        .z-loading {
+            width : 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
 
-    .z-loading-indicator {
-        position: absolute;
-        width:10% !important;
-        top:40% !important;
-        left:45% !important;
-        border: 3px solid #83B5F7 !important;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
-        text-align:center;
-    }
+        .z-loading-indicator {
+            position: absolute;
+            width:10% !important;
+            top:40% !important;
+            left:45% !important;
+            border: 3px solid #83B5F7 !important;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            text-align:center;
+        }
+
+
+        div.z-grid-head th{
+            font-size: 0.5em
+        }
+
+        tr.z-row z.cell{
+            font-size: 0.25em
+        }
+
+        div.z-grid-body {
+            font-size:0.25em
+        }
 
 		.errors{
 			font-weight: bold;

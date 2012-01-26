@@ -41,6 +41,7 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
         <li>firstName</li>
         <li>houseNumber</li>
         <li>street</li>
+        <li>municipality</li>
         <li>sex</li>
         <li>age</li>
         <li>birthDate</li>
@@ -59,6 +60,7 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
 		for(_voterElection in voterElectionService.search(search, getElection(), getDivision(), itemStartNumber, pageSize)){
             def _addressInstance = _voterElection.voter.registrationAddress
             def _voter = _voterElection.voter
+            def _registrationAddress = _voter.registrationAddress
             def instance = [
                 voterElection:      _voterElection,
                 voter:              _voter,
@@ -66,8 +68,9 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
                 registrationNumber: _voter.registrationNumber,
                 lastName:           _voter.lastName,
                 firstName:          _voter.firstName,
-                houseNumber:        _addressInstance?.houseNumber,
-                street:             _addressInstance?.street,
+                houseNumber:        _registrationAddress?.houseNumber,
+                street:             _registrationAddress?.street,
+                municipality:       _registrationAddress?.municipality,
                 sex:                _voter.sex,
                 age:                _voter.age,
                 birthDate:          _voter.birthDate,
@@ -100,6 +103,7 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
         <li>firstName</li>
         <li>houseNumber</li>
         <li>street</li>
+        <li>municipality</li>
         <li>sex</li>
         <li>age</li>
         <li>birthDate</li>
@@ -118,6 +122,7 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
 		for(_voterElection in voterElectionService.listByElectionAndDivision(getElection(),getDivision(), itemStartNumber, pageSize )){
             def _addressInstance = _voterElection.voter.registrationAddress
             def _voter = _voterElection.voter
+            def _registrationAddress = _voter.registrationAddress
             def instance = [
                 voterElection:      _voterElection,
                 voter:              _voter,
@@ -125,8 +130,9 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
                 registrationNumber:   _voter.registrationNumber,
                 lastName:           _voter.lastName,
                 firstName:          _voter.firstName,
-                houseNumber:        _addressInstance?.houseNumber,
-                street:             _addressInstance?.street,
+                houseNumber:        _registrationAddress?.houseNumber,
+                street:             _registrationAddress?.street,
+                municipality:       _registrationAddress?.municipality,
                 sex:                _voter.sex,
                 age:                _voter.age,
                 birthDate:          _voter.birthDate,
