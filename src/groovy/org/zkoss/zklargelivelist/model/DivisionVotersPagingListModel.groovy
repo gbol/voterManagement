@@ -229,7 +229,7 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
                 break
 
             case NAME_SEARCH:
-                totalSize = voterServie.countByDivisionAndSearch(division,searchString)
+                totalSize = voterService.countByDivisionAndSearch(division,searchString)
                 break
 
             case AFFILIATION_FILTER:
