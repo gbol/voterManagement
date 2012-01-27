@@ -72,8 +72,8 @@
     <window  width="100%" height="100%" apply="bz.voter.management.MainComposer" contentStyle="overflow:auto">
 
 		<borderlayout>
-			<north size="50px">
-				<div>
+			<north size="50px" id="n">
+				<div id="header">
 					<label style="padding:150px 0px 10px 10px; font-size:24px;color:#008BB6;font-weight:bold;"
 					value="Voter Management System"/>
 				</div>

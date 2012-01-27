@@ -36,7 +36,7 @@ class ActivitiesFormComposer extends GrailsComposer {
     def voterFacade
     def activityFacade
 
-    EventQueue queue
+    private EventQueue queue
 
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){

@@ -3,6 +3,10 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
 import org.zkoss.zk.ui.event.ForwardEvent
+import org.zkoss.zk.ui.event.Event
+import org.zkoss.zk.ui.event.EventQueue
+import org.zkoss.zk.ui.event.EventQueues
+import org.zkoss.zk.ui.event.EventListener
 import org.zkoss.zul.Messagebox
 import org.zkoss.zul.Grid
 import org.zkoss.zul.Paging
@@ -17,6 +21,7 @@ import org.zkoss.zklargelivelist.model.DivisionVotersPagingListModel
 
 import bz.voter.management.zk.ComposerHelper
 import bz.voter.management.zk.VoterRenderer
+import bz.voter.management.utils.FilterType
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -26,6 +31,7 @@ class VoterComposer extends GrailsComposer {
 	def showAllVotersBtn
 	def searchVoterButton
 	def printButton
+    def filterVotersBtn
 
 	def voterSearchTextbox
 
@@ -54,14 +60,34 @@ class VoterComposer extends GrailsComposer {
 	private int _totalSize = 0
 	private boolean _needsTotalSizeUpdate = true
 
+    private EventQueue queue
+
     def afterCompose = { window ->
 	 	if(springSecurityService.isLoggedIn()){
             division = voterListFacade.getSystemDivision()
 			votersGrid.setRowRenderer(new VoterRenderer())
             showVoters()
+            queue = EventQueues.lookup('filterVoters', EventQueues.DESKTOP,true)
+            queue.subscribe(new EventListener(){
+                public void onEvent(Event evt){
+                    def data = evt.getData()
+                    filter(data.filterType,data.filterValue)
+                }
+                
+            })
 		}else{
 			execution.sendRedirect('/login')
 		}
+    }
+
+
+    def filter(FilterType filterType, Object value){
+        switch(filterType){
+            case filterType.AFFILIATION:
+                def affiliation = (Affiliation)value
+                refreshModel(filterType, affiliation,0)
+                break
+        }
     }
 
 
@@ -79,9 +105,21 @@ class VoterComposer extends GrailsComposer {
 
     def onClick_showAllVotersBtn(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+            voterSearchTextbox.setValue("")
             showVoters()
         }else{
 			ComposerHelper.permissionDeniedBox()
+        }
+    }
+
+
+    def onClick_filterVotersBtn(){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+            Executions.createComponents("/bz/voter/management/filter/voter.zul",
+                votersDiv.getParent().getParent().getParent().getFirstChild().getFirstChild()
+                ,null).doModal()
+        }else{
+            ComposerHelper.permissionDeniedBox()
         }
     }
 
@@ -137,7 +175,7 @@ class VoterComposer extends GrailsComposer {
 	}
 
 
-  private void refreshModel(int activePage){
+    private void refreshModel(int activePage){
   		voterPaging.setPageSize(_pageSize)
 		voterModel = new DivisionVotersPagingListModel(division,activePage, _pageSize)
 		voterPaging.setTotalSize(voterModel.getTotalSize())
@@ -145,13 +183,19 @@ class VoterComposer extends GrailsComposer {
 		if(_needsTotalSizeUpdate || activePage == 0){
 			_totalSize = voterModel.getTotalSize()
 			_needsTotalSizeUpdate = false
+			voterPaging.setDetailed(true)
 		}
 
+		if(_totalSize < _pageSize){
+			voterPaging.setDetailed(false)
+		}
+
+
 		votersGrid.setModel(voterModel)
-  }
+    }
 
 
-  private void refreshModel(String search, int activePage){
+    private void refreshModel(String search, int activePage){
   		voterPaging.setPageSize(_pageSize)
 		voterModel = new DivisionVotersPagingListModel(search,division,activePage, _pageSize)
 		voterPaging.setTotalSize(voterModel.getTotalSize())
@@ -167,6 +211,25 @@ class VoterComposer extends GrailsComposer {
 		}
 
 		votersGrid.setModel(voterModel)
+  }
+
+
+  private void refreshModel(FilterType filterType, Object filterValue, int activePage){
+    voterPaging.setPageSize(_pageSize)
+    voterModel = new DivisionVotersPagingListModel(filterType,(Object)filterValue, division,activePage, _pageSize)
+    voterPaging.setTotalSize(voterModel.getTotalSize())
+
+    if(_needsTotalSizeUpdate || activePage == 0){
+        _totalSize = voterModel.getTotalSize()
+        voterPaging.setDetailed(true)
+        _needsTotalSizeUpdate = false
+    }
+
+    if(_totalSize < _pageSize){
+        voterPaging.setDetailed(false)
+    }
+
+    votersGrid.setModel(voterModel)
   }
 
 }

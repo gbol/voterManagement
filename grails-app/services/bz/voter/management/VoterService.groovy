@@ -2,6 +2,8 @@ package bz.voter.management
 
 import java.util.Calendar
 
+import bz.voter.management.utils.FilterType
+
 class VoterService {
 
     static transactional = true
@@ -36,6 +38,22 @@ class VoterService {
 			"inner join v.pollStation as poll " +
 			"inner join v.person as person " +
 			"where  poll.division =:division " 
+
+	 static String FILTER_BY_AFFILIATION = "select v " +
+			"from Voter as v " +
+			"inner join v.pollStation as poll " +
+			"inner join v.person as person " +
+			"where  poll.division =:division " +
+            "and v.affiliation =:affiliation " +
+			"order by person.lastName"
+
+
+	 static String GET_COUNT_BY_AFFILIATION = "select count(v) " +
+			"from Voter as v " +
+			"inner join v.pollStation as poll " +
+			"inner join v.person as person " +
+			"where  poll.division =:division " +
+            "and v.affiliation =:affiliation " 
 
 
 	/*
@@ -192,13 +210,15 @@ class VoterService {
 
 			if(searchParams.size() == 1){
 				query = query + 
-					" or (lower(p.lastName) like lower(:lastName)))"
+					" or (lower(p.lastName) like lower(:lastName))) " +
+                    " order by p.lastName "
 
 				firstName = "%${searchParams[0].trim()}%"
 				lastName = "%${searchParams[0].trim()}%"
 			}else{
 				query = query + 
-					" and (lower(p.lastName) like lower(:lastName)))"
+					" and (lower(p.lastName) like lower(:lastName))) " +
+                    " order by p.lastName "
 
 				firstName = "%${searchParams[0].trim()}%"
 				lastName = "%${searchParams[1].trim()}%"
@@ -291,5 +311,35 @@ class VoterService {
 
 		results[0]
 	}
+
+
+    def countByAffiliation(division,affiliation){
+        def results = Voter.executeQuery(GET_COUNT_BY_AFFILIATION,
+            [division: division,
+            affiliation: affiliation
+            ])
+
+        return results[0]
+    }
+
+
+
+    /**
+    Filters the voters list by a specific field.
+    @param filterType
+    @param Division the division whose voters we wish to filte.
+    @param int offset query starting point
+    @param int max the maximum number of records to fetch
+    @return List of voters.
+    **/
+    def filter(filterType,division,int offset, int max){
+        def results = Voter.executeQuery(FILTER_BY_AFFILIATION, 
+            [division: division, 
+            affiliation: filterType,
+            offset: offset,
+            max: max])
+
+        return results
+    }
 
 }

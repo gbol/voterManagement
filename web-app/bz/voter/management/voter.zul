@@ -11,12 +11,21 @@
     <div id="votersDiv" apply="bz.voter.management.VoterComposer" 
 	 	style="margin:2px;font-size: small" vflex='1'>
 				<panel title="Voters List" style="padding:4px;" border="normal" vflex='1'>
-					<panelchildren style="padding:5px;">
-					<toolbar>
-						<button label="Show All Voters" id="showAllVotersBtn" />
-						<button id="addVoterButton" label="New Voter" />
-						<button id="printButton" label="Print" />
-					</toolbar>
+					<panelchildren style="padding:5px">
+					    <toolbar>
+                            <cell align="left">
+						        <button label="Show All Voters" id="showAllVotersBtn" />
+                            </cell>
+                            <cell>
+						        <button id="addVoterButton" label="New Voter" />
+                            </cell>
+                            <cell>
+						        <button id="printButton" label="Print" />
+                            </cell>
+                            <cell colspan="6" align="right" valign="bottom">
+                                <toolbarbutton id="filterVotersBtn" image="/images/filter.png" tooltip="filterTooltip" />
+                            </cell>
+					    </toolbar>
 					<toolbar>
 						<textbox id="voterSearchTextbox" />
 						<button id="searchVoterButton" label="Search" />
@@ -54,6 +63,9 @@
 							following search pattern:
 								John,Doe
 					</popup>
+                    <popup id="filterTooltip">
+                        Filter Voters
+                    </popup>
 				</vbox>
 
     </div>

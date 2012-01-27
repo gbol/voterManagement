@@ -4,6 +4,8 @@ import java.util.List;
 import bz.voter.management.Voter
 import bz.voter.management.VoterService
 import bz.voter.management.Division
+import bz.voter.management.Affiliation
+import bz.voter.management.utils.FilterType
 
 
 /**
@@ -20,6 +22,14 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 	VoterService voterService //= new VoterService()
 	Division division
 	String searchString
+    
+    private static String AFFILIATION_FILTER = "AFFILIATION"
+    private static String PLEDGE_FILTER = "PLEDGE"
+    private static String NAME_SEARCH = "NAME"
+    private static String ALL = "ALL"
+    private String searchType
+
+    private Affiliation affiliation
 
 	public DivisionVotersPagingListModel(){
 	}
@@ -51,6 +61,11 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 		this.division = division
 		this.searchString = search
 	}
+
+    public DivisionVotersPagingListModel(FilterType filterType, Object filterObject, Division division, int startPageNumber, int pageSize){
+        super(filterType, filterObject, division, startPageNumber, pageSize)
+        this.division = division
+    }
 
 
 	/**
@@ -109,8 +124,33 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
             votersList.push(resultMap)
         }
 
+        searchType = ALL
+
         return votersList
 	}
+
+
+
+    /**
+    **/
+    @Override
+    protected List<Map> getPageData(FilterType filterType,Object filterObject,Division division, int itemStartNumber, int pageSize){
+        def votersList = []
+        switch(filterType){
+            case filterType.AFFILIATION:
+                voterService = new VoterService()
+                affiliation = (Affiliation) filterObject
+                for(_voter in voterService.filter(filterObject,division, itemStartNumber, pageSize)){
+                    def resultMap = doMap(_voter)
+                    votersList.push(resultMap)
+                }
+                searchType = AFFILIATION_FILTER
+                break
+        }
+
+
+        return votersList
+    }
 
 
 	/**
@@ -169,6 +209,8 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
             votersList.push(resultMap)
         }
 
+        searchType = NAME_SEARCH
+
         return votersList
 	}
 
@@ -178,9 +220,56 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 	**/
 	@Override
 	public int getTotalSize() {
-		def totalSize = searchString ? voterService.countByDivisionAndSearch(division,searchString) : voterService.countByDivision(division)
+		//def totalSize = searchString ? voterService.countByDivisionAndSearch(division,searchString) : voterService.countByDivision(division)
+        def totalSize
+
+        switch(searchType){
+            case ALL:
+                totalSize = voterService.countByDivision(division)
+                break
+
+            case NAME_SEARCH:
+                totalSize = voterServie.countByDivisionAndSearch(division,searchString)
+                break
+
+            case AFFILIATION_FILTER:
+                totalSize = voterService.countByAffiliation(division,affiliation)
+                break
+
+        }
 		return totalSize
 	}
 
+
+    /**
+    Converts a voter instance to a map suitable for a grid.
+    @param Voter
+    @return Map
+    **/
+    private def doMap(_voter){
+        def voter = _voter.read(_voter.id)
+        def address = voter.registrationAddress
+        def resultMap = [
+            voter:              voter,
+            registrationDate:   voter.registrationDate,
+            registrationNumber: voter.registrationNumber,
+            lastName:           voter.lastName,
+            firstName:          voter.firstName,
+            houseNumber:        address?.houseNumber,
+            street:             address?.street,
+            municipality:       address?.municipality,
+            phoneNumber1:       address?.phoneNumber1,
+            phoneNumber2:       address?.phoneNumber2,
+            phoneNumber3:       address?.phoneNumber3,
+            sex:                voter.sex,
+            age:                voter.age,
+            birthDate:          voter.birthDate,
+            pollStation:        voter.pollStation,
+            pollNumber:         voter.pollStation.pollNumber,
+            affiliation:        voter.affiliation
+        ]
+
+        return resultMap
+    }
 
 }

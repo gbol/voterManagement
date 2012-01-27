@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bz.voter.management.Division;
+import bz.voter.management.utils.FilterType;
 
 import org.zkoss.zul.AbstractListModel;
 
@@ -43,6 +44,14 @@ public abstract class AbstractDivisionVotersPagingListModel<T> extends AbstractL
 		_items = getPageData(search, _division,_itemStartNumber, _pageSize);
 	}
 
+	public AbstractDivisionVotersPagingListModel(FilterType filterType ,Object filterObject,Division division, int startPageNumber, int pageSize) {
+		super();
+		
+		initialize(division, startPageNumber, pageSize);
+		
+		_items = getPageData(filterType, filterObject, _division,_itemStartNumber, _pageSize);
+	}
+
 	private void initialize(Division division, int startPageNumber, int pageSize){
 		this._division = division;
 		this._startPageNumber = startPageNumber;
@@ -53,6 +62,7 @@ public abstract class AbstractDivisionVotersPagingListModel<T> extends AbstractL
 	public abstract int getTotalSize();
 	protected abstract List<T> getPageData(Division division, int itemStartNumber, int pageSize);
 	protected abstract List<T> getPageData(String search,Division division, int itemStartNumber, int pageSize);
+	protected abstract List<T> getPageData(FilterType filterType,Object filterObject,Division division, int itemStartNumber, int pageSize);
 	
 	@Override
 	public Object getElementAt(int index) {

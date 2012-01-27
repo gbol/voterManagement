@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="./voterFilterWindow"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page zscriptLanguage="GroovyGrails"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+    <window id="voterFilterWindow" border="normal" shadow="true" title="Filter Voters"
+        width="35%" height="25%" closable="true" position="top,center"
+        action="show:slideIn;hide:slideUp" apply="bz.voter.management.filter.VoterComposer">
+
+        <grid>
+            <columns>
+                <column align="right" />
+                <column />
+            </columns>
+            <rows>
+                <row>
+                    <label value="Filter Type" />
+                    <listbox id="filterTypeListbox" mold="select" rows="1" />
+                </row>
+                <row>
+                    <label value="Filter Value" />
+                    <listbox id="filterValueListbox" mold="select" rows="1" />
+                </row>
+            </rows>
+        </grid>
+        <toolbar>
+            <button label="Filter" id="filterBtn" disabled="true"/>
+            <button label="Cancel" id="cancelFilterBtn" />
+        </toolbar>
+
+
+    </window>
+
+</zk>
