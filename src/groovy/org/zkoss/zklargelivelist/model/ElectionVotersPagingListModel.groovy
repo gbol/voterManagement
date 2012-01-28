@@ -126,7 +126,7 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
     protected List<Map> getPageData(FilterType filterType, Object filterObject, int itemStartNumber, int pageSize){
         voterElectionService = new VoterElectionService()
         def votersMap = []
-        switch(fiterType){
+        switch(filterType){
             case filterType.PLEDGE:
                 def pledge = (Pledge) filterObject
                 super.setPledge(pledge)

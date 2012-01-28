@@ -3,6 +3,10 @@ package bz.voter.management
 import org.zkoss.zkgrails.*
 import org.zkoss.zk.ui.*
 import org.zkoss.zk.ui.event.ForwardEvent
+import org.zkoss.zk.ui.event.Event
+import org.zkoss.zk.ui.event.EventQueue
+import org.zkoss.zk.ui.event.EventQueues
+import org.zkoss.zk.ui.event.EventListener
 import org.zkoss.zul.Messagebox
 import org.zkoss.zul.Grid
 import org.zkoss.zul.Paging
@@ -17,6 +21,7 @@ import org.zkoss.zklargelivelist.model.ElectionVotersPagingListModel
 
 import bz.voter.management.zk.ComposerHelper
 import bz.voter.management.zk.OfficeStationVoterRenderer
+import bz.voter.management.utils.FilterType
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -25,6 +30,8 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 	def springSecurityService
 	def voterElectionService
+
+    def votersDiv
 
 	def votersListRows
     Grid electionOfficeVotersGrid
@@ -36,6 +43,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 	def showAllVotersButton
 	def searchVoterButton
+    def filterVotersBtn
 
 	def divisionInstance
 
@@ -46,6 +54,8 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     def voterListFacade
 
     ElectionVotersPagingListModel electionVoterModel = null 
+
+    private EventQueue queue
 
 	private final int _pageSize             = 10
 	private int _startPageNumber            = 0
@@ -58,15 +68,38 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 			election = Election.get(Executions.getCurrent().getArg().id)
             electionOfficeVotersGrid.setRowRenderer(new OfficeStationVoterRenderer())
             showAllVoters()
+            queue = EventQueues.lookup('filterElectionVoters', EventQueues.DESKTOP,true)
+            queue.subscribe(new EventListener(){
+                public void onEvent(Event evt){
+                    def data = evt.getData()
+                    filter(data.filterType,data.filterValue)
+                }
+                
+            })
 		}else{
 			ComposerHelper.permissionDeniedBox()
 		}
     }
 
 
+    def filter(FilterType filterType, Object value){
+        switch(filterType){
+            case filterType.PLEDGE:
+                def pledge = (Pledge)value
+                refreshModel(filterType, pledge,0)
+                break
+        }
+    }
+
+
 	 def onClick_showAllVotersButton(){
         showAllVoters()
 	 }
+
+     def onClick_filterVotersBtn(){
+        Executions.createComponents("/bz/voter/management/filter/voterElection.zul",
+            votersDiv.getParent().getParent().getParent(), null).doModal()
+     }
 
 
      def showAllVoters(){
@@ -146,6 +179,24 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 		if(_totalSize < _pageSize){
 			voterPaging.setDetailed(false)
 		}
+
+		electionOfficeVotersGrid.setModel(electionVoterModel)
+    }
+
+    private void refreshModel(FilterType filterType, Object filterValue, int activePage){
+        voterPaging.setPageSize(_pageSize)
+        electionVoterModel = new ElectionVotersPagingListModel(filterType,(Object)filterValue, election,divisionInstance,activePage, _pageSize)
+        voterPaging.setTotalSize(electionVoterModel.getTotalSize())
+
+        if(_needsTotalSizeUpdate || activePage == 0){
+            _totalSize = electionVoterModel.getTotalSize()
+            voterPaging.setDetailed(true)
+            _needsTotalSizeUpdate = false
+        }
+
+        if(_totalSize < _pageSize){
+            voterPaging.setDetailed(false)
+        }
 
 		electionOfficeVotersGrid.setModel(electionVoterModel)
     }

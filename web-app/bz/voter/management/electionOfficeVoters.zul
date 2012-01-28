@@ -7,7 +7,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div vflex='1' apply="bz.voter.management.ElectionOfficeVotersComposer">
+    <div id="votersDiv" vflex='1' apply="bz.voter.management.ElectionOfficeVotersComposer">
 
 	 	<vlayout vflex='1'>
 
@@ -15,12 +15,21 @@
 				border="normal" vflex='1'>
 				<panelchildren style="padding:5px" vflex='1'>
 					<toolbar>
-						<textbox id="searchTextbox" />
-						<button id="searchVoterButton" label="Search" />
-						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
-							style="cursor:help" />
-						<label value="Tips" tooltip="searchHelp" />
-						<button label="Show All Voters" id="showAllVotersButton" />
+                        <cell>
+						    <textbox id="searchTextbox" />
+						    <button id="searchVoterButton" label="Search" />
+                        </cell>
+                        <cell>
+						    <image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
+							    style="cursor:help" />
+						    <label value="Tips" tooltip="searchHelp" />
+                        </cell>
+                        <cell>
+						    <button label="Show All Voters" id="showAllVotersButton" />
+                         </cell>
+                         <cell>
+                            <toolbarbutton id="filterVotersBtn" image="/images/filter.png" tooltip="filterTooltip" />
+                         </cell>
 
 					</toolbar>
 
