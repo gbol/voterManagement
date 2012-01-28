@@ -20,6 +20,24 @@ class VoterElectionService {
 											"where ve.election =:election " +
 											"and poll.division =:division "
 
+	static String  FILTER_BY_PLEDGE_QUERY  =  "select ve from VoterElection as ve " +
+							            "inner join ve.voter as v " +
+						                "inner join v.person as p " +
+					 	                "inner join v.pollStation as poll " +
+							            "where ve.election =:election " +
+							            "and poll.division =:division " +
+                                        "and ve.pledge =:pledge " +
+                                        "order by p.lastName"
+
+	static String  COUNT_BY_PLEDGE =  "select count(ve.voter) from VoterElection as ve " +
+											"inner join ve.voter as v " +
+							      			"inner join v.person as p " +
+					 			   			"inner join v.pollStation as poll " +
+											"where ve.election =:election " +
+											"and poll.division =:division " +
+                                            "and ve.pledge =:pledge"
+
+
 
    def sessionFactory
 
@@ -167,4 +185,38 @@ class VoterElectionService {
 		
 	}
 
+
+    /**
+    Filterse list of voters by a specific pledge
+    @param Election election for which we want to filter voters.
+    @param Division division whose voters we wish to filter.
+    @param Pledge
+    @param int offset
+    @param int max
+    @return List of VoterElection
+    **/
+    public List<VoterElection> filterByPledge(Election election, Division division, Pledge pledge, int offset, int max){
+        def _voters = VoterElection.executeQuery(FILTER_BY_PLEDGE_QUERY,[
+                        election: election,
+                        division: division,
+                        pledge: pledge,
+                        offset: offset,
+                        max: max
+                    ])
+
+        return _voters
+    }
+
+
+    
+   public int countByPledge(Election election, Division division, Pledge pledge){
+        def _count = VoterElection.executeQuery(COUNT_BY_PLEDGE,[
+                        election: election,
+                        division: division,
+                        pledge: pledge
+                        ])
+        return _count[0]
+   }
+
 }
+

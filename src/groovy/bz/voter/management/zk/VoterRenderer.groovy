@@ -40,6 +40,7 @@ public class VoterRenderer implements RowRenderer{
             }
         })
 
+		row.getChildren().add(new Label("${_voter.registrationDate.format('dd-MMM-yyyy')}"))
 		row.getChildren().add(new Label("${_voter.registrationNumber}"))
 		row.getChildren().add(new Label("${_voter.lastName}"))
 		row.getChildren().add(new Label("${_voter.firstName}"))
@@ -48,9 +49,7 @@ public class VoterRenderer implements RowRenderer{
 		row.getChildren().add(new Label("${_voter.houseNumber}"))
 		row.getChildren().add(new Label("${_voter.street}"))
 		row.getChildren().add(new Label("${_voter.municipality}"))
-		row.getChildren().add(new Label("${_voter.phoneNumber1}"))
-		row.getChildren().add(new Label("${_voter.phoneNumber2}"))
-		row.getChildren().add(new Label("${_voter.affiliation}"))
+		row.getChildren().add(new Label("${_voter.pollNumber}"))
 		row.getChildren().add(manageButton)
 	}
 

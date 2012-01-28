@@ -5,6 +5,8 @@ import java.util.List;
 
 import bz.voter.management.Division;
 import bz.voter.management.Election;
+import bz.voter.management.Pledge;
+import bz.voter.management.utils.FilterType;
 
 import org.zkoss.zul.AbstractListModel;
 
@@ -20,6 +22,7 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 	private int _itemStartNumber;
 	private Division _division;
 	private Election _election;
+    private Pledge _pledge;
 	private String _searchString;
 	
 	//internal use only
@@ -47,6 +50,17 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 		_items = getPageData(_searchString, _itemStartNumber, _pageSize);
 	}
 
+
+    public AbstractElectionVotersPagingListModel(FilterType filterType, Object filterObject, Election election, Division division, int startPageNumber, int pageSize){
+        super();
+
+        initialize(election, division, startPageNumber, pageSize);
+
+        _items = getPageData(filterType, filterObject, _itemStartNumber, _pageSize);
+    }
+        
+
+
 	private void initialize(Election election,Division division, int startPageNumber, int pageSize){
 		this._division = division;
 		this._startPageNumber = startPageNumber;
@@ -58,6 +72,7 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 	public abstract int getTotalSize();
 	protected abstract List<T> getPageData(int itemStartNumber, int pageSize);
 	protected abstract List<T> getPageData(String search, int itemStartNumber, int pageSize);
+	protected abstract List<T> getPageData(FilterType filterType, Object filterObject, int itemStartNumber, int pageSize);
 	
 	@Override
 	public Object getElementAt(int index) {
@@ -84,6 +99,15 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 	public Election getElection(){
 		return _election;
 	}
+
+
+    public Pledge getPledge(){
+        return _pledge;
+    }
+
+    protected void setPledge(Pledge pledge){
+        this._pledge = pledge;
+    }
 
 	public String getSearchString(){
 		return _searchString;
