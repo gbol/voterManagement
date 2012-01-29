@@ -2,6 +2,8 @@ package bz.voter.management
 
 import grails.test.*
 
+import bz.voter.management.utils.PickupTimeEnum
+
 class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 
 
@@ -155,5 +157,71 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 
 		assertEquals 6, voterElectionService.countVoters("f", election, albertDivision)
 	 }
+
+
+     void test_count_by_pledge(){
+        def election = new Election(year: 2008, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+
+        assertEquals 13, voterElectionService.countByPledge(election,albertDivision,Pledge.findByCode('U'))
+     }
+
+
+     void test_filter_by_pledge(){
+        def election = new Election(year: 2008, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+
+        assertEquals 13, voterElectionService.filterByPledge(election, albertDivision, Pledge.findByCode('U'),0,0).size()
+     }
+
+
+     void test_filter_by_pickuptime(){
+        def election = new Election(year: 2008, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+
+        def cnt = 0
+        def ve = VoterElection.findAllByElection(election)
+        ve.each{
+            if(cnt < 4){
+                it.pickupTime = "6:30"
+                it.save()
+            }
+            cnt++
+        }
+
+
+        def pickupTimeEnum = PickupTimeEnum.SIX
+
+
+        def results = voterElectionService.filterByPickupTime(election,albertDivision,pickupTimeEnum,0, 0)
+
+        assertEquals 4, results.size()
+
+     }
+
+
+     void test_count_by_pickuptime(){
+        def election = new Election(year: 2008, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+
+        def cnt = 0
+        def ve = VoterElection.findAllByElection(election)
+        ve.each{
+            if(cnt < 4){
+                it.pickupTime = "7:30"
+                it.save()
+            }
+            cnt++
+        }
+
+
+        def pickupTimeEnum = PickupTimeEnum.SEVEN
+
+        def result = voterElectionService.countByPickupTime(election, albertDivision, pickupTimeEnum)
+
+
+        assertEquals 4, result
+
+     }
 
 }

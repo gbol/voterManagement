@@ -2,6 +2,9 @@ package bz.voter.management
 
 import java.util.Calendar
 
+
+import bz.voter.management.utils.PickupTimeEnum
+
 class VoterElectionService {
 
    static transactional = true
@@ -21,21 +24,21 @@ class VoterElectionService {
 											"and poll.division =:division "
 
 	static String  FILTER_BY_PLEDGE_QUERY  =  "select ve from VoterElection as ve " +
-							            "inner join ve.voter as v " +
-						                "inner join v.person as p " +
-					 	                "inner join v.pollStation as poll " +
-							            "where ve.election =:election " +
-							            "and poll.division =:division " +
-                                        "and ve.pledge =:pledge " +
-                                        "order by p.lastName"
+							                    "inner join ve.voter as v " +
+						                        "inner join v.person as p " +
+					 	                        "inner join v.pollStation as poll " +
+							                    "where ve.election =:election " +
+							                    "and poll.division =:division " +
+                                                "and ve.pledge =:pledge " +
+                                                "order by p.lastName"
 
 	static String  COUNT_BY_PLEDGE =  "select count(ve.voter) from VoterElection as ve " +
-											"inner join ve.voter as v " +
-							      			"inner join v.person as p " +
-					 			   			"inner join v.pollStation as poll " +
-											"where ve.election =:election " +
-											"and poll.division =:division " +
-                                            "and ve.pledge =:pledge"
+										"inner join ve.voter as v " +
+							     		"inner join v.person as p " +
+					 			   		"inner join v.pollStation as poll " +
+										"where ve.election =:election " +
+										"and poll.division =:division " +
+                                        "and ve.pledge =:pledge"
 
 
 
@@ -196,13 +199,23 @@ class VoterElectionService {
     @return List of VoterElection
     **/
     public List<VoterElection> filterByPledge(Election election, Division division, Pledge pledge, int offset, int max){
-        def _voters = VoterElection.executeQuery(FILTER_BY_PLEDGE_QUERY,[
+        def _voters 
+        
+        if(max > 0){
+            _voters = VoterElection.executeQuery(FILTER_BY_PLEDGE_QUERY,[
                         election: election,
                         division: division,
                         pledge: pledge,
                         offset: offset,
                         max: max
-                    ])
+                   ])
+        }else{
+            _voters = VoterElection.executeQuery(FILTER_BY_PLEDGE_QUERY,[
+                        election: election,
+                        division: division,
+                        pledge: pledge
+                   ])
+        }
 
         return _voters
     }
@@ -216,6 +229,49 @@ class VoterElectionService {
                         pledge: pledge
                         ])
         return _count[0]
+   }
+
+
+   public List<VoterElection> filterByPickupTime(Election election, Division division, PickupTimeEnum pickupTimeEnum, int offset, int max){
+        def hourMarks = pickupTimeEnum.value().split('-')
+        def results = []
+
+
+        def query = QUERY + " AND ve.pickupTime  like (:hour)"
+
+        if(max > 0){
+            results = VoterElection.executeQuery(query, [
+                division: division,
+                election: election,
+                hour: (hourMarks[0] + '%'),
+                offset: offset,
+                max: max
+            ])
+        }else{
+            results = VoterElection.executeQuery(query, [
+                division: division,
+                election: election,
+                hour: (hourMarks[0] + ':%')
+            ])
+        }
+
+        return results
+
+   }
+
+
+   public int countByPickupTime(Election election, Division division, PickupTimeEnum pickupTimeEnum){
+    def hourMark = pickupTimeEnum.value().split('-')
+
+    def query = COUNT_BY_SEARCH_QUERY +  " and ve.pickupTime like (:hour)"
+
+    def results = VoterElection.executeQuery(query, [
+                  division: division,
+                  election: election,
+                  hour: (hourMark[0] + ':%')
+               ])
+
+    return results[0]
    }
 
 }

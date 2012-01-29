@@ -2,6 +2,8 @@ package bz.voter.management
 
 import grails.test.*
 
+import bz.voter.management.utils.FilterType
+
 class VoterServiceIntegrationTests extends GroovyTestCase {
 
 
@@ -89,11 +91,11 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 	}
 
 
-	def count_by_division_and_search(){
+	def test_count_by_division_and_search(){
 
 		def division = Division.findByName('Albert')
 
-		def totalVoters = voterService.countByDivsionAndSearch(division, 'a')
+		def totalVoters = voterService.countByDivisionAndSearch(division, "a")
 
 		assertEquals 13, totalVoters
 
@@ -101,5 +103,16 @@ class VoterServiceIntegrationTests extends GroovyTestCase {
 
 		assertEquals 10, results.size()
 	}
+
+
+    def test_filter(){
+        def division = Division.findByName('Albert')
+        def affiliation = Affiliation.findByName('UNKNOWN')
+
+        def unknownVoters = voterService.filter(affiliation, division,0 ,0) 
+
+        assertEquals 2, unknownVoters.size()
+    }
+
 
 }

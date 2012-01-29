@@ -99,28 +99,7 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 		voterService = new VoterService()
         def votersList = []
 		for(_voter in  voterService.listByDivision(division, itemStartNumber, pageSize)){
-            def voter = _voter.read(_voter.id)
-            def address = voter.registrationAddress
-            def resultMap = [
-                voter:              voter,
-                registrationDate:   voter.registrationDate,
-                registrationNumber: voter.registrationNumber,
-                lastName:           voter.lastName,
-                firstName:          voter.firstName,
-                houseNumber:        address?.houseNumber,
-                street:             address?.street,
-                municipality:       address?.municipality,
-                phoneNumber1:       address?.phoneNumber1,
-                phoneNumber2:       address?.phoneNumber2,
-                phoneNumber3:       address?.phoneNumber3,
-                sex:                voter.sex,
-                age:                voter.age,
-                birthDate:          voter.birthDate,
-                pollStation:        voter.pollStation,
-                pollNumber:         voter.pollStation.pollNumber,
-                affiliation:        voter.affiliation
-            ]
-
+            def resultMap = doMap(_voter)
             votersList.push(resultMap)
         }
 
@@ -184,28 +163,7 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 		voterService = new VoterService()
         def votersList = []
 		for(_voter in  voterService.searchByDivision(search,division, itemStartNumber, pageSize)){
-            def voter = _voter.read(_voter.id)
-            def address = voter.registrationAddress
-            def resultMap = [
-                voter:              voter,
-                registrationDate:   voter.registrationDate,
-                registrationNumber: voter.registrationNumber,
-                lastName:           voter.lastName,
-                firstName:          voter.firstName,
-                houseNumber:        address?.houseNumber,
-                street:             address?.street,
-                municipality:       address?.municipality,
-                phoneNumber1:       address?.phoneNumber1,
-                phoneNumber2:       address?.phoneNumber2,
-                phoneNumber3:       address?.phoneNumber3,
-                sex:                voter.sex,
-                age:                voter.age,
-                birthDate:          voter.birthDate,
-                pollStation:        voter.pollStation,
-                pollNumber:         voter.pollStation.pollNumber,
-                affiliation:        voter.affiliation
-            ]
-
+            def resultMap = doMap(_voter)
             votersList.push(resultMap)
         }
 

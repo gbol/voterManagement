@@ -22,6 +22,7 @@ import org.zkoss.zklargelivelist.model.DivisionVotersPagingListModel
 import bz.voter.management.zk.ComposerHelper
 import bz.voter.management.zk.VoterRenderer
 import bz.voter.management.utils.FilterType
+import bz.voter.management.utils.VoterListTypeEnum
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -53,6 +54,15 @@ class VoterComposer extends GrailsComposer {
 
     def voterListFacade
 
+
+    //Identifies the type of voter list we are displaying.
+    VoterListTypeEnum voterListType 
+    //When filtering by affiliation, we keep track of what affiliation
+    //the user is searching for. This helps when the print button is pressed
+    //we can always refer to the affiliation filtered so that we print only
+    //voters with that affiliation.
+    Affiliation _affiliation
+
     private Division division
 
 	private final int _pageSize = 10
@@ -66,6 +76,8 @@ class VoterComposer extends GrailsComposer {
 	 	if(springSecurityService.isLoggedIn()){
             division = voterListFacade.getSystemDivision()
 			votersGrid.setRowRenderer(new VoterRenderer())
+            //The initial listType:
+            voterListType = VoterListTypeEnum.ALL
             showVoters()
             queue = EventQueues.lookup('filterVoters', EventQueues.DESKTOP,true)
             queue.subscribe(new EventListener(){
@@ -84,8 +96,10 @@ class VoterComposer extends GrailsComposer {
     def filter(FilterType filterType, Object value){
         switch(filterType){
             case filterType.AFFILIATION:
-                def affiliation = (Affiliation)value
-                refreshModel(filterType, affiliation,0)
+                _affiliation = (Affiliation)value
+                refreshModel(filterType, _affiliation,0)
+                voterListType = VoterListTypeEnum.AFFILIATION
+                voterSearchTextbox.setValue("")
                 break
         }
     }
@@ -93,6 +107,7 @@ class VoterComposer extends GrailsComposer {
 
 	 def onClick_searchVoterButton(){
 	 	if(division){
+            voterListType = VoterListTypeEnum.NAME
 	 		def searchText = voterSearchTextbox.getValue()?.trim()
 			refreshModel(searchText,0)
 		}else{
@@ -106,6 +121,7 @@ class VoterComposer extends GrailsComposer {
     def onClick_showAllVotersBtn(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             voterSearchTextbox.setValue("")
+            voterListType = VoterListTypeEnum.ALL
             showVoters()
         }else{
 			ComposerHelper.permissionDeniedBox()
@@ -153,7 +169,19 @@ class VoterComposer extends GrailsComposer {
 	 def onClick_printButton(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_PRINT_VOTERS')){
 	 	    if(division){
-	 		    Executions.sendRedirect("/person/pdf?division=${division.id}")
+                switch(voterListType){
+                    case voterListType.ALL:
+	 		            Executions.sendRedirect("/person/pdf?division=${division.id}&listType=${voterListType}")
+                        break
+                    case voterListType.NAME:
+	 		            Executions.sendRedirect("/person/pdf?division=${division.id}&listType=${voterListType}&searchString=${voterSearchTextbox.getValue()?.trim()}")
+                        break
+
+                    case voterListType.AFFILIATION:
+	 		            Executions.sendRedirect("/person/pdf?division=${division.id}&listType=${voterListType}&affiliation=${_affiliation.id}")
+                        break
+                        
+                }
 		    }else{
 			    Messagebox.show("You must select a division!", "Message", Messagebox.OK,
 				    Messagebox.EXCLAMATION)

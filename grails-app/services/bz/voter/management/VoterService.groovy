@@ -333,11 +333,19 @@ class VoterService {
     @return List of voters.
     **/
     def filter(filterType,division,int offset, int max){
-        def results = Voter.executeQuery(FILTER_BY_AFFILIATION, 
-            [division: division, 
-            affiliation: filterType,
-            offset: offset,
-            max: max])
+        def results
+
+        if(max > 0){
+            results = Voter.executeQuery(FILTER_BY_AFFILIATION, 
+                [division: division, 
+                affiliation: filterType,
+                offset: offset,
+                max: max])
+        }else{
+            results = Voter.executeQuery(FILTER_BY_AFFILIATION, 
+                [division: division, 
+                affiliation: filterType])
+        }
 
         return results
     }
