@@ -101,7 +101,8 @@ class VoterComposer extends GrailsComposer {
         switch(filterType){
             case filterType.AFFILIATION:
                 _affiliation = (Affiliation)value
-                refreshModel(filterType, _affiliation,0)
+                _startPageNumber = 0
+                refreshModel(filterType, _affiliation,_startPageNumber)
                 voterListType = VoterListTypeEnum.AFFILIATION
                 voterSearchTextbox.setValue("")
                 break
@@ -150,6 +151,7 @@ class VoterComposer extends GrailsComposer {
 		    def divisionVoters = voterService.countByDivision(divisionInstance)
 			voterSearchTextbox.setValue("")
 			if(divisionVoters>0){
+                _startPageNumber = 0
 				refreshModel(_startPageNumber)
 			}else{
 				votersListRows.getChildren().clear()
