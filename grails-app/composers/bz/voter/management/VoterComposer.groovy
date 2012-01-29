@@ -62,6 +62,8 @@ class VoterComposer extends GrailsComposer {
     //we can always refer to the affiliation filtered so that we print only
     //voters with that affiliation.
     Affiliation _affiliation
+    FilterType _filterType
+    def _filterValue
 
     private Division division
 
@@ -83,6 +85,8 @@ class VoterComposer extends GrailsComposer {
             queue.subscribe(new EventListener(){
                 public void onEvent(Event evt){
                     def data = evt.getData()
+                    _filterType = data.filterType
+                    _filterValue =  data.filterValue
                     filter(data.filterType,data.filterValue)
                 }
                 
@@ -195,11 +199,20 @@ class VoterComposer extends GrailsComposer {
 	public void onPaging_voterPaging(ForwardEvent event){
 		final PagingEvent pagingEvent = (PagingEvent) event.getOrigin()
 		_startPageNumber = pagingEvent.getActivePage()
-		if(voterSearchTextbox.getValue().isAllWhitespace()){
-			refreshModel(_startPageNumber)
-		}else{
-			refreshModel(voterSearchTextbox.getValue().trim(),_startPageNumber)
-		}
+        
+        switch(voterListType){
+            case voterListType.ALL:
+			    refreshModel(_startPageNumber)
+                break
+
+            case voterListType.NAME:
+			    refreshModel(voterSearchTextbox.getValue().trim(),_startPageNumber)
+                break
+
+            case voterListType.AFFILIATION:
+                refreshModel(_filterType, _filterValue, _startPageNumber)
+                break
+        }
 	}
 
 
