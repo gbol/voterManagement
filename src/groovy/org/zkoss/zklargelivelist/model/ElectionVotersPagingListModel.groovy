@@ -7,6 +7,7 @@ import bz.voter.management.Division
 import bz.voter.management.Election
 import bz.voter.management.Pledge
 import bz.voter.management.utils.FilterType
+import bz.voter.management.utils.PickupTimeEnum
 
 
 public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingListModel<VoterElection> {
@@ -19,6 +20,10 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
     private static String ALL = "ALL"
     private static String NAME_SEARCH = "NAME"
     private static String PLEDGE_FILTER = "PLEDGE"
+    private static String PICKUP_TIME_FILTER = "PICKUP_TIME_FILTER"
+
+
+    private PickupTimeEnum pickupTimeEnum
 
 	public ElectionVotersPaginListModel(){
 	}
@@ -136,6 +141,17 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
                 }
                 searchType = PLEDGE_FILTER
                 break
+
+           case filterType.PICKUP_TIME:
+                
+                pickupTimeEnum = (PickupTimeEnum) filterObject
+                for(_voterElection in voterElectionService.filterByPickupTime(getElection(),getDivision(),pickupTimeEnum, itemStartNumber, pageSize))
+                {
+                    def instance = doMap(_voterElection)
+                    votersMap.push(instance)
+                }
+                searchType = PICKUP_TIME_FILTER
+                break
         }
 
         return votersMap
@@ -165,6 +181,12 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
             case PLEDGE_FILTER:
                 totalSize = voterElectionService.countByPledge(getElection(), getDivision(), getPledge())
                 break
+
+            case PICKUP_TIME_FILTER:
+                totalSize = voterElectionService.countByPickupTime(getElection(), getDivision(), pickupTimeEnum)
+                break
+
+
         }
 
 		return totalSize

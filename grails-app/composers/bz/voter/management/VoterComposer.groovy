@@ -200,7 +200,9 @@ class VoterComposer extends GrailsComposer {
 
 	public void onPaging_voterPaging(ForwardEvent event){
 		final PagingEvent pagingEvent = (PagingEvent) event.getOrigin()
-		_startPageNumber = pagingEvent.getActivePage()
+        if(_startPageNumber != 0){
+		    _startPageNumber = pagingEvent.getActivePage()
+        }
         
         switch(voterListType){
             case voterListType.ALL:

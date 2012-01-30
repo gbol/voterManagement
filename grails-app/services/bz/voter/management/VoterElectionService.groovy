@@ -97,12 +97,18 @@ class VoterElectionService {
 	@returns List<VoterElection> of voters registered to vote in a division for a specific election.
 	**/
 	public List<VoterElection> listByElectionAndDivision(Election election, Division division, int offset, int max){
-		def votersList = VoterElection.executeQuery(QUERY, 
+		def votersList 
+        if(max > 0){
+            votersList= VoterElection.executeQuery(QUERY, 
 			[election: election, 
 			division: division,
 			offset: offset,
 			max: max])
-
+        }else{
+            votersList= VoterElection.executeQuery(QUERY, 
+			[election: election, 
+			division: division])
+        }
         return votersList
 	}
 

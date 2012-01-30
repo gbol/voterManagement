@@ -14,6 +14,7 @@ import bz.voter.management.zk.ComposerHelper
 import bz.voter.management.zk.VoterRenderer
 
 import bz.voter.management.utils.FilterType
+import bz.voter.management.utils.PickupTimeEnum
 import bz.voter.management.Affiliation
 import bz.voter.management.Pledge
 
@@ -73,6 +74,19 @@ class VoterElectionComposer extends GrailsComposer {
                     }
                 }
                 break
+            
+            case FilterType.PICKUP_TIME:
+                filterValueListbox.getChildren().clear()
+                for(pickupTime in PickupTimeEnum.values()){
+                    filterValueListbox.append{
+                        listitem(value: pickupTime, selected: false){
+                            listcell(label: "${pickupTime.value()}")
+                            listcell(label: "${pickupTime}")
+                        }
+                    }
+                }
+                break
+
         }
     }
 

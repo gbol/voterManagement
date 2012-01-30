@@ -22,6 +22,8 @@ import org.zkoss.zklargelivelist.model.ElectionVotersPagingListModel
 import bz.voter.management.zk.ComposerHelper
 import bz.voter.management.zk.OfficeStationVoterRenderer
 import bz.voter.management.utils.FilterType
+import bz.voter.management.utils.VoterListTypeEnum
+import bz.voter.management.utils.PickupTimeEnum
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -44,6 +46,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	def showAllVotersButton
 	def searchVoterButton
     def filterVotersBtn
+    def printButton
 
 	def divisionInstance
 
@@ -54,6 +57,11 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     def voterListFacade
 
     ElectionVotersPagingListModel electionVoterModel = null 
+
+    FilterType _filterType
+    VoterListTypeEnum _voterListType
+    PickupTimeEnum _pickupTimeEnum
+    def pledge
 
     private EventQueue queue
 
@@ -67,11 +75,13 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
             divisionInstance = voterListFacade.getSystemDivision()
 			election = Election.get(Executions.getCurrent().getArg().id)
             electionOfficeVotersGrid.setRowRenderer(new OfficeStationVoterRenderer())
+            _voterListType = VoterListTypeEnum.ALL
             showAllVoters()
             queue = EventQueues.lookup('filterElectionVoters', EventQueues.DESKTOP,true)
             queue.subscribe(new EventListener(){
                 public void onEvent(Event evt){
                     def data = evt.getData()
+                    _filterType = data.filterType
                     filter(data.filterType,data.filterValue)
                 }
                 
@@ -83,16 +93,26 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 
 
     def filter(FilterType filterType, Object value){
+        searchTextbox.setValue('')
         switch(filterType){
             case filterType.PLEDGE:
-                def pledge = (Pledge)value
+                pledge = (Pledge)value
+                _voterListType = VoterListTypeEnum.PLEDGE
                 refreshModel(filterType, pledge,0)
+                break
+
+            case filterType.PICKUP_TIME:
+                _pickupTimeEnum = (PickupTimeEnum )value
+                _voterListType = VoterListTypeEnum.PICKUP_TIME
+                refreshModel(filterType,_pickupTimeEnum, 0)
                 break
         }
     }
 
 
 	 def onClick_showAllVotersButton(){
+        _voterListType = VoterListTypeEnum.ALL
+        searchTextbox.setValue('')
         showAllVoters()
 	 }
 
@@ -129,6 +149,29 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 				"Message", Messagebox.OK, Messagebox.EXCLAMATION)
 		}
 	}
+
+
+    def onClick_printButton(){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_PRINT_VOTERS')){
+            switch(_voterListType){
+                case _voterListType.ALL:
+                    Executions.sendRedirect("/voterElection/allVoters?division=${divisionInstance.id}&election=${election.id}&listType=${_voterListType}")
+                    break
+
+                case _voterListType.PLEDGE:
+                    Executions.sendRedirect("/voterElection/pledges?division=${divisionInstance.id}&election=${election.id}&pledge=${pledge.id}&listType=${_voterListType}")
+                    break
+
+                case _voterListType.PICKUP_TIME:
+                    Executions.sendRedirect("/voterElection/pickupTime?division=${divisionInstance.id}&election=${election.id}&pickupTime=${_pickupTimeEnum}&listType=${_voterListType}")
+                    break
+
+             }
+
+        }else{
+            ComposerHelper.permissionDeniedBox()
+        }
+    }
 
 
     /**
