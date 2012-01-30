@@ -9,14 +9,10 @@
 
 
 	<div apply="bz.voter.management.ElectionOfficeNavigationComposer">
-		<panel width='100%' border='normal' title='Menu'>
-			<panelchildren style="padding:1px">
-				<vbox>
-					<toolbarbutton id="votersButton" label="Voters List" />
-					<toolbarbutton id="dashboardButton" label="Dashboard" />
-				</vbox>
-			</panelchildren>
-		</panel>
+        <toolbar>
+		    <toolbarbutton id="votersButton" label="Voters List" />
+			<toolbarbutton id="dashboardButton" label="Dashboard" />
+        </toolbar>
 	</div>
 
 </zk>

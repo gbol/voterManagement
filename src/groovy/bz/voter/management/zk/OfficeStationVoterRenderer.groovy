@@ -17,11 +17,18 @@ import org.zkoss.zkgrails.*
 import bz.voter.management.VoterElection
 
 public class OfficeStationVoterRenderer implements RowRenderer{
+    
+    def centerPanel
+    def grid
+    def mainDiv
 
     public void render(Row row, java.lang.Object data){
-        //VoterElection _voterElection = (VoterElection) data
         def _voterElection = data
         def voterElection = _voterElection.voterElection
+
+        grid = row.getParent()
+        mainDiv = grid.getParent().getParent().getParent().getParent()
+        centerPanel = mainDiv.getParent()
 
         def saveButtonLabel = _voterElection.pickupTime ? 'Edit' : 'Save'
         def votedLabel = _voterElection.voted ? 'Yes' : 'No'
@@ -56,6 +63,15 @@ public class OfficeStationVoterRenderer implements RowRenderer{
             }
         })
 
+        Button manageButton = new Button("Manage")
+        manageButton.addEventListener("onClick", new EventListener(){
+            public void onEvent(Event event) throws Exception{
+                centerPanel.getChildren().clear()
+                Executions.createComponents("/bz/voter/management/display/panel/voterMainPanel.zul",
+                    centerPanel, [voter: _voterElection.voter])
+            }
+        })
+
         Textbox pickupTimeTextbox = new Textbox()
         pickupTimeTextbox.value = _voterElection.pickupTime ?: '' 
         pickupTimeTextbox.addEventListener("onChange", new EventListener(){
@@ -77,6 +93,7 @@ public class OfficeStationVoterRenderer implements RowRenderer{
         row.getChildren().add(pickupTimeTextbox)
         row.getChildren().add(saveButton)
         row.getChildren().add(detailsButton)
+        row.getChildren().add(manageButton)
 
     }
 

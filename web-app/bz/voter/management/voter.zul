@@ -17,10 +17,10 @@
 						        <button label="Show All Voters" id="showAllVotersBtn" />
                             </cell>
                             <cell>
-						        <button id="addVoterButton" label="New Voter" />
+						        <toolbarbutton id="addVoterButton" image="/images/add.png" tooltip="addVoterToolTip"/>
                             </cell>
                             <cell>
-						        <button id="printButton" label="Print" />
+						        <toolbarbutton id="printButton" image="/images/printer.png" />
                             </cell>
                             <cell colspan="6" align="right" valign="bottom">
                                 <toolbarbutton id="filterVotersBtn" image="/images/filter.png" tooltip="filterTooltip" />
@@ -28,10 +28,7 @@
 					    </toolbar>
 					<toolbar>
 						<textbox id="voterSearchTextbox" />
-						<button id="searchVoterButton" label="Search" />
-						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
-							style="cursor:help" />
-						<label value="Tips" tooltip="searchHelp" />
+                        <toolbarbutton id="searchVoterButton" image="/images/search.png" tooltip="searchHelp" />
 					</toolbar>
 					<paging id="voterPaging" autohide="true" detailed="true"/>
 					<grid id="votersGrid" style="font-size: 0.025em;" vflex='1'>
@@ -64,6 +61,9 @@
 					</popup>
                     <popup id="filterTooltip">
                         Filter Voters
+                    </popup>
+                    <popup id="addVoterToolTip">
+                        Add New Voter
                     </popup>
 				</vbox>
 

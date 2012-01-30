@@ -9,7 +9,8 @@ public enum VoterListTypeEnum{
     NAME('Name'),
     AFFILIATION('Affiliation'),
     PICKUP_TIME('Pickup Time'),
-    PLEDGE('Pledge')
+    PLEDGE('Pledge'),
+    POLLSTATION('Poll Station')
 
     final String name
 

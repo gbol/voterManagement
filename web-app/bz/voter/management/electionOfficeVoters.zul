@@ -17,15 +17,13 @@
 					<toolbar>
                         <cell>
 						    <textbox id="searchTextbox" />
-						    <button id="searchVoterButton" label="Search" />
-                        </cell>
-                        <cell>
-						    <image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
-							    style="cursor:help" />
-						    <label value="Tips" tooltip="searchHelp" />
+                            <toolbarbutton id="searchVoterButton" image="/images/search.png" tooltip="searchHelp" />
                         </cell>
                         <cell>
 						    <button label="Show All Voters" id="showAllVotersButton" />
+                         </cell>
+                         <cell>
+						    <toolbarbutton id="printButton" image="/images/printer.png" />
                          </cell>
                          <cell>
                             <toolbarbutton id="filterVotersBtn" image="/images/filter.png" tooltip="filterTooltip" />
@@ -34,7 +32,7 @@
 					</toolbar>
 
 					<paging id="voterPaging" autohide="true" detailed="true"/>
-					<grid  vflex='1' id="electionOfficeVotersGrid">
+					<grid  vflex='1' hflex="1" id="electionOfficeVotersGrid">
 						<columns menupopup="auto" width="100%" sizable="true">
 							<column label="Reg #" align="left" hflex="min" sort="auto" />
 							<column label="Last Name" align="left" hflex="min" sort="auto" />
@@ -51,6 +49,7 @@
 							<column label="Pickup Time" sort="auto" />
 							<column  hflex="min"/>
 							<column hflex="min"/>
+							<column hflex="min"/>
 						</columns>
 						<rows id="votersListRows" vflex='1'>
 						</rows>
@@ -65,6 +64,9 @@
 				following search pattern:
 					John,Doe
 			</popup>
+            <popup id="filterTooltip">
+                Filter Voters
+            </popup>
 
 		 </vlayout>
 

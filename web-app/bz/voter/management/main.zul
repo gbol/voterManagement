@@ -85,6 +85,9 @@
 			</west>
 			<center id="centerArea" vflex="1">
 				<div id="center" vflex="1">
+                    <hbox style="padding: 100 20 0 300">
+			            <image src="/images/undecided-voter.jpg" align="center" /> 
+                    </hbox>
 				</div>
 			</center>
 		</borderlayout>

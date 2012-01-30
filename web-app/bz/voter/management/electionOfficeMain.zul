@@ -11,12 +11,11 @@
 
 	 	<borderlayout>
 
+			<north title="Elections Office"  id="navigationBox">
+			</north>
+
 			<center id="electionOfficeCenter">
 			</center>
-
-			<east title="Elections Office" collapsible="true" 
-				flex="true" id="navigationBox">
-			</east>
 
 		</borderlayout>
 
