@@ -5,7 +5,9 @@ import bz.voter.management.Voter
 import bz.voter.management.VoterService
 import bz.voter.management.Division
 import bz.voter.management.Affiliation
+import bz.voter.management.PollStation
 import bz.voter.management.utils.FilterType
+
 
 
 /**
@@ -19,11 +21,13 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 	 */
 	private static final long serialVersionUID = 4370353438941246687L;
 
-	VoterService voterService //= new VoterService()
-	Division division
+	VoterService voterService 
+    private Division division
+    private PollStation pollStation
 	String searchString
     
     private static String AFFILIATION_FILTER = "AFFILIATION"
+    private static String POLLSTATION_FILTER = "POLL_STATION"
     private static String PLEDGE_FILTER = "PLEDGE"
     private static String NAME_SEARCH = "NAME"
     private static String ALL = "ALL"
@@ -96,7 +100,7 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 	**/
 	@Override
 	protected List<Map> getPageData(Division division, int itemStartNumber, int pageSize) {
-		voterService = new VoterService()
+        voterService = new VoterService()
         def votersList = []
 		for(_voter in  voterService.listByDivision(division, itemStartNumber, pageSize)){
             def resultMap = doMap(_voter)
@@ -115,15 +119,26 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
     @Override
     protected List<Map> getPageData(FilterType filterType,Object filterObject,Division division, int itemStartNumber, int pageSize){
         def votersList = []
+        voterService = new VoterService()
         switch(filterType){
             case filterType.AFFILIATION:
-                voterService = new VoterService()
+                //voterService = new VoterService()
                 affiliation = (Affiliation) filterObject
-                for(_voter in voterService.filter(filterObject,division, itemStartNumber, pageSize)){
+                for(_voter in voterService.filter(filterType,filterObject,division, itemStartNumber, pageSize)){
                     def resultMap = doMap(_voter)
                     votersList.push(resultMap)
                 }
                 searchType = AFFILIATION_FILTER
+                break
+
+           case filterType.POLL_STATION:
+                pollStation = (PollStation) filterObject
+                for(_voter in voterService.filter(filterType,filterObject, division, itemStartNumber, pageSize)){
+                    def resultMap = doMap(_voter)
+                    votersList.push(resultMap)
+                }
+                searchType = POLLSTATION_FILTER
+
                 break
         }
 
@@ -178,7 +193,7 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 	**/
 	@Override
 	public int getTotalSize() {
-		//def totalSize = searchString ? voterService.countByDivisionAndSearch(division,searchString) : voterService.countByDivision(division)
+        voterService = new VoterService()
         def totalSize
 
         switch(searchType){
@@ -192,6 +207,10 @@ public class DivisionVotersPagingListModel extends AbstractDivisionVotersPagingL
 
             case AFFILIATION_FILTER:
                 totalSize = voterService.countByAffiliation(division,affiliation)
+                break
+
+            case POLLSTATION_FILTER:
+                totalSize = voterService.countByPollStation(division, pollStation)
                 break
 
         }

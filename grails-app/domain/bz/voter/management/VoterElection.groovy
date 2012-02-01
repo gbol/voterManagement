@@ -93,6 +93,8 @@ class VoterElection implements Serializable{
 
 			def results = VoterElection.executeQuery(query,
 				[election: election, division: division])
+
+            return results
 		}
 	 }
 
@@ -120,4 +122,36 @@ class VoterElection implements Serializable{
 		}
 
 	 }
+
+
+    
+    /**
+    Counts the total number of votes that were casted, grouped by voters affiliation.
+    @param Election
+    @param PollStation
+    @return List with a map of results:
+    <ul>
+        <li>voteCounts</li>
+        <li>party</li>
+    </ul>
+    **/
+     static getCountOfVotesByElectionAndPollStation(Election electionInstance, PollStation pollStationInstance){
+        
+        if((electionInstance instanceof Election) && (pollStationInstance instanceof PollStation)){
+            
+	 		def query = "select count(v.id) as voteCounts, " +
+				"aff.name as party "+
+				"from VoterElection ve"+
+				" inner join ve.voter as v" +
+				" inner join v.affiliation as aff" +
+				" where ve.election = :election and ve.voted = true " +
+				" and v.pollStation = :pollStation " +
+				" group by  aff.name"
+
+
+          return VoterElection.executeQuery(query, [election: electionInstance, pollStation: pollStationInstance])
+
+        }
+     }
+
 }

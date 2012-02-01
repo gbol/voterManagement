@@ -34,7 +34,7 @@ class VoterElectionComposer extends GrailsComposer {
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             for(filterType in FilterType.values()){
-                if(filterType != FilterType.AFFILIATION) {
+                if((filterType != FilterType.AFFILIATION) && (filterType != POLL_STATION) ) {
                     filterTypeListbox.append{
                         listitem(value: filterType){
                             listcell(label: filterType.name)

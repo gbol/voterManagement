@@ -12,6 +12,7 @@ class ElectionOfficeNavigationComposer extends GrailsComposer {
 
 	def votersButton
 	def dashboardButton
+    def votesChartButton
 
 	def electionOfficeCenter
 
@@ -23,6 +24,12 @@ class ElectionOfficeNavigationComposer extends GrailsComposer {
 		election = Election.get(electionId)
     }
 
+    
+    def onClick_votesChartButton(){
+        electionOfficeCenter.getChildren().clear()
+        Executions.createComponents("/bz/voter/management/election/votesChart.zul",
+            electionOfficeCenter, [electionId: election.id])
+    }
 
 	 def onClick_dashboardButton(){
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){

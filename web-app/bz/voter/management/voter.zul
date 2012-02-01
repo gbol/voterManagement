@@ -20,7 +20,10 @@
 						        <toolbarbutton id="addVoterButton" image="/images/add.png" tooltip="addVoterToolTip"/>
                             </cell>
                             <cell>
-						        <toolbarbutton id="printButton" image="/images/printer.png" />
+						        <toolbarbutton id="printButton" image="/images/pdf.png" />
+                            </cell>
+                            <cell>
+						        <toolbarbutton id="excelExportButton" image="/images/excel.png" />
                             </cell>
                             <cell colspan="6" align="right" valign="bottom">
                                 <toolbarbutton id="filterVotersBtn" image="/images/filter.png" tooltip="filterTooltip" />

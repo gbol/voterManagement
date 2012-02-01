@@ -39,7 +39,8 @@ class VoterService {
 			"inner join v.person as person " +
 			"where  poll.division =:division " 
 
-	 static String FILTER_BY_AFFILIATION = "select v " +
+
+	 static String FILTER_BY_AFFILIATION_QUERY = "select v " +
 			"from Voter as v " +
 			"inner join v.pollStation as poll " +
 			"inner join v.person as person " +
@@ -52,9 +53,24 @@ class VoterService {
 			"from Voter as v " +
 			"inner join v.pollStation as poll " +
 			"inner join v.person as person " +
-			"where  poll.division =:division " +
+			"where poll.division =:division " +
             "and v.affiliation =:affiliation " 
 
+    static String FILTER_BY_POLLSTATION_QUERY = "select v " +
+			"from Voter as v " +
+			"inner join v.pollStation as poll " +
+			"inner join v.person as person " +
+			"where poll.division =:division " +
+            "and v.pollStation =:pollStation " +
+			"order by person.lastName"
+
+
+    static String GET_COUNT_BY_POLLSTATION = "select count(v) " +
+			"from Voter as v " +
+			"inner join v.pollStation as poll " +
+			"inner join v.person as person " +
+			"where poll.division =:division " +
+            "and v.pollStation =:pollStation " 
 
 	/*
 	Save a new instance of voters.
@@ -323,6 +339,15 @@ class VoterService {
     }
 
 
+    def countByPollStation(division, pollStation){
+        def results = Voter.executeQuery(GET_COUNT_BY_POLLSTATION,
+            [division: division,
+             pollStation: pollStation])
+
+        return results[0]
+    }
+
+
 
     /**
     Filters the voters list by a specific field.
@@ -332,20 +357,41 @@ class VoterService {
     @param int max the maximum number of records to fetch
     @return List of voters.
     **/
-    def filter(filterType,division,int offset, int max){
+    def filter(filterType,filterObject,division,int offset, int max){
         def results
 
-        if(max > 0){
-            results = Voter.executeQuery(FILTER_BY_AFFILIATION, 
-                [division: division, 
-                affiliation: filterType,
-                offset: offset,
-                max: max])
-        }else{
-            results = Voter.executeQuery(FILTER_BY_AFFILIATION, 
-                [division: division, 
-                affiliation: filterType])
+        switch(filterType){
+            case filterType.AFFILIATION:
+                def affiliation = (Affiliation) filterObject
+                if(max > 0){
+                    results = Voter.executeQuery(FILTER_BY_AFFILIATION_QUERY, 
+                        [division: division, 
+                        affiliation: affiliation,
+                        offset: offset,
+                        max: max])
+                }else{
+                    results = Voter.executeQuery(FILTER_BY_AFFILIATION_QUERY, 
+                        [division: division, 
+                        affiliation: affiliation])
+                }
+                break
+
+           case filterType.POLL_STATION:
+                def pollStation = (PollStation) filterObject
+                if(max>0){
+                    results = Voter.executeQuery(FILTER_BY_POLLSTATION_QUERY,
+                        [division: division,
+                        pollStation: pollStation,
+                        offset: offset,
+                        max: max])
+                }else{
+                    results = Voter.executeQuery(FILTER_BY_POLLSTATION_QUERY,
+                                [division: division, pollStation: pollStation])
+                }
+
+                break
         }
+
 
         return results
     }

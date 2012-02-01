@@ -16,6 +16,7 @@ import bz.voter.management.zk.VoterRenderer
 import bz.voter.management.utils.FilterType
 import bz.voter.management.Affiliation
 import bz.voter.management.Pledge
+import bz.voter.management.PollStation
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -28,12 +29,16 @@ class VoterComposer extends GrailsComposer {
     def filterBtn
     def cancelFilterBtn
 
+    def division
+
     private EventQueue queue
 
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+            
+            division = Executions.getCurrent().getArg().division
             for(filterType in FilterType.values()){
-                if(filterType == FilterType.AFFILIATION) {
+                if(filterType == FilterType.AFFILIATION || filterType == FilterType.POLL_STATION) {
                     filterTypeListbox.append{
                         listitem(value: filterType){
                             listcell(label: filterType.name)
@@ -51,13 +56,13 @@ class VoterComposer extends GrailsComposer {
 
     def onSelect_filterTypeListbox(){
         switch(filterTypeListbox.getSelectedItem().getValue()){
-            case FilterType.PLEDGE:
+            case FilterType.POLL_STATION:
                 filterValueListbox.getChildren().clear()
-                for(pledge in Pledge.list([sort: 'name'])){
+                for(pollStation in PollStation.findAllByDivision(division, [sort: 'pollNumber'])){
                     filterValueListbox.append{
-                        listitem(value: pledge,selected: false){
-                            listcell(label: "${pledge.name}")
-                            listcell(label: pledge.id)
+                        listitem(value: pollStation,selected: false){
+                            listcell(label: "${pollStation.pollNumber}")
+                            listcell(label: pollStation.id)
                         }
                     }
                 }

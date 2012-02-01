@@ -102,8 +102,16 @@ class VoterComposer extends GrailsComposer {
             case filterType.AFFILIATION:
                 _affiliation = (Affiliation)value
                 _startPageNumber = 0
-                refreshModel(filterType, _affiliation,_startPageNumber)
+                //refreshModel(filterType, _affiliation,_startPageNumber)
+                refreshModel(filterType, value,_startPageNumber)
                 voterListType = VoterListTypeEnum.AFFILIATION
+                voterSearchTextbox.setValue("")
+                break
+
+            case filterType.POLL_STATION:
+                _startPageNumber = 0
+                refreshModel(filterType, value,_startPageNumber)
+                voterListType = VoterListTypeEnum.POLLSTATION
                 voterSearchTextbox.setValue("")
                 break
         }
@@ -138,7 +146,7 @@ class VoterComposer extends GrailsComposer {
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             Executions.createComponents("/bz/voter/management/filter/voter.zul",
                 votersDiv.getParent().getParent().getParent().getFirstChild().getFirstChild()
-                ,null).doModal()
+                ,[division: division]).doModal()
         }else{
             ComposerHelper.permissionDeniedBox()
         }
@@ -200,9 +208,10 @@ class VoterComposer extends GrailsComposer {
 
 	public void onPaging_voterPaging(ForwardEvent event){
 		final PagingEvent pagingEvent = (PagingEvent) event.getOrigin()
-        if(_startPageNumber != 0){
+        //if(_startPageNumber != 0){
 		    _startPageNumber = pagingEvent.getActivePage()
-        }
+        //}
+
         
         switch(voterListType){
             case voterListType.ALL:
@@ -214,8 +223,11 @@ class VoterComposer extends GrailsComposer {
                 break
 
             case voterListType.AFFILIATION:
+
+            case voterListType.POLL_STATION:
                 refreshModel(_filterType, _filterValue, _startPageNumber)
                 break
+                
         }
 	}
 
