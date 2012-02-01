@@ -32,6 +32,7 @@ class VoterComposer extends GrailsComposer {
 	def showAllVotersBtn
 	def searchVoterButton
 	def printButton
+    def excelExportButton
     def filterVotersBtn
 
 	def voterSearchTextbox
@@ -62,6 +63,7 @@ class VoterComposer extends GrailsComposer {
     //we can always refer to the affiliation filtered so that we print only
     //voters with that affiliation.
     Affiliation _affiliation
+    PollStation _pollStation
     FilterType _filterType
     def _filterValue
 
@@ -110,6 +112,7 @@ class VoterComposer extends GrailsComposer {
 
             case filterType.POLL_STATION:
                 _startPageNumber = 0
+                _pollStation = (PollStation)value
                 refreshModel(filterType, value,_startPageNumber)
                 voterListType = VoterListTypeEnum.POLLSTATION
                 voterSearchTextbox.setValue("")
@@ -185,14 +188,18 @@ class VoterComposer extends GrailsComposer {
 	 	    if(division){
                 switch(voterListType){
                     case voterListType.ALL:
-	 		            Executions.sendRedirect("/person/pdf?division=${division.id}&listType=${voterListType}")
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&format=pdf")
                         break
                     case voterListType.NAME:
-	 		            Executions.sendRedirect("/person/pdf?division=${division.id}&listType=${voterListType}&searchString=${voterSearchTextbox.getValue()?.trim()}")
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&searchString=${voterSearchTextbox.getValue()?.trim()}&format=pdf")
                         break
 
                     case voterListType.AFFILIATION:
-	 		            Executions.sendRedirect("/person/pdf?division=${division.id}&listType=${voterListType}&affiliation=${_affiliation.id}")
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&affiliation=${_affiliation.id}&format=pdf")
+                        break
+
+                    case voterListType.POLLSTATION:
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&pollStation=${_pollStation.id}&format=pdf")
                         break
                         
                 }
@@ -204,6 +211,37 @@ class VoterComposer extends GrailsComposer {
             ComposerHelper.permissionDeniedBox()
         }
 	 }
+
+
+
+    def onClick_excelExportButton(){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_PRINT_VOTERS')){
+	 	    if(division){
+                switch(voterListType){
+                    case voterListType.ALL:
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&format=excel")
+                        break
+                    case voterListType.NAME:
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&searchString=${voterSearchTextbox.getValue()?.trim()}&format=excel")
+                        break
+
+                    case voterListType.AFFILIATION:
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&affiliation=${_affiliation.id}&format=excel")
+                        break
+
+                    case voterListType.POLLSTATION:
+	 		            Executions.sendRedirect("/person/export?division=${division.id}&listType=${voterListType}&pollStation=${_pollStation.id}&format=excel")
+                        break
+                        
+                }
+		    }else{
+			    Messagebox.show("You must select a division!", "Message", Messagebox.OK,
+				    Messagebox.EXCLAMATION)
+		    }
+        }else{
+            ComposerHelper.permissionDeniedBox()
+        }
+    }
 
 
 	public void onPaging_voterPaging(ForwardEvent event){
@@ -224,7 +262,7 @@ class VoterComposer extends GrailsComposer {
 
             case voterListType.AFFILIATION:
 
-            case voterListType.POLL_STATION:
+            case voterListType.POLLSTATION:
                 refreshModel(_filterType, _filterValue, _startPageNumber)
                 break
                 

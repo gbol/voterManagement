@@ -3,19 +3,19 @@ package bz.voter.management
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 import bz.voter.management.utils.VoterListTypeEnum
+import bz.voter.management.utils.FilterType
 
 class PersonController {
 
 	def exportService
 	def voterService
 
-    def index = { }
 
 	 def list = {
 	 	if(params?.format && params.format != 'html'){
             def voters
 			response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
-			response.setHeader("Content-disposition", "attachment; filename=person.${params.format}")
+			response.setHeader("Content-disposition", "attachment; filename=person.${params.extension}")
 
 			List fields = ["registrationDate", "registrationNumber","lastName","firstName","age","birthDate", "registrationAddress"]
 			Map labels = ["registrationDate": "Registration Date" ,"registrationNumber": "Registration Number", 
@@ -43,10 +43,20 @@ class PersonController {
                     break
 
                 case "AFFILIATION":
-                    def affiliationInstance = Affiliation.get(params.affiliation)
-                    voters = voterService.filter(affiliationInstance,divisionInstance,0, 0)
+                    def filterType = FilterType.AFFILIATION
+                    def affiliationInstance = Affiliation.get(params.affiliation.toLong())
+                    voters = voterService.filter(filterType.AFFILIATION,(Object)affiliationInstance,divisionInstance,0, 0)
                     parameters.title = "Voters with ${affiliationInstance} Affiliation"
                     break
+
+                case "POLLSTATION":
+                    def filterType = FilterType.POLL_STATION
+                    def pollStationInstance = PollStation.get(params.pollStation.toLong())
+                    voters = voterService.filter(filterType.POLL_STATION,(Object)pollStationInstance,divisionInstance,0, 0)
+                    parameters.title = "Voters at Poll Station # ${pollStationInstance} "
+                    break
+
+
             }
 
 
@@ -55,28 +65,37 @@ class PersonController {
 		}
 	 }
 
-	 def test={
-	 	render("Hello form test")
-	 }
 
 
-	 def pdf = {
+	 def export = {
+        println "\nlistType: ${params.listType}"
         def listType = params.listType
+        def extension = (params.format == "pdf") ? "pdf" : "xls"
+        def format = params.format
 
         switch(listType){
             case "ALL":
-	 	        redirect(action: "list", params: ["extension" : "pdf", "format":"pdf","division" : params.division, listType: listType])
+	 	        redirect(action: "list", params: ["extension" : extension, "format":format,"division" : params.division, 
+                            listType: listType])
                 break
             
             case "NAME":
-	 	        redirect(action: "list", params: ["extension" : "pdf", "format":"pdf","division" : params.division, listType: listType, searchString: params.searchString])
+	 	        redirect(action: "list", params: ["extension" : extension, "format":format,"division" : params.division, 
+                            listType: listType, searchString: params.searchString])
                 break
 
             case "AFFILIATION":
-	 	        redirect(action: "list", params: ["extension" : "pdf", "format":"pdf","division" : params.division, listType: listType, affiliation: params.affiliation])
+	 	        redirect(action: "list", params: ["extension" : extension, "format":format,
+                            "division" : params.division, listType: listType, affiliation: params.affiliation])
+                break
+
+            case "POLLSTATION":
+	 	        redirect(action: "list", params: ["extension" : extension, "format":format,
+                            "division" : params.division, listType: listType, pollStation: params.pollStation])
                 break
         }
 	 }
+
 
 
 }
