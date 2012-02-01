@@ -74,6 +74,7 @@ public class OfficeStationVoterRenderer implements RowRenderer{
 
         Textbox pickupTimeTextbox = new Textbox()
         pickupTimeTextbox.value = _voterElection.pickupTime ?: '' 
+        pickupTimeTextbox.setWidth("60%")
         pickupTimeTextbox.addEventListener("onChange", new EventListener(){
             public void onEvent(Event evt) throws Exception{
                 _voterElection.pickupTime = evt.getTarget().getValue()

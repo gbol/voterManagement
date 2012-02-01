@@ -14,7 +14,7 @@
 					<panelchildren style="padding:5px">
 					    <toolbar>
                             <cell align="left">
-						        <button label="Show All Voters" id="showAllVotersBtn" />
+						        <toolbarbutton image="/images/refresh.png" id="showAllVotersBtn" tooltip="refreshToolTip" />
                             </cell>
                             <cell>
 						        <toolbarbutton id="addVoterButton" image="/images/add.png" tooltip="addVoterToolTip"/>
@@ -67,6 +67,9 @@
                     </popup>
                     <popup id="addVoterToolTip">
                         Add New Voter
+                    </popup>
+                    <popup id="refreshToolTip">
+                        Show All Voters
                     </popup>
 				</vbox>
 
