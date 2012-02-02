@@ -29,8 +29,7 @@ class VoterElectionService {
 					 	                        "inner join v.pollStation as poll " +
 							                    "where ve.election =:election " +
 							                    "and poll.division =:division " +
-                                                "and ve.pledge =:pledge " +
-                                                "order by p.lastName"
+                                                "and ve.pledge =:pledge " 
 
 	static String  COUNT_BY_PLEDGE =  "select count(ve.voter) from VoterElection as ve " +
 										"inner join ve.voter as v " +
@@ -196,7 +195,7 @@ class VoterElectionService {
 
 
     /**
-    Filterse list of voters by a specific pledge
+    Filters list of voters by a specific pledge
     @param Election election for which we want to filter voters.
     @param Division division whose voters we wish to filter.
     @param Pledge
@@ -207,8 +206,9 @@ class VoterElectionService {
     public List<VoterElection> filterByPledge(Election election, Division division, Pledge pledge, int offset, int max){
         def _voters 
         
+        def query = FILTER_BY_PLEDGE_QUERY + " order by p.lastName"
         if(max > 0){
-            _voters = VoterElection.executeQuery(FILTER_BY_PLEDGE_QUERY,[
+            _voters = VoterElection.executeQuery(query,[
                         election: election,
                         division: division,
                         pledge: pledge,
@@ -216,7 +216,7 @@ class VoterElectionService {
                         max: max
                    ])
         }else{
-            _voters = VoterElection.executeQuery(FILTER_BY_PLEDGE_QUERY,[
+            _voters = VoterElection.executeQuery(query,[
                         election: election,
                         division: division,
                         pledge: pledge
@@ -227,7 +227,54 @@ class VoterElectionService {
     }
 
 
+
+    /**
+    Filters voters by a specific pledge and whether they voted or not.
+    @param Election
+    @param Division
+    @param Pledge
+    @param boolean voted
+    @param int offset
+    @param int max
+    @return List<VoterElection>
+    **/
+    public List<VoterElection> filterByPledgeAndVoted(Election election, Division division, Pledge pledge, boolean voted, int offset, int max){
+        def _voters
+
+        def query = FILTER_BY_PLEDGE_QUERY + " and voted =:voted order by p.lastName"
+
+        if(max>0){
+            _voters = VoterElection.executeQuery(query,
+                    [
+                        election: election,
+                        division: division,
+                        pledge: pledge,
+                        voted: voted,
+                        offset: offset,
+                        max: max
+                    ])
+        }else{
+            _voters = VoterElection.executeQuery(query,
+                      [
+                        election: election,
+                        division: division,
+                        pledge: pledge,
+                        voted: voted
+                      ])
+        }
+
+        return _voters
+    }
+
+
     
+   /**
+   Counts the total number of voters with a specific pledge.
+   @param Election
+   @param Division
+   @param Pledge
+   @return int total count of voters with a specific pledge.
+   **/
    public int countByPledge(Election election, Division division, Pledge pledge){
         def _count = VoterElection.executeQuery(COUNT_BY_PLEDGE,[
                         election: election,
@@ -238,6 +285,38 @@ class VoterElectionService {
    }
 
 
+
+   /**
+   Counts the total number of voters with a specific pledge that either voted or not.
+   @param Election
+   @param Division
+   @param Pledge
+   @return int
+   **/
+   public int countByPledgeAndVoted(Election election, Division division, Pledge pledge, boolean voted){
+        def query = COUNT_BY_PLEDGE + " and ve.voted =:voted"
+        def _count = VoterElection.executeQuery(query,
+                [election: election,
+                 division: division,
+                 pledge: pledge,
+                 voted: voted
+                ])
+
+
+        return _count[0]
+   }
+
+
+
+   /**
+   Fiter the voters at an election by pickup time.
+   @param Election
+   @param Division
+   @param PickupTimeEnum
+   @param int offset
+   @param int max
+   @return List<VoterElection>
+   **/
    public List<VoterElection> filterByPickupTime(Election election, Division division, PickupTimeEnum pickupTimeEnum, int offset, int max){
         def hourMarks = pickupTimeEnum.value().split('-')
         def results = []
@@ -249,7 +328,7 @@ class VoterElectionService {
             results = VoterElection.executeQuery(query, [
                 division: division,
                 election: election,
-                hour: (hourMarks[0] + '%'),
+                hour: (hourMarks[0] + ':%'),
                 offset: offset,
                 max: max
             ])
@@ -264,6 +343,71 @@ class VoterElectionService {
         return results
 
    }
+
+
+    /**
+    Filters the voters at an election by Pickup Time and if they voted or not.
+    @param Election
+    @param Division
+    @param PickupTimeEnum
+    @param boolean voted
+    @param int offset
+    @param int max
+    @return List<VoterElection>
+    **/
+    public List<VoterElection> filterByPickupTimeAndVoted(Election election, Division division, PickupTimeEnum pickupTimeEnum, boolean voted, int offset, int max){
+        def hourMarks = pickupTimeEnum.value().split('-')
+        def results = []
+
+        def query = QUERY + " AND ve.pickupTime like (:hour) AND ve.voted =:voted "
+
+        if(max>0){
+            results = VoterElection.executeQuery(query, [
+                division: division,
+                election: election,
+                hour: (hourMarks[0] + ':%'),
+                voted: voted,
+                offset: offset,
+                max: max
+                ])
+        }else{
+            results = VoterElection.executeQuery(query, [
+                division: division,
+                election: election,
+                hour: (hourMarks[0] + ':%'),
+                voted: voted])
+        }
+
+
+        return results
+    }
+
+
+    /**
+    Counts the voters at an election that were scheduled to be picked up at a certain time 
+    and if they voted or not.
+    @param Election
+    @param Division
+    @param PickupTimeEnum
+    @param boolean voted
+    @return int : count of voters
+    **/
+    public int countByPickupTimeAndVoted(Election election, Division division, PickupTimeEnum pickupTimeEnum, boolean voted ){
+        def hourMark = pickupTimeEnum.value().split('-')
+
+        def query = COUNT_BY_SEARCH_QUERY + " AND ve.pickupTime like (:hour) AND ve.voted =:voted"
+
+        def results = VoterElection.executeQuery(query, [
+                        division: division,
+                        election: election,
+                        hour: (hourMark[0] + ':%'),
+                        voted: voted
+                        ])
+
+        return results[0]
+
+    }
+   
 
 
    public int countByPickupTime(Election election, Division division, PickupTimeEnum pickupTimeEnum){

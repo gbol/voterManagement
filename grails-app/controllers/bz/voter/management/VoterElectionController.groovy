@@ -10,11 +10,58 @@ class VoterElectionController {
     def exportService
     def voterElectionService
 
+
+    def excelFields = ["registrationNumber", "lastName", "firstName", 
+                        "pollNumber", "affiliation", "pledge", "voted",
+                        "pickupTime", "houseNumber", "street", "municipality",
+                        "registrationAddress", "phone1", "phone2", "phone3"]
+
+    def excelLabels = [
+            "registrationNumber": "Registration Number",
+            "lastName": "Last Name",
+            "firstName": "First Name",
+            "pollNumber": "Poll Number",
+            "affiliation": "Affiliation",
+            "pledge": "Pledge",
+            "voted": "Voted",
+            "pickupTime": "Pickup Time",
+            "houseNumber": "House #",
+            "street": "Street",
+            "municipality": "Municipality",
+            "registrationAddress": "Registration Address",
+            "phone1": "Phone 1",
+            "phone2": "Phone 2",
+            "phone3": "Phone 3"
+    ]
+
+    def excelParams = ["column.widths": [0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6]]
+
+    def pdfFields = ["registrationNumber", "lastName", "firstName", "pollNumber", "affiliation", "pledge",
+                        "voted", "pickupTime", "registrationAddress"]
+
+
+    def pdfLabels = [
+            "registrationNumber": "Registration Number",
+            "lastName": "Last Name",
+            "firstName": "First Name",
+            "pollNumber": "Poll #",
+            "affiliation": "Affiliation",
+            "pledge": "Pledge",
+            "voted": "Voted",
+            "pickupTime": "Pickup Time",
+            "registrationAddress": "Registration Address"
+    ]
+
+
+    def pdfParams = ["column.widths": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,0.1, 0.2]]
+
+    def parameters = [:]
+    def formatters = [:]
+
     def list = {
         def voters
         List fields
         Map labels
-        def parameters = [:]
 
         def electionInstance = Election.get(params.election.toLong())
         def divisionInstance = Division.get(params.division.toLong())
@@ -23,20 +70,6 @@ class VoterElectionController {
 			response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
 			response.setHeader("Content-disposition", "attachment; filename=voters.${params.format}")
 
-            fields = ["registrationNumber", "lastName", "firstName", "registrationAddress", "pollNumber", 
-                "affiliation","pledge", "voted","pickupTime"]
-
-            labels = [
-                "registrationNumber": "Registration #",
-                "lastName": "Last Name",
-                "firstName": "First Name",
-                "registrationAddress": "Address",
-                "pollNumber": "Poll #",
-                "affiliation": "Affiliation",
-                "pledge": "Pledge",
-                "voted": "Voted",
-                "pickupTime": "Pickup Time"
-            ]
 
             def registrationNumberFormatter = {domain, value->
                 domain.voter.registrationNumber
@@ -44,6 +77,19 @@ class VoterElectionController {
 
             def registrationAddressFormatter = {domain,value->
                 "${domain.voter.registrationAddress}"
+            }
+
+            def houseNumberFormatter = {domain,value->
+                "${domain.voter.registrationAddress.houseNumber}"
+            }
+
+            def streetFormatter = {domain, value->
+                "${domain.voter.registrationAddress.street}"
+            }
+
+
+            def municipalityFormatter = {domain, value->
+                "${domain.voter.registrationAddress.municipality}"
             }
 
 
@@ -65,6 +111,20 @@ class VoterElectionController {
                 "${domain.voter.affiliation}"
             }
 
+            def phone1Formatter = {domain,value->
+                "${domain.voter.registrationAddress.phoneNumber1}"
+            }
+
+
+            def phone2Formatter = {domain, value->
+                "${domain.voter.registrationAddress.houseNmber2}"
+            }
+
+
+            def phone3Formatter = {domain,value->
+                "${domain.voter.registrationAddress.houseNumber3}"
+            }
+
 
             def votedFormatter = {domain, value->
                 def voted
@@ -83,15 +143,43 @@ class VoterElectionController {
             }
 
             
-            Map formatters = [
-                registrationNumber: registrationNumberFormatter,
-                registrationAddress: registrationAddressFormatter,
-                firstName:      firstNameFormatter,
-                lastName:       lastNameFormatter,
-                pollNumber:     pollNumberFormatter,
-                affiliation:    affiliationFormatter,
-                voted:          votedFormatter
-                ]
+            switch(params.format){
+                
+                case "pdf":
+                    fields = pdfFields
+                    labels = pdfLabels
+                    formatters = [
+                        registrationNumber: registrationNumberFormatter,
+                        registrationAddress: registrationAddressFormatter,
+                        firstName:      firstNameFormatter,
+                        lastName:       lastNameFormatter,
+                        pollNumber:     pollNumberFormatter,
+                        affiliation:    affiliationFormatter,
+                        voted:          votedFormatter
+                    ]
+                    break
+
+                case "excel":
+                    fields = excelFields
+                    labels = excelLabels
+                    formatters = [
+                        registrationNumber: registrationNumberFormatter,
+                        registrationAddress: registrationAddressFormatter,
+                        firstName:      firstNameFormatter,
+                        lastName:       lastNameFormatter,
+                        pollNumber:     pollNumberFormatter,
+                        affiliation:    affiliationFormatter,
+                        voted:          votedFormatter,
+                        houseNumber:    houseNumberFormatter,
+                        street:         streetFormatter,
+                        municipality:   municipalityFormatter,
+                        phone1:         phone1Formatter,
+                        phone2:         phone2Formatter,
+                        phone3:         phone3Formatter
+                    ]
+                    break
+
+            }
 
             switch(params.listType){
                 case "PICKUP_TIME":
@@ -101,12 +189,12 @@ class VoterElectionController {
 
                 case "ALL":
                     voters = voterElectionService.listByElectionAndDivision(electionInstance,divisionInstance,0,0)
-                    parameters.title = "Voters List for ${electionInstance.year} Election"
+                    parameters.title = "${electionInstance.year} Election"
                     break
 
                 case "PLEDGE":
                     voters = voterElectionService.filterByPledge(electionInstance,divisionInstance,Pledge.get(params.pledge),0,0)
-                    parameters.title = "Voters Pledges for ${electionInstance.year} Election"
+                    parameters.title = "Pledges for ${electionInstance.year} Election"
                     break
             }
 
@@ -114,6 +202,9 @@ class VoterElectionController {
                 fields, labels,formatters, parameters)
         }
     }
+
+
+
 
     def pickupTime = {
 

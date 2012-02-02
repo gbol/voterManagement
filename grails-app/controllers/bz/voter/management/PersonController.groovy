@@ -91,7 +91,7 @@ class PersonController {
                     def filterType = FilterType.POLL_STATION
                     def pollStationInstance = PollStation.get(params.pollStation.toLong())
                     voters = voterService.filter(filterType.POLL_STATION,(Object)pollStationInstance,divisionInstance,0, 0)
-                    parameters.title = "Voters at Poll Station # ${pollStationInstance} "
+                    parameters.title = "Poll Station # ${pollStationInstance} "
                     log.info "Printed voters list : Voters at Poll Station # ${pollStationInstance} as ${params.format} ."
                     break
 
