@@ -8,12 +8,44 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-    <div id="votesChartPanel" apply="bz.voter.management.election.VotesChartComposer">
 
-        <h:h2> Votes Count </h:h2>
-        <vbox id="chartBox">
-        </vbox>
+    <panel id="votesChartPanel" title="Votes By Poll Station" border="rounded"
+        vflex="1" hflex="2"
+        apply="bz.voter.management.election.VotesChartComposer">
 
-    </div>
+        <panelchildren>
+            <toolbar>
+	            <listbox id="pollStationListbox" mold="select" rows="1"/>
+			    <button label="Display Votes" id="votesBtn" />
+            </toolbar>
+
+            <div style="margin: 0.01em">
+                <hlayout>
+                    <vlayout hflex="1">
+                        <vbox id="chartBox">
+                        <h:h5> Votes Count </h:h5>
+                        </vbox>
+                        <vbox id="tableBox">
+                            <grid id="votesSummaryGrid" width="60%" style="margin: 0.5em" visible="false">
+                                <auxhead>
+                                    <auxheader label="Votes Casted Grouped By Affiliation" style="font-size: 0.9em" colspan="4"/>
+                                </auxhead>
+                                <columns>
+                                    <column label="Affliation" style="font-size: 0.75em" hflex="min" />
+                                    <column label="# of Votes" style="font-size: 0.75em" hflex="min" />
+                                    <column label="% of Votes Casted" style="font-size: 0.75em" hflex="min" />
+                                    <column label="Total Voters Registered" style="font-size: 0.75em" hflex="min" />
+                                </columns>
+                                <rows id="votesSummaryRows">
+                                </rows>
+                            </grid>
+                        </vbox>
+                    </vlayout>
+                </hlayout>
+            </div>
+
+        </panelchildren>
+
+    </panel>
 
 </zk>
