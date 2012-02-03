@@ -133,8 +133,8 @@ class VotesChartComposer extends GrailsComposer {
             row(style: 'background-color: khaki'){
                 label(value: "Total", style:"font-size: 0.75em")
                 label(value: "${pollStationTotalVotes}", style:"font-size: 0.75em")
-                label(value: "${percentOfVotersWhoVoted}", style:"font-size: 0.75em")
-                label(value: "${allVoters} %", style:"font-size: 0.75em")
+                label(value: "${percentOfVotersWhoVoted}%", style:"font-size: 0.75em")
+                label(value: "${allVoters} ", style:"font-size: 0.75em")
             }
        }
 
