@@ -46,10 +46,10 @@
 							<column label="Pledge" align="left" hflex="min" 
 								sort="auto" />
 							<column label="Voted" align="left" hflex="min" />
-							<column label="Pickup Time" sort="auto" />
-							<column  hflex="min"/>
-							<column hflex="min"/>
-							<column hflex="min"/>
+							<column label="Pickup Time" hflex="8%" sort="auto" />
+							<column  hflex="8%"/>
+							<column hflex="8%"/>
+							<column hflex="8%" />
 						</columns>
 						<rows id="votersListRows" vflex='1'>
 						</rows>

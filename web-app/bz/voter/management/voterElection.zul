@@ -15,12 +15,13 @@
 				<panel title="Voters List" style="padding:4px;" border="normal" vflex='1'>
 					<panelchildren style="padding:5px;">
 					<toolbar>
-						<textbox id="searchTextbox" />
-						<button id="searchVoterButton" label="Search" />
-						<image src="/images/QuestionmarkButton-16x16.png" tooltip="searchHelp"
-							style="cursor:help" />
-						<label value="Tips" tooltip="searchHelp" />
-						<button label="Show All Voters" id="showAllVotersBtn" />
+                        <cell>
+						    <textbox id="searchTextbox" />
+                            <toolbarbutton id="searchVoterButton" image="/images/search.png" tooltip="searchHelp" />
+                        </cell>
+                        <cell>
+						    <toolbarbutton image="/images/refresh.png" id="showAllVotersBtn" tooltip="refreshToolTip" />
+                        </cell>
 					</toolbar>
 					<paging id="voterPaging" autohide="true" detailed="true"/>
 					<grid  vflex='1' id="pollStationVotersGrid">

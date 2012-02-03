@@ -27,6 +27,10 @@
                     <label value="Filter Value" />
                     <listbox id="filterValueListbox" mold="select" rows="1" />
                 </row>
+                <row id="votedCheckboxRow" visible="false">
+                    <label value="Voted" />
+                    <checkbox id="votedCheckbox" />
+                </row>
             </rows>
         </grid>
         <toolbar>

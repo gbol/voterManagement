@@ -26,8 +26,11 @@ class VoterElectionComposer extends GrailsComposer {
     
     def filterTypeListbox
     def filterValueListbox
+    def votedCheckbox
+    def votedCheckboxRow
     def filterBtn
-    def cacnelFilterBtn
+    def cancelFilterBtn
+
 
     private EventQueue queue
 
@@ -92,14 +95,17 @@ class VoterElectionComposer extends GrailsComposer {
 
 
     def onSelect_filterValueListbox(){
+        votedCheckboxRow.visible = true
         filterBtn.disabled = false
+        voterFilterWindow.setHeight("30%")
     }
 
 
     def onClick_filterBtn(){
         def data = [
             filterType: filterTypeListbox.getSelectedItem()?.getValue(),
-            filterValue: filterValueListbox.getSelectedItem()?.getValue()
+            filterValue: filterValueListbox.getSelectedItem()?.getValue(),
+            voted:  votedCheckbox.isChecked()
         ]
         queue.publish(new Event('onFilterElectionVoters',null,data))
         voterFilterWindow.detach()

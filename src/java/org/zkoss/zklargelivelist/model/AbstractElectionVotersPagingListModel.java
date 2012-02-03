@@ -24,6 +24,7 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 	private Election _election;
     private Pledge _pledge;
 	private String _searchString;
+    private boolean _voted;
 	
 	//internal use only
 	private List<T> _items = new ArrayList<T>();
@@ -55,7 +56,14 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
         super();
 
         initialize(election, division, startPageNumber, pageSize);
+        _items = getPageData(filterType, filterObject, _itemStartNumber, _pageSize);
+    }
 
+
+    public AbstractElectionVotersPagingListModel(FilterType filterType, Object filterObject, Election election, Division division, boolean voted, int startPageNumber, int pageSize){
+        super();
+
+        initialize(election, division, voted,startPageNumber, pageSize);
         _items = getPageData(filterType, filterObject, _itemStartNumber, _pageSize);
     }
         
@@ -68,6 +76,11 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 		this._itemStartNumber = startPageNumber * pageSize;
 		this._election = election;
 	}
+
+    private void initialize(Election election, Division division, boolean voted,int startPageNumber, int pageSize){
+        this._voted = voted;
+        initialize(election, division, startPageNumber, pageSize);
+    }
 	
 	public abstract int getTotalSize();
 	protected abstract List<T> getPageData(int itemStartNumber, int pageSize);
@@ -107,6 +120,15 @@ public abstract class AbstractElectionVotersPagingListModel<T> extends AbstractL
 
     protected void setPledge(Pledge pledge){
         this._pledge = pledge;
+    }
+
+
+    protected boolean getVoted(){
+        return _voted;
+    }
+
+    protected void setVoted(boolean voted){
+        this._voted = voted;
     }
 
 	public String getSearchString(){

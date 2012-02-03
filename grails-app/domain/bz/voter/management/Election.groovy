@@ -8,6 +8,7 @@ class Election implements Serializable{
     boolean complete //After an election is complete, no records pertaining to that election can be modified.
 
     String toString(){
+        electionType = ElectionType.load(this.electionType.id)
         "${year} : ${electionType}"
     }
 

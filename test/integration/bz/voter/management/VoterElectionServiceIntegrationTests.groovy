@@ -250,6 +250,34 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
      }
 
 
+     void test_filter_by_pickuptime_and_did_not_vote(){
+        def election = Election.findByYear(2012) ?: new Election(year: 2012, electionType: ElectionType.findByName('General'), completed:false).save()
+        voterElectionService.addAllVoters(election)
+
+        def cnt = 0
+        def ve = VoterElection.findAllByElection(election)
+        ve.each{
+            if(cnt < 4){
+                it.pickupTime =  "12:12"
+                it.voted = false
+                it.save()
+            }
+
+            if(cnt>10){
+                it.pickupTime = "12:12"
+                it.voted = true
+                it.save()
+            }
+            cnt++
+        }
+
+        def pickupTimeEnum = PickupTimeEnum.TWELVE
+        def result = voterElectionService.filterByPickupTimeAndVoted(election, albertDivision, pickupTimeEnum,false, 0 ,0)
+        
+        assertEquals 4, result.size()
+     }
+
+
      void test_count_by_pickuptime_and_vote(){
         def election = Election.findByYear(2012) ?: new Election(year: 2012, completed: false, electionType: ElectionType.findByName('General')).save()
         voterElectionService.addAllVoters(election)

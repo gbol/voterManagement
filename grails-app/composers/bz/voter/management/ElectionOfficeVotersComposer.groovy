@@ -61,6 +61,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     FilterType _filterType
     VoterListTypeEnum _voterListType
     PickupTimeEnum _pickupTimeEnum
+    boolean _voted
     def pledge
 
     private EventQueue queue
@@ -82,7 +83,8 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
                 public void onEvent(Event evt){
                     def data = evt.getData()
                     _filterType = data.filterType
-                    filter(data.filterType,data.filterValue)
+                    _voted = data.voted
+                    filter(data.filterType,data.filterValue, _voted)
                 }
                 
             })
@@ -92,19 +94,19 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
     }
 
 
-    def filter(FilterType filterType, Object value){
+    def filter(FilterType filterType, Object value, boolean voted){
         searchTextbox.setValue('')
         switch(filterType){
             case filterType.PLEDGE:
                 pledge = (Pledge)value
                 _voterListType = VoterListTypeEnum.PLEDGE
-                refreshModel(filterType, pledge,0)
+                refreshModel(filterType, pledge,voted,0)
                 break
 
             case filterType.PICKUP_TIME:
                 _pickupTimeEnum = (PickupTimeEnum )value
                 _voterListType = VoterListTypeEnum.PICKUP_TIME
-                refreshModel(filterType,_pickupTimeEnum, 0)
+                refreshModel(filterType,_pickupTimeEnum, voted, 0)
                 break
         }
     }
@@ -226,9 +228,9 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 		electionOfficeVotersGrid.setModel(electionVoterModel)
     }
 
-    private void refreshModel(FilterType filterType, Object filterValue, int activePage){
+    private void refreshModel(FilterType filterType, Object filterValue, boolean voted, int activePage){
         voterPaging.setPageSize(_pageSize)
-        electionVoterModel = new ElectionVotersPagingListModel(filterType,(Object)filterValue, election,divisionInstance,activePage, _pageSize)
+        electionVoterModel = new ElectionVotersPagingListModel(filterType,(Object)filterValue, election,divisionInstance, voted,activePage, _pageSize)
         voterPaging.setTotalSize(electionVoterModel.getTotalSize())
 
         if(_needsTotalSizeUpdate || activePage == 0){

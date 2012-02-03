@@ -40,12 +40,11 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
 
 	public ElectionVotersPagingListModel(FilterType filterType ,Object filterObject, Election election, Division division, int startPageNumber, int pageSize){
 		super(filterType, filterObject, election, division, startPageNumber, pageSize)
-        /*switch(filterType){
-            case filterType.PLEDGE:
-                super._pledge = (Pledge)filterObject
-                break
-        }*/
 	}
+
+    public ElectionVotersPagingListModel(FilterType filterType, Object filterObject, Election election, Division division, boolean voted, int startPageNumber, int pageSize){
+        super(filterType, filterObject, election, division, voted, startPageNumber, pageSize)
+    }
 
 
 	/**
@@ -131,11 +130,17 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
     protected List<Map> getPageData(FilterType filterType, Object filterObject, int itemStartNumber, int pageSize){
         voterElectionService = new VoterElectionService()
         def votersMap = []
+        def _voterElectionList = []
         switch(filterType){
             case filterType.PLEDGE:
                 def pledge = (Pledge) filterObject
                 super.setPledge(pledge)
-                for(_voterElection in voterElectionService.filterByPledge(getElection(), getDivision(), pledge, itemStartNumber, pageSize)){
+                if(getVoted() == null){
+                    _voterElectionList = voterElectionService.filterByPledge(getElection(),getDivision(),pledge,itemStartNumber, pageSize)
+                }else{
+                    _voterElectionList = voterElectionService.filterByPledgeAndVoted(getElection(),getDivision(),pledge,getVoted(),itemStartNumber, pageSize)
+                }
+                for(_voterElection in _voterElectionList){
                     def instance =doMap(_voterElection)
                     votersMap.push(instance)
                 }
@@ -145,7 +150,12 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
            case filterType.PICKUP_TIME:
                 
                 pickupTimeEnum = (PickupTimeEnum) filterObject
-                for(_voterElection in voterElectionService.filterByPickupTime(getElection(),getDivision(),pickupTimeEnum, itemStartNumber, pageSize))
+                if(getVoted() == null){
+                    _voterElectionList = voterElectionService.filterByPickupTime(getElection(), getDivision(),pickupTimeEnum, itemStartNumber, pageSize)
+                }else{
+                    _voterElectionList = voterElectionService.filterByPickupTimeAndVoted(getElection(), getDivision(),pickupTimeEnum, getVoted(), itemStartNumber, pageSize)
+                }
+                for(_voterElection in _voterElectionList)
                 {
                     def instance = doMap(_voterElection)
                     votersMap.push(instance)
@@ -179,11 +189,11 @@ public class ElectionVotersPagingListModel extends AbstractElectionVotersPagingL
                 break
 
             case PLEDGE_FILTER:
-                totalSize = voterElectionService.countByPledge(getElection(), getDivision(), getPledge())
+                totalSize = (getVoted() == null) ? voterElectionService.countByPledge(getElection(), getDivision(), getPledge()) : voterElectionService.countByPledgeAndVoted(getElection(), getDivision(), getPledge(), getVoted())
                 break
 
             case PICKUP_TIME_FILTER:
-                totalSize = voterElectionService.countByPickupTime(getElection(), getDivision(), pickupTimeEnum)
+                totalSize = (getVoted() == null)  ?  voterElectionService.countByPickupTime(getElection(), getDivision(), pickupTimeEnum) : voterElectionService.countByPickupTimeAndVoted(getElection(), getDivision(), pickupTimeEnum, getVoted())
                 break
 
 
