@@ -52,6 +52,9 @@
 							following search pattern:
 								John,Doe
 					</popup>
+                    <popup id="refreshToolTip" width="300px">
+                        Refresh Voters List.
+                    </popup>
 				</vbox>
 
 			</vlayout>

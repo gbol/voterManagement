@@ -23,7 +23,10 @@
 						    <toolbarbutton image="/images/refresh.png" id="showAllVotersButton" tooltip="refreshToolTip" />
                          </cell>
                          <cell>
-						    <toolbarbutton id="printButton" image="/images/printer.png" />
+						    <toolbarbutton id="printButton" image="/images/pdf.png" />
+                         </cell>
+                         <cell>
+						    <toolbarbutton id="excelExportButton" image="/images/excel.png" />
                          </cell>
                          <cell>
                             <toolbarbutton id="filterVotersBtn" image="/images/filter.png" tooltip="filterTooltip" />

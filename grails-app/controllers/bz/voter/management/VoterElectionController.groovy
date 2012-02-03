@@ -68,7 +68,7 @@ class VoterElectionController {
 
 	 	if(params?.format && params.format != 'html'){
 			response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
-			response.setHeader("Content-disposition", "attachment; filename=voters.${params.format}")
+			response.setHeader("Content-disposition", "attachment; filename=voters.${params.extension}")
 
 
             def registrationNumberFormatter = {domain, value->
@@ -103,7 +103,7 @@ class VoterElectionController {
 
             
             def pollNumberFormatter = {domain, value->
-                "${domain.voter.pollStation}"
+                "${domain.voter.pollStation.pollNumber}"
             }
 
 
@@ -117,12 +117,12 @@ class VoterElectionController {
 
 
             def phone2Formatter = {domain, value->
-                "${domain.voter.registrationAddress.houseNmber2}"
+                "${domain.voter.registrationAddress.phoneNumber2}"
             }
 
 
             def phone3Formatter = {domain,value->
-                "${domain.voter.registrationAddress.houseNumber3}"
+                "${domain.voter.registrationAddress.phoneNumber3}"
             }
 
 
@@ -183,7 +183,7 @@ class VoterElectionController {
 
             switch(params.listType){
                 case "PICKUP_TIME":
-                    voters = voterElectionService.filterByPickupTime(electionInstance, divisionInstance,(PickupTimeEnum)params.pickupTime,0,0)
+                    voters = voterElectionService.filterByPickupTimeAndVoted(electionInstance, divisionInstance,(PickupTimeEnum)params.pickupTime,stringToBool(params.voted),0,0)
                     parameters.title = "Voters Pickup Times"
                     break
 
@@ -193,7 +193,8 @@ class VoterElectionController {
                     break
 
                 case "PLEDGE":
-                    voters = voterElectionService.filterByPledge(electionInstance,divisionInstance,Pledge.get(params.pledge),0,0)
+                    voters = voterElectionService.filterByPledgeAndVoted(electionInstance,divisionInstance,
+                        Pledge.get(params.pledge),stringToBool(params.voted),0,0)
                     parameters.title = "Pledges for ${electionInstance.year} Election"
                     break
             }
@@ -207,22 +208,24 @@ class VoterElectionController {
 
 
     def pickupTime = {
-
+        def extension = (params.format == "pdf") ?: "xls"
         redirect(action: "list", 
             params: [
-                "extension":"pdf", 
-                "format":"pdf", 
+                "extension":extension, 
+                "format": params.format, 
                 "division": params.division, 
                 "election": params.election,
                 "listType": params.listType,
+                "voted": params.voted,
                 "pickupTime": params.pickupTime])
     }
 
     def allVoters = {
+        def extension = (params.format == "pdf") ?: "xls"
         redirect(action: "list", 
             params: [
-                "extension":"pdf", 
-                "format":"pdf", 
+                "extension":extension, 
+                "format":params.format, 
                 "division": params.division, 
                 "election": params.election,
                 "listType": params.listType
@@ -231,14 +234,28 @@ class VoterElectionController {
 
 
     def pledges = {
+        def extension = (params.format == "pdf") ?: "xls"
         redirect(action: "list", 
             params: [
-                "extension":"pdf", 
-                "format":"pdf", 
+                "extension":extension, 
+                "format":params.format, 
                 "division": params.division, 
                 "election": params.election,
                 "pledge" : params.pledge,
+                "voted": params.voted,
                 "listType": params.listType
             ])
+    }
+
+
+    public boolean stringToBool(String s){
+        if(s.equals('true')){
+            return true
+        }
+        if(s.equals('false')){
+            return false
+        }
+
+        throw new IllegalArgumentException(s + " is not a bool. Only true are false are.")
     }
 }

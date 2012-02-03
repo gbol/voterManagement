@@ -47,6 +47,7 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	def searchVoterButton
     def filterVotersBtn
     def printButton
+    def excelExportButton
 
 	def divisionInstance
 
@@ -157,19 +158,40 @@ class ElectionOfficeVotersComposer extends GrailsComposer {
 	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_PRINT_VOTERS')){
             switch(_voterListType){
                 case _voterListType.ALL:
-                    Executions.sendRedirect("/voterElection/allVoters?division=${divisionInstance.id}&election=${election.id}&listType=${_voterListType}")
+                    Executions.sendRedirect("/voterElection/allVoters?division=${divisionInstance.id}&election=${election.id}&listType=${_voterListType}&format=pdf")
                     break
 
                 case _voterListType.PLEDGE:
-                    Executions.sendRedirect("/voterElection/pledges?division=${divisionInstance.id}&election=${election.id}&pledge=${pledge.id}&listType=${_voterListType}")
+                    Executions.sendRedirect("/voterElection/pledges?division=${divisionInstance.id}&election=${election.id}&pledge=${pledge.id}&listType=${_voterListType}&voted=${_voted}&format=pdf")
                     break
 
                 case _voterListType.PICKUP_TIME:
-                    Executions.sendRedirect("/voterElection/pickupTime?division=${divisionInstance.id}&election=${election.id}&pickupTime=${_pickupTimeEnum}&listType=${_voterListType}")
+                    Executions.sendRedirect("/voterElection/pickupTime?division=${divisionInstance.id}&election=${election.id}&pickupTime=${_pickupTimeEnum}&listType=${_voterListType}&voted=${_voted}&format=pdf")
                     break
 
              }
 
+        }else{
+            ComposerHelper.permissionDeniedBox()
+        }
+    }
+
+
+    def onClick_excelExportButton(){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_PRINT_VOTERS')){
+            switch(_voterListType){
+                case _voterListType.ALL:
+                    Executions.sendRedirect("/voterElection/allVoters?division=${divisionInstance.id}&election=${election.id}&listType=${_voterListType}&format=excel")
+                    break
+
+                case _voterListType.PLEDGE:
+                    Executions.sendRedirect("/voterElection/pledges?division=${divisionInstance.id}&election=${election.id}&pledge=${pledge.id}&listType=${_voterListType}&voted=${_voted}&format=excel")
+                    break
+
+                case _voterListType.PICKUP_TIME:
+                    Executions.sendRedirect("/voterElection/pickupTime?division=${divisionInstance.id}&election=${election.id}&pickupTime=${_pickupTimeEnum}&listType=${_voterListType}&voted=${_voted}&format=excel")
+                    break
+            }
         }else{
             ComposerHelper.permissionDeniedBox()
         }

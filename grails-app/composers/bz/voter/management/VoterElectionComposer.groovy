@@ -64,6 +64,7 @@ class VoterElectionComposer extends GrailsComposer {
 
 
 	 def onClick_showAllVotersBtn(){
+        searchTextbox.value = ""
         showVoters()
 	 }
 
