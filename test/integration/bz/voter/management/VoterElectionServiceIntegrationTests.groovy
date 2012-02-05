@@ -1,6 +1,7 @@
 package bz.voter.management
 
 import grails.test.*
+import org.codehaus.groovy.runtime.TimeCategory
 
 import bz.voter.management.utils.PickupTimeEnum
 
@@ -14,7 +15,6 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
         super.setUp()
 
 		  albertDivision = Division.findByName('Albert')
-		  println "Albert division: ${albertDivision}"
 
 		  def address = new Address(houseNumber:'2',street:'n/a',
 		  		municipality: Municipality.findByName('Belmopan')).save()
@@ -356,6 +356,43 @@ class VoterElectionServiceIntegrationTests extends GroovyTestCase {
 
         assertEquals 4, result
 
+     }
+
+
+     void test_hourly_count(){
+        def election = Election.findByYear(2012) ?: new Election(year: 2012, completed: false, electionType: ElectionType.findByName('General')).save()
+        voterElectionService.addAllVoters(election)
+
+        def pollStation = PollStation.findByDivision(albertDivision)
+
+        def cnt = 0
+        VoterElection.findAllByElection(election).each{ve->
+            if(cnt < 4){
+                ve.voted = true
+                ve.voteTime = new Date()
+                ve.save(flush:true)
+            }
+
+            if(cnt <= 9 && cnt >= 4){
+                ve.voted = true
+                use(TimeCategory){
+                    ve.voteTime = new Date() - 3.hours
+                }
+                ve.save(flush:true)
+            }
+
+            if(cnt > 9){
+                ve.voted = true
+                use(TimeCategory){
+                    ve.voteTime = new Date() + 2.hours
+                }
+                ve.save(flush:true)
+            }
+
+            cnt++
+        }
+
+        voterElectionService.countByHourAndPollStation(election, albertDivision, pollStation)
      }
 
 }

@@ -12,7 +12,8 @@ public enum PickupTimeEnum{
     TWO('2-3'),
     THREE('3-4'),
     FOUR('4-5'),
-    FIVE('5-6')
+    FIVE('5-6'),
+    EIGHTEEN('6-7')
 
 
     final String name

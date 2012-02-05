@@ -4,10 +4,19 @@ import java.util.Calendar
 
 
 import bz.voter.management.utils.PickupTimeEnum
+import bz.voter.management.spring.SpringUtil
+
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 class VoterElectionService {
 
    static transactional = true
+
+   def jdbcTemplate
+   def dataSource
+   //def namedParameterJdbcTemplate
 
 	static String  QUERY =  "select ve from VoterElection as ve " +
 							"inner join ve.voter as v " +
@@ -31,7 +40,7 @@ class VoterElectionService {
 							                    "and poll.division =:division " +
                                                 "and ve.pledge =:pledge " 
 
-	static String  COUNT_BY_PLEDGE =  "select count(ve.voter) from VoterElection as ve " +
+	static String  COUNT_BY_PLEDGE =  "select count(ve.voter) as votes_count from VoterElection as ve " +
 										"inner join ve.voter as v " +
 							     		"inner join v.person as p " +
 					 			   		"inner join v.pollStation as poll " +
@@ -39,6 +48,19 @@ class VoterElectionService {
 										"and poll.division =:division " +
                                         "and ve.pledge =:pledge"
 
+
+    static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "Select count(ve.voter_id) as votes_count, " +
+                                        "affiliation.name as affiliation, " +
+                                        "EXTRACT(HOUR FROM ve.vote_time) as vote_time " + 
+                                        "from voter_election as ve " +
+                                        "inner join voter as v on ve.voter_id=v.id " +
+                                        "inner join affiliation as affiliation on v.affiliation_id = affiliation.id " +
+                                        "inner join poll_station as poll on v.poll_station_id = poll.id " +
+                                        "where ve.election_id = :election_id " +
+                                        "and poll.id = :poll_station_id " +
+                                        "and poll.division_id = :division_id " +
+                                        "group by affiliation.name, vote_time"
+                                            
 
 
    def sessionFactory
@@ -423,6 +445,53 @@ class VoterElectionService {
 
     return results[0]
    }
+
+
+    
+    def countByHourAndPollStation(Election election,Division division, PollStation pollStation){
+
+        SqlParameterSource namedParameters = new MapSqlParameterSource("election_id", election.id)
+        namedParameters.addValue("division_id", division.id)
+        namedParameters.addValue("poll_station_id", pollStation.id)
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource)
+
+        def results = namedParameterJdbcTemplate.queryForList(HOURLY_COUNT_BY_POLLSTATION_QUERY, namedParameters)
+
+        /*println "\nresults: ${results} \n"
+
+        results.each{
+            switch(it.vote_time){
+                
+                case "14":
+                    println "${PickupTimeEnum.TWO.value()} : ${it.affiliation} : ${it.votes_count}"
+                    break
+
+                case "15":
+                    println "${PickupTimeEnum.THREE.value()} : ${it.affiliation} : ${it.votes_count}"
+                    break
+
+                case "16":
+                    println "${PickupTimeEnum.FOUR.value()} : ${it.affiliation} : ${it.votes_count}"
+                    break
+
+                case "17":
+                    println "${PickupTimeEnum.FIVE.value()} : ${it.affiliation} : ${it.votes_count}"
+                    break
+
+                case "18":
+                    println "${PickupTimeEnum.EIGHTEEN.value()} : ${it.affiliation} : ${it.votes_count}"
+                    break
+
+
+            }
+        }
+        */
+
+        return results
+
+   }
+
+
 
 }
 
