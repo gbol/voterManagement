@@ -113,7 +113,7 @@ class AddressPanelComposer extends GrailsComposer {
     }
 
     def onClick_saveRegistrationAddressButton(){
-	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params = [
                 id:                 registrationAddress?.id,
                 houseNumber:        registrationAddressHouseNumberTextbox.getValue()?.trim(),
@@ -141,7 +141,7 @@ class AddressPanelComposer extends GrailsComposer {
 
 
     def onClick_saveWorkAddressButton(){
-	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params =[
                 id:             workAddress?.id,
                 addressType:    WORK,
@@ -169,7 +169,7 @@ class AddressPanelComposer extends GrailsComposer {
 
 
     def onClick_saveAlternateAddressButton(){
-	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params =[
                 id:             alternateAddress?.id,
                 addressType:    ALTERNATE,

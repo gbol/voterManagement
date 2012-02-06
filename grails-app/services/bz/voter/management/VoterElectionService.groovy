@@ -49,17 +49,17 @@ class VoterElectionService {
                                         "and ve.pledge =:pledge"
 
 
-    static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "Select count(ve.voter_id) as votes_count, " +
+    static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "SELECT count(ve.voter_id) as votes_count, " +
                                         "affiliation.name as affiliation, " +
-                                        "EXTRACT(HOUR FROM ve.vote_time) as vote_time " + 
-                                        "from voter_election as ve " +
+                                        "EXTRACT(HOUR FROM ve.vote_time) as 'vote_time' " + 
+                                        "FROM voter_election as ve " +
                                         "inner join voter as v on ve.voter_id=v.id " +
                                         "inner join affiliation as affiliation on v.affiliation_id = affiliation.id " +
                                         "inner join poll_station as poll on v.poll_station_id = poll.id " +
-                                        "where ve.election_id = :election_id " +
+                                        "WHERE ve.election_id = :election_id " +
                                         "and poll.id = :poll_station_id " +
                                         "and poll.division_id = :division_id " +
-                                        "group by affiliation.name, vote_time"
+                                        "GROUP BY affiliation.name, 'vote_time'"
                                             
 
 

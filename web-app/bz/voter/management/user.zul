@@ -45,6 +45,10 @@
 								<checkbox id="pollStationRoleCheckbox" />
 							</row>
 							<row>
+								<label value="MANAGE_VOTERS_ROLE" />
+								<checkbox id="manageVotersRoleCheckbox" />
+							</row>
+							<row>
 								<label value="OFFICE_STATION_ROLE" />
 								<checkbox id="officeStationRoleCheckbox" />
 							</row>

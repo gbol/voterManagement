@@ -32,7 +32,7 @@ class PledgeFormComposer extends GrailsComposer {
     EventQueue queue
 
     def afterCompose = { window ->
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_MANAGE_VOTERS')){
 
             voter = Executions.getCurrent().getArg().voter
             voterFacade.voter = voter
@@ -72,7 +72,7 @@ class PledgeFormComposer extends GrailsComposer {
 
 
     def onClick_savePledgeBtn(){
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_MANAGE_VOTERS')){
             
             def electionInstance = electionListbox.getSelectedItem()?.getValue()
             def pledge = pledgeListbox.getSelectedItem()?.getValue()

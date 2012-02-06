@@ -39,7 +39,7 @@ class ActivitiesFormComposer extends GrailsComposer {
     private EventQueue queue
 
     def afterCompose = { window ->
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_MANAGE_VOTERS')){
             voter = Executions.getCurrent().getArg().voter
             voterFacade.voter = voter
             def activityId = Executions.getCurrent().getArg().activityId
@@ -73,7 +73,7 @@ class ActivitiesFormComposer extends GrailsComposer {
 
 
     def onClick_saveActivityBtn(){
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_MANAGE_VOTERS')){
             
             def activityType = activityTypeTextbox.getValue() ? activityFacade.saveActivity(activityTypeTextbox.getValue()) : activityListbox.getSelectedItem()?.getValue()
             

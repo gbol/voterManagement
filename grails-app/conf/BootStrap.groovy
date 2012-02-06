@@ -141,6 +141,7 @@ class BootStrap {
         def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION') ?: new SecRole(authority: 'ROLE_POLL_STATION').save(failOnError: true)
         def officeStationRole = SecRole.findByAuthority('ROLE_OFFICE_STATION') ?: new SecRole(authority: 'ROLE_OFFICE_STATION').save(failOnError: true)
         def printVotersRole = SecRole.findByAuthority('ROLE_PRINT_VOTERS') ?: new SecRole(authority: 'ROLE_PRINT_VOTERS').save(failOnError: true)
+        def votersManageRole = SecRole.findByAuthority('ROLE_MANAGE_VOTERS') ?: new SecRole(authority: 'ROLE_MANAGE_VOTERS').save(failOnError: true)
 		def adminUser = SecUser.findByUsername('admin') ?: new SecUser(
                 username: 'admin',
                 password: 'p4ssw0rd',

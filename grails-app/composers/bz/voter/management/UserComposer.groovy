@@ -22,6 +22,7 @@ class UserComposer extends GrailsComposer {
 	def officeStationRoleCheckbox
 	def pollStationRoleCheckbox
     def printVotersRoleCheckbox
+    def manageVotersRoleCheckbox
 	def enabledCheckbox
 
 	def userIdLabel
@@ -71,6 +72,7 @@ class UserComposer extends GrailsComposer {
 			def pollStationRole = SecRole.findByAuthority('ROLE_POLL_STATION')
 			def officeStationRole = SecRole.findByAuthority('ROLE_OFFICE_STATION')
             def printVotersRole = SecRole.findByAuthority('ROLE_PRINT_VOTERS')
+            def manageVotersRole = SecRole.findByAuthority('ROLE_MANAGE_VOTERS')
 
 			userInstance = (userIdLabel.getValue()) ? (SecUser.get(userIdLabel.getValue())) : (new SecUser())
 
@@ -134,6 +136,16 @@ class UserComposer extends GrailsComposer {
                     }
                 }
 
+                if(manageVotersRoleCheckbox.isChecked()){
+                    if(!SecUserSecRole.get(userInstance.id, manageVotersRole.id)){
+                        SecUserSecRole.create(userInstance, manageVotersRole,true)
+                    }
+                }else{
+                    if(SecUserSecRole.get(userInstance.id, manageVotersRole.id)){
+                        SecUserSecRole.remove(userInstance, manageVotersRole,true)
+                    }
+                }
+
 				hideUserForm()
 				Messagebox.show('User Saved','User Message', Messagebox.OK,
 					Messagebox.INFORMATION)
@@ -181,6 +193,7 @@ class UserComposer extends GrailsComposer {
 		adminRoleCheckbox.setChecked(false)
 		userRoleCheckbox.setChecked(false)
 		enabledCheckbox.setChecked(false)
+        manageVotersRoleCheckbox.setChecked(false)
 		errorMessages.getChildren().clear()
 		addUserButton.setVisible(false)
 		userFormPanel.setVisible(true)
@@ -207,6 +220,9 @@ class UserComposer extends GrailsComposer {
 			if(SecUserSecRole.get(userInstance.id, SecRole.findByAuthority('ROLE_OFFICE_STATION').id)){
 				officeStationRoleCheckbox.setChecked(true)
 			}
+			if(SecUserSecRole.get(userInstance.id, SecRole.findByAuthority('ROLE_MANAGE_VOTERS').id)){
+				manageVotersRoleCheckbox.setChecked(true)
+            }
 
 		}else{
 			userFormPanel.setTitle(NEW_TITLE)
@@ -228,6 +244,7 @@ class UserComposer extends GrailsComposer {
 		adminRoleCheckbox.setChecked(false)
 		userRoleCheckbox.setChecked(false)
 		enabledCheckbox.setChecked(false)
+		manageVotersRoleCheckbox.setChecked(false)
 
 	 }
 }

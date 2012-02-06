@@ -135,7 +135,7 @@ class VoterComposer extends GrailsComposer {
 
 
     def onClick_showAllVotersBtn(){
-	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_MANAGE_VOTERS')){
             voterSearchTextbox.setValue("")
             voterListType = VoterListTypeEnum.ALL
             showVoters()
@@ -146,7 +146,7 @@ class VoterComposer extends GrailsComposer {
 
 
     def onClick_filterVotersBtn(){
-	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
+	 	if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_MANAGE_VOTERS')){
             Executions.createComponents("/bz/voter/management/filter/voter.zul",
                 votersDiv.getParent().getParent().getParent().getFirstChild().getFirstChild()
                 ,[division: division]).doModal()

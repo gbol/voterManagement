@@ -27,7 +27,7 @@ class RemoveActivityComposer extends GrailsComposer {
     EventQueue queue
 
     def afterCompose = { window ->
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             voter = Executions.getCurrent().getArg().voter
             activityId = Executions.getCurrent().getArg().activityId
 
@@ -46,7 +46,7 @@ class RemoveActivityComposer extends GrailsComposer {
 
 
     def onClick_deleteActivityButton(){
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             voterFacade.deleteActivity(activityId)
             queue.publish(new Event("onVoterActivity", null, null))
             removeActivityWindow.detach()

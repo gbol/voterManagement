@@ -76,6 +76,11 @@
 
 
         .gridHeaders{
+            font-size: 0.75em;
+            font-weight: bolder
+        }
+
+        .voteCountLabels{
             font-size: 0.75em
         }
 

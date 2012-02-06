@@ -75,7 +75,7 @@ class DependentFormComposer extends GrailsComposer {
 
 
     def onClick_saveDependentBtn(){
-        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def errors = validate()
             if(!errors.isAllWhitespace()){
                 Messagebox.show(errors, 'Errors', Messagebox.OK,

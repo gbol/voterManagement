@@ -44,7 +44,7 @@ class RegistrationInformationComposer extends GrailsComposer {
 
 
     def onClick_saveRegistrationInformationButton(){
-	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params = [
                 registrationNumber: registrationNumberTextbox.getValue()?.trim(),
                 registrationDate: registrationDatebox.getValue(),

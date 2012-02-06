@@ -70,7 +70,7 @@ class BasicInformationPanelComposer extends GrailsComposer {
 
 
     def onClick_saveBasicInformationButton(){
-	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params = [
                 firstName:      firstNameTextbox.getValue()?.trim(),
                 middleName:     middleNameTextbox.getValue()?.trim(),

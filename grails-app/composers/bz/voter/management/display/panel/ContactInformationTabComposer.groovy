@@ -33,7 +33,7 @@ class ContactInformationTabComposer extends GrailsComposer {
 
 
     def onClick_saveContactInformationButton(){
-	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_OFFICE_STATION')){
+	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params = [
                 homePhone:      homePhoneTextbox.getValue()?.trim(),
                 cellPhone:      cellPhoneTextbox.getValue()?.trim(),

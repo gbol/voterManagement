@@ -10,23 +10,23 @@
 
 
     <panel id="votesChartPanel" title="Votes By Poll Station" border="rounded"
-        vflex="1" hflex="2"
+        vflex="2" hflex="2"
         apply="bz.voter.management.election.VotesChartComposer">
 
-        <panelchildren>
+        <panelchildren vflex="2">
             <toolbar>
 	            <listbox id="pollStationListbox" mold="select" rows="1"/>
 			    <button label="Display Votes" id="votesBtn" />
             </toolbar>
 
-            <div style="margin: 0.01em">
-                <hlayout>
+            <div style="margin: 0.01em" vflex="1">
+                <hlayout vflex="1">
                     <vlayout hflex="1">
                         <vbox id="chartBox">
                         <h:h5> Votes Count </h:h5>
                         </vbox>
                         <vbox id="tableBox">
-                            <grid id="votesSummaryGrid" width="60%" style="margin: 0.5em" visible="false">
+                            <grid id="votesSummaryGrid" width="80%" style="margin: 0.5em" visible="false">
                                 <auxhead>
                                     <auxheader label="Votes Casted Grouped By Affiliation" style="font-size: 0.9em" colspan="4"/>
                                 </auxhead>
@@ -41,6 +41,17 @@
                             </grid>
                         </vbox>
                     </vlayout>
+                    <vbox vflex="2" hflex="1">
+                        <grid id="hourlyCountGrid" width="80%" style="margin: 0.5em" visible="false">
+                            <auxhead>
+                               <auxheader id="hourlyCountHeader" label="Hourly Count of Votes Casted" style="font-size: 0.9em" />
+                            </auxhead>
+                            <columns id="hourlyCountColumns">
+                            </columns>
+                            <rows id="hourlyCountRows">
+                            </rows>
+                        </grid>
+                    </vbox>
                 </hlayout>
             </div>
 

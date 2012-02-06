@@ -15,7 +15,9 @@ import bz.voter.management.Election
 import bz.voter.management.Division
 import bz.voter.management.PollStation
 import bz.voter.management.Voter
+import bz.voter.management.Affiliation
 import bz.voter.management.zk.ComposerHelper
+import bz.voter.management.utils.PickupTimeEnum
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -25,6 +27,10 @@ class VotesChartComposer extends GrailsComposer {
     def tableBox
     def votesSummaryGrid
     def votesSummaryRows
+    def hourlyCountGrid
+    def hourlyCountRows
+    def hourlyCountColumns
+    def hourlyCountHeader
     def votersChartPanel
     def pollStationListbox
     def votesBtn
@@ -33,12 +39,17 @@ class VotesChartComposer extends GrailsComposer {
     Division division
     PollStation pollStation
     Election election
+    def affiliations
 
     Hlayout hlayout
+
+
+    def voterElectionService
 
     def afterCompose = { window ->
         if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_OFFICE_STATION')){
             def electionId = Executions.getCurrent().getArg().electionId
+            affiliations = Affiliation.list()
 
             election = Election.get(electionId.toLong())
 
@@ -139,7 +150,45 @@ class VotesChartComposer extends GrailsComposer {
        }
 
 
-        votesSummaryGrid.visible = true
+        hourlyCountHeader.colspan = affiliations.size()
+        hourlyCountColumns.append{
+            column{
+                label(value:"Hour", class:"gridHeaders")
+            }
+            for(affiliation in affiliations){
+                column{
+                    label(value:"${affiliation.name}", class:"gridHeaders")
+                }
+            }
+        }
+
+        def voteCounts = voterElectionService.countByHourAndPollStation(election,division, pollStation)
+        println "\nvoteCounts: ${voteCounts}"
+        hourlyCountRows.append{
+            for(hourVote in voteCounts){
+                switch(hourVote.vote_time){
+                    case "16.0":
+                        println "\n${hourVote.affiliation}"
+                        row{
+                            label(value: "${PickupTimeEnum.FOUR.value()}", class:"voteCountLabels")
+                            //label(value: "${PickupTimeEnumValue}", class="voteCountLabels")
+                        }
+                        break
+
+                    case "17":
+                        println "\n${hourVote.affiliation}"
+                        row{
+                            label(value: "${PickupTimeEnum.FIVE.value()}", class:"voteCountLabels")
+                        }
+                        break
+
+                }
+            }
+        }
+
+
+       votesSummaryGrid.visible = true
+       hourlyCountGrid.visible = true
 
 
     }
