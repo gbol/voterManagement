@@ -78,6 +78,7 @@ class VotesChartComposer extends GrailsComposer {
                 def results = VoterElection.getCountOfVotesByElectionAndPollStation(election, pollStation)
                 chartBox.getChildren().clear()
                 votesSummaryRows.getChildren().clear()
+                hourlyCountRows.getChildren().clear()
                 displayChart(pollStation, results)
             }else{
                 Messagebox.show("Kindly Select a Poll Station!", "Charts Message", Messagebox.OK,
@@ -150,33 +151,30 @@ class VotesChartComposer extends GrailsComposer {
        }
 
 
-        hourlyCountHeader.colspan = affiliations.size()
+        //hourlyCountHeader.colspan = affiliations.size()
+        /*
         hourlyCountColumns.append{
             column{
                 label(value:"Hour", class:"gridHeaders")
             }
-            for(affiliation in affiliations){
-                column{
-                    label(value:"${affiliation.name}", class:"gridHeaders")
-                }
+            column{
+                label(value: "# of Votes", class:"gridHeaders")
             }
         }
+        */
 
         def voteCounts = voterElectionService.countByHourAndPollStation(election,division, pollStation)
-        println "\nvoteCounts: ${voteCounts}"
         hourlyCountRows.append{
             for(hourVote in voteCounts){
-                switch(hourVote.vote_time){
-                    case "16.0":
-                        println "\n${hourVote.affiliation}"
+                switch(hourVote.vote_hour){
+                    case "16":
                         row{
                             label(value: "${PickupTimeEnum.FOUR.value()}", class:"voteCountLabels")
-                            //label(value: "${PickupTimeEnumValue}", class="voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "17":
-                        println "\n${hourVote.affiliation}"
                         row{
                             label(value: "${PickupTimeEnum.FIVE.value()}", class:"voteCountLabels")
                         }

@@ -26,7 +26,7 @@
                         <h:h5> Votes Count </h:h5>
                         </vbox>
                         <vbox id="tableBox">
-                            <grid id="votesSummaryGrid" width="80%" style="margin: 0.5em" visible="false">
+                            <grid id="votesSummaryGrid" width="80%"  style="margin: 0.5em" visible="false">
                                 <auxhead>
                                     <auxheader label="Votes Casted Grouped By Affiliation" style="font-size: 0.9em" colspan="4"/>
                                 </auxhead>
@@ -42,11 +42,14 @@
                         </vbox>
                     </vlayout>
                     <vbox vflex="2" hflex="1">
-                        <grid id="hourlyCountGrid" width="80%" style="margin: 0.5em" visible="false">
+                        <grid id="hourlyCountGrid" hflex="1" style="margin: 0.25em" visible="false">
                             <auxhead>
-                               <auxheader id="hourlyCountHeader" label="Hourly Count of Votes Casted" style="font-size: 0.9em" />
+                               <auxheader id="hourlyCountHeader" label="Hourly Count of Votes Casted" 
+                                    colspan="2" style="font-size: 0.9em" />
                             </auxhead>
                             <columns id="hourlyCountColumns">
+                                <column label="Hour" class="gridHeaders"/>
+                                <column label="# of Votes" class="gridHeaders"/>
                             </columns>
                             <rows id="hourlyCountRows">
                             </rows>

@@ -50,16 +50,31 @@ class VoterElectionService {
 
 
     static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "SELECT count(ve.voter_id) as votes_count, " +
-                                        "affiliation.name as affiliation, " +
-                                        "EXTRACT(HOUR FROM ve.vote_time) as 'vote_time' " + 
+                                        //"affiliation.name as affiliation, " +
+                                        "CASE WHEN EXTRACT(HOUR FROM ve.vote_time) = 6 THEN 6 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 7 THEN 7 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 8 THEN 8 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 9 THEN 9 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 10 THEN 10 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 11 THEN 11 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 12 THEN 12 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 13 THEN 13 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 14 THEN 14 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 15 THEN 15 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 16 THEN 16 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 17 THEN 17 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 18 THEN 18 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 19 THEN 19 " +
+                                        "ELSE 20 END AS vote_hour " +
                                         "FROM voter_election as ve " +
                                         "inner join voter as v on ve.voter_id=v.id " +
-                                        "inner join affiliation as affiliation on v.affiliation_id = affiliation.id " +
+                                        //"inner join affiliation as affiliation on v.affiliation_id = affiliation.id " +
                                         "inner join poll_station as poll on v.poll_station_id = poll.id " +
                                         "WHERE ve.election_id = :election_id " +
                                         "and poll.id = :poll_station_id " +
                                         "and poll.division_id = :division_id " +
-                                        "GROUP BY affiliation.name, 'vote_time'"
+                                        "and ve.vote_time IS NOT NULL and ve.voted IS TRUE " +
+                                        "GROUP BY vote_hour"
                                             
 
 
@@ -457,29 +472,29 @@ class VoterElectionService {
 
         def results = namedParameterJdbcTemplate.queryForList(HOURLY_COUNT_BY_POLLSTATION_QUERY, namedParameters)
 
-        /*println "\nresults: ${results} \n"
+        /*
 
         results.each{
-            switch(it.vote_time){
+            switch(it.vote_hour){
                 
                 case "14":
-                    println "${PickupTimeEnum.TWO.value()} : ${it.affiliation} : ${it.votes_count}"
+                    println "${PickupTimeEnum.TWO.value()} : ${it.votes_count}"
                     break
 
                 case "15":
-                    println "${PickupTimeEnum.THREE.value()} : ${it.affiliation} : ${it.votes_count}"
+                    println "${PickupTimeEnum.THREE.value()} : ${it.votes_count}"
                     break
 
                 case "16":
-                    println "${PickupTimeEnum.FOUR.value()} : ${it.affiliation} : ${it.votes_count}"
+                    println "${PickupTimeEnum.FOUR.value()}  : ${it.votes_count}"
                     break
 
                 case "17":
-                    println "${PickupTimeEnum.FIVE.value()} : ${it.affiliation} : ${it.votes_count}"
+                    println "${PickupTimeEnum.FIVE.value()}  : ${it.votes_count}"
                     break
 
                 case "18":
-                    println "${PickupTimeEnum.EIGHTEEN.value()} : ${it.affiliation} : ${it.votes_count}"
+                    println "${PickupTimeEnum.EIGHTEEN.value()}  : ${it.votes_count}"
                     break
 
 
