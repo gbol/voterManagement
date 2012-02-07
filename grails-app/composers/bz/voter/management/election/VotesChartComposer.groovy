@@ -18,6 +18,7 @@ import bz.voter.management.Voter
 import bz.voter.management.Affiliation
 import bz.voter.management.zk.ComposerHelper
 import bz.voter.management.utils.PickupTimeEnum
+import static bz.voter.management.utils.TwentyFourHourEnum.*
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -164,19 +165,101 @@ class VotesChartComposer extends GrailsComposer {
         */
 
         def voteCounts = voterElectionService.countByHourAndPollStation(election,division, pollStation)
+        println "\nvoteCounts: ${voteCounts}"
         hourlyCountRows.append{
             for(hourVote in voteCounts){
                 switch(hourVote.vote_hour){
+
+                    case "1":
+                        row{
+                            label(value: "${TwentyFourHourEnum.ONE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        
+                        }
+                        break
+
+                    case "2":
+                        row{
+                            label(value: "${TWO.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "3":
+                        row{
+                            label(value: "${THREE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "4":
+                        row{
+                            label(value: "${FOUR.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+
+                    case "5":
+                        row{
+                            label(value: "${FIVE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+                   
+                    case "6":
+                        row{
+                            label(value: "${SIX.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "7":
+                        row{
+                            label(value: "${SEVEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
                     case "16":
                         row{
-                            label(value: "${PickupTimeEnum.FOUR.value()}", class:"voteCountLabels")
+                            label(value: "${SIXTEEN.value()}", class:"voteCountLabels")
                             label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 
                     case "17":
                         row{
-                            label(value: "${PickupTimeEnum.FIVE.value()}", class:"voteCountLabels")
+                            label(value: "${SEVENTEEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "18":
+                        row{
+                            label(value: "${TwentyFourHourEnum.EIGHTEEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "19":
+                        row{
+                            label(value: "${NINETEEN.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "20":
+                        row{
+                            label(value: "${TWENTY.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
+                        }
+                        break
+
+                    case "21":
+                        row{
+                            label(value: "${TWENTY_ONE.value()}", class:"voteCountLabels")
+                            label(value: "${hourVote.votes_count}", class:"voteCountLabels")
                         }
                         break
 

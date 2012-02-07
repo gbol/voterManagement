@@ -4,6 +4,7 @@ import java.util.Calendar
 
 
 import bz.voter.management.utils.PickupTimeEnum
+//import bz.voter.management.utils.TwentyFourHourEnum
 import bz.voter.management.spring.SpringUtil
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -52,6 +53,12 @@ class VoterElectionService {
     static String HOURLY_COUNT_BY_POLLSTATION_QUERY = "SELECT count(ve.voter_id) as votes_count, " +
                                         //"affiliation.name as affiliation, " +
                                         "CASE WHEN EXTRACT(HOUR FROM ve.vote_time) = 6 THEN 6 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 1 THEN 1 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 2 THEN 2 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 3 THEN 3 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 4 THEN 4 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 5 THEN 5 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 6 THEN 6 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 7 THEN 7 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 8 THEN 8 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 9 THEN 9 " +
@@ -65,7 +72,11 @@ class VoterElectionService {
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 17 THEN 17 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 18 THEN 18 " +
                                         "WHEN EXTRACT(HOUR FROM ve.vote_time) = 19 THEN 19 " +
-                                        "ELSE 20 END AS vote_hour " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 20 THEN 20 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 21 THEN 21 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 22 THEN 22 " +
+                                        "WHEN EXTRACT(HOUR FROM ve.vote_time) = 23 THEN 23 " +
+                                        "ELSE 0 END AS vote_hour " +
                                         "FROM voter_election as ve " +
                                         "inner join voter as v on ve.voter_id=v.id " +
                                         //"inner join affiliation as affiliation on v.affiliation_id = affiliation.id " +

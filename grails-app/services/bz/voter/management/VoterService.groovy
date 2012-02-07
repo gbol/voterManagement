@@ -3,12 +3,13 @@ package bz.voter.management
 import java.util.Calendar
 
 import bz.voter.management.utils.FilterType
+import bz.voter.management.spring.SpringUtil
 
 class VoterService {
 
     static transactional = true
 
-	 def messageSource
+	 def messageSource //= SpringUtil.getBean('messageSource')
 
 	 def personService
 
@@ -138,6 +139,12 @@ class VoterService {
 			voterInstance.validate()
 
 			if(voterInstance.hasErrors()){
+                log.error "Could not save voter:"
+                for(error in voterInstance.errors){
+                    log.error error
+                    println error
+                }
+                
 			}else{
 				voterInstance.save()
 			}
@@ -152,6 +159,7 @@ class VoterService {
 		def voterInstance = save(params)
 
 		if(!voterInstance.hasErrors()){
+            log.info "Imported voter: ${voterInstance}"
 			def year = voterInstance.registrationDate.toCalendar().get(Calendar.YEAR)
 
 			def elections = Election.findAllByYearGreaterThanEquals(year)
@@ -164,7 +172,12 @@ class VoterService {
 				}
 			}
 			
-		}
+		}else{
+            log.error "Error importing voter: "
+            for(error in voterInstance.errors){
+                log.error error
+            }
+        }
 
 		return voterInstance
 	}

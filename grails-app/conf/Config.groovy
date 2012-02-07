@@ -79,9 +79,17 @@ log4j = {
     // Example of changing the log pattern for the default console
     // appender:
     //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
+    appenders {
+        console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+
+        environments{
+            production{
+                rollingFile name:'rollingFile', maxFileSize:102400, maxBackupIndex: 5, file:'/usr/local/tomcat/logs/voterManagement.log',
+                    layout:pattern(conversionPattern:'%d %-5p %c{2} %x - %m%n')
+            }
+        }
+
+    }
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP

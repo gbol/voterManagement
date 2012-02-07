@@ -10,6 +10,7 @@ class MenuComposer extends GrailsComposer {
 	def voterButton
 	def signOutButton
 	def systemButton
+    def passwordButton
 
 	def center
 	
@@ -44,4 +45,10 @@ class MenuComposer extends GrailsComposer {
 	 	center.getChildren().clear()
 		Executions.createComponents("uploadVotersFile.zul",center,null)
 	 }
+
+
+     def onClick_passwordButton(){
+        center.getChildren().clear()
+        Executions.createComponents("password.zul", center,null)
+     }
 }
