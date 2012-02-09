@@ -22,9 +22,12 @@ class BootStrap {
 	def messageSource
 	def unknownMunicipality
 
-   static String fileName = ConfigurationHolder.config.files.dir + "Sample.xls"
-   static String albertFile = "/usr/local/files/albert.xlsx"
-   static String caribbeanShoresFile = "/usr/local/files/caribbean_shores.xlsx"
+   //static String fileName = ConfigurationHolder.config.files.dir + "Sample.xls"
+      static String fileName = "C:\\Users\\BOLGU.CITOLT-1\\voterManagement\\web-app\\files\\sample.xlsx"
+   static String albertFile = "C:\\Users\\BOLGU.CITOLT-1\\voterManagement\\web-app\\files\\albert.xlsx"
+   static String caribbeanShoresFile = "C:\\Users\\BOLGU.CITOLT-1\\voterManagement\\web-app\\files\\caribbean_shores.xlsx"
+  // static String albertFile = "/usr/local/files/albert.xlsx"
+  // static String caribbeanShoresFile = "/usr/local/files/caribbean_shores.xlsx"
    static String appDivision = ConfigurationHolder.config.division
 
     def init = { servletContext ->

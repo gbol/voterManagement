@@ -10,7 +10,8 @@
 //Required property is division and should be declared as : division = DivisionName
 //When app boots up, a division with this name will be created if it doesn't exist.
 //Actions will only be allowed in this division, even if other divisions exist in the database.
-grails.config.locations = ["file:/usr/local/${appName}0.properties"]
+//grails.config.locations = ["file:/usr/local/${appName}0.properties"]
+grails.config.locations = ["file:C:\\Users\\BOLGU.CITOLT-1\\voterManagement\\${appName}0.properties"]
 // if(System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
@@ -58,12 +59,14 @@ grails.spring.bean.packages = []
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
 
-files.dir='/usr/local/files/'
+//files.dir='/usr/local/files/'
+files.dir='C:\\Users\\BOLGU.CITOLT-1\\voterManagement\\web-app\\files\\'
 
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://74.207.233.149:8080/${appName}"
+        //grails.serverURL = "http://74.207.233.149:8080/${appName}"
+		grails.serverURL = "http://localhost:8080/${appName}"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"

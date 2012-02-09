@@ -229,6 +229,9 @@ class VoterFacade {
             this.voter = Voter.load(voter.id)
             def addressType
             switch(params.addressType){
+                case AddressEnum.REGISTRATION:
+                    addressType = AddressType.findByName('Registration')
+                    break
                 case AddressEnum.ALTERNATE:
                     addressType = AddressType.findByName('Alternate')
                     break

@@ -116,6 +116,7 @@ class AddressPanelComposer extends GrailsComposer {
 	    if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_MANAGE_VOTERS')){
             def params = [
                 id:                 registrationAddress?.id,
+                addressType:        REGISTRATION,
                 houseNumber:        registrationAddressHouseNumberTextbox.getValue()?.trim(),
                 street:             registrationAddressStreetTextbox.getValue()?.trim(),
                 municipality:       registrationAddressMunicipalityListbox.getSelectedItem()?.getValue(),
